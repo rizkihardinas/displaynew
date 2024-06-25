@@ -8,6 +8,7 @@ use App\Models\Security;
 use Illuminate\Http\Request;
 use App\Http\Traits\CryptAES;
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
@@ -165,7 +166,12 @@ class IndexController extends Controller
     }
     public function convertToBase64(Request $request)
     {
+        $setting = Setting::first();
         $filePath = $request->input('i');
+        $ip = $this->ip_extract($filePath);
+        $filePath = str_replace('\\\\'.$ip.'\\','file:///'.$setting->path,$filePath);
+        $filePath = str_replace('\\','/',$filePath);
+
         if (!file_exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
@@ -174,5 +180,14 @@ class IndexController extends Controller
         $base64 = base64_encode($videoData);
 
         return response()->json(['base64' => $base64]);
+    }
+    function ip_extract($uncPath){
+
+        if (preg_match('/\\\\\\\\([\d\.]+)\\\\/', $uncPath, $matches)) {
+            $ipAddress = $matches[1];
+            return $ipAddress;
+        } else {
+            return false;
+        }
     }
 }

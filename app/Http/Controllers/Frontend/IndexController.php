@@ -21,7 +21,10 @@ class IndexController extends Controller
         $datas = [];
         foreach ($promotions->promotions as $key => $value) {
             $upac = [];
-            $upac['path'] = $this->convertToBase64($value->path);
+            $ip = $this->ip_extract($value->path);
+            $filePath = str_replace('\\\\'.$ip.'\\','file:///'.$setting->path,$value->path);
+            $filePath = str_replace('\\','/',$filePath);
+            $upac['path'] = $this->convertToBase64($filePath);
             $upac['type'] = $value->type;
             $datas[] = $upac;
         }
@@ -46,4 +49,14 @@ class IndexController extends Controller
 
         return $base64;
     }
+    function ip_extract($uncPath){
+
+        if (preg_match('/\\\\\\\\([\d\.]+)\\\\/', $uncPath, $matches)) {
+            $ipAddress = $matches[1];
+            return $ipAddress;
+        } else {
+            return false;
+        }
+    }
+    
 }
