@@ -75,7 +75,7 @@
             setimage(imagein, 'imagein');
             $('#info').text(pesan);
             $('#posname').text(posname);
-            $('#posip').text(posip + ' - ' + '[' + local_ip + ']');
+            $('#posip').text(posip);
             $('#memberstatus').text(memberstatus);
             $('#lpr').text(lpr);
             $('#datecapture').text(datecapture);
