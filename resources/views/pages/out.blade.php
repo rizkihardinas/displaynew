@@ -113,6 +113,8 @@
             $('#informasi-pembayaran').text(' ');
             $('#image').removeAttr('src');
             $('#imagein').removeAttr('src');
+            $('#image').attr('src','https://placehold.co/600x400')
+            $('#imagein').attr('src','https://placehold.co/600x400')
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
 

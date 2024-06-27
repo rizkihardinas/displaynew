@@ -63,9 +63,10 @@
 
         function clear() {
             $('#memberstatus').text('-');
-            $('#lpr').text('No Plat LPR');
+            $('#lpr').text('-');
             $('#datecapture').text('-');
             $('#image').removeAttr('src');
+            $('#image').attr('src','https://placehold.co/600x400')
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
 
