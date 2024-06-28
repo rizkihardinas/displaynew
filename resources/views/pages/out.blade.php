@@ -10,7 +10,7 @@
             </div>
 
             <div class="flex bg-[#04427B]">
-                <p class="text-white text-lg p-4">
+                <p class="text-white text-3xl p-4 font-bold">
                     <span id="nota">No Nota/No Plat In</span> <br>
                     <span id="vehicletype">Jenis Kendaraan</span><br>
                     <span id="intime">Jam masuk/ Pos Masuk</span> <br>
@@ -19,10 +19,10 @@
             </div>
             <div class="bg-[#f1ff00] p-4 font-bold  text-2xl">
                 <div class="flex justify-between">
-                    Lama Parkir : <span id="duration">0 Jam 0 Menit</span>
+                    Lama Parkir : <span id="duration" class="text-4xl">0 Jam 0 Menit</span>
                 </div>
                 <div class="flex justify-between">
-                    Total : <span class="text-4xl" id="total">10.000</span>
+                    Total : <span class="text-6xl" id="total">0</span>
                 </div>
                 <div class="" id="informasi-pembayaran">
                     [Informasi Pembayaran]
@@ -44,7 +44,7 @@
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event-out', function(data) {
             hasResponse = true;
-            
+
             var datas = data.data;
             var local_ip = data.local_ip;
             var job = datas.job;
@@ -66,10 +66,13 @@
             var outtime = datas.outtime;
             var duration = datas.duration;
             var pesan = datas.pesan;
-            
+
             if (datas.paymenttype) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                setInterval(function() {
+                    clear_out();
+                }, sec);
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
@@ -79,28 +82,24 @@
             $('#memberstatus').text(memberstatus);
             $('#lpr').text(lpr);
             $('#datecapture').text(datecapture);
-            $('#nota').text(nota);
+            $('#nota').text('Nota : ' + nota);
             $('#total').text(formatRupiah(total));
-            $('#vehicletype').text(vehicletype);
-            $('#intime').text(intime);
-            $('#outtime').text(outtime);
+            $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
+            $('#intime').text('Tanggal Masuk : ' + intime);
+            $('#outtime').text('Tanggal Keluar : ' +outtime);
             $('#duration').text(duration);
             $('#image').attr('src', image);
             $('#imagein').attr('src', imagein);
-            setInterval(function() {
-                hasResponse = hasResponse ? !hasResponse : hasResponse;
-            }, sec);
+            // setInterval(function() {
+            //     hasResponse = hasResponse ? !hasResponse : hasResponse;
+            // }, sec);
 
         });
 
 
-        setInterval(function() {
-            if (!hasResponse) {
-                clear();
-            }
-        }, sec);
 
-        function clear() {
+
+        function clear_out() {
             $('#memberstatus').text('-');
             $('#lpr').text('-');
             $('#datecapture').text('-');
@@ -113,8 +112,8 @@
             $('#informasi-pembayaran').text(' ');
             $('#image').removeAttr('src');
             $('#imagein').removeAttr('src');
-            $('#image').attr('src','https://placehold.co/600x400')
-            $('#imagein').attr('src','https://placehold.co/600x400')
+            $('#image').attr('src', 'https://placehold.co/400x200')
+            $('#imagein').attr('src', 'https://placehold.co/400x200')
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
 

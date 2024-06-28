@@ -4,24 +4,15 @@
         <div class="flex flex-col bg-gray-300 text-white">
             @include('components.lpr')
         </div>
-        <div class="relative h-auto overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}">
-            @foreach ($datas as $item)
-                <div class="hidden duration-2000 ease-in-out" data-carousel-item="">
-                    @if ($item['type'] == 'image')
-                        <img class="object-fill margin-0 w-full h-full" src="data:image/png;base64,{{ $item['path'] }}" alt="...">
-                    @else
-                    <video src="data:video/mp4;base64,{{ $item['path'] }}" loop autoplay class="object-fill w-full h-full" id="video"></video>
-                    @endif
-
-                </div>
-            @endforeach
+        <div id="wrapper" class="h-full">
+            @include('components.in')
         </div>
+
     </div>
 @endsection
 @push('scripts')
-    
     <script>
-        var sec = 10 * 1000;
+        var sec = 20 * 1000;
         Pusher.logToConsole = true;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
@@ -55,6 +46,65 @@
             }, sec);
 
         });
+
+        channel.bind('my-event-out', function(data) {
+            hasResponse = true;
+
+            var datas = data.data;
+            var action = datas.action;
+            if (action == 3 || action == 4) {
+                var html = `@include('components.out')`;
+                $('#wrapper').html(html);
+            }
+            var local_ip = data.local_ip;
+            var job = datas.job;
+            var posname = datas.posname;
+            var posip = datas.posip;
+            var image = datas.image;
+            var imagein = datas.imagein;
+            var lpr = datas.lpr;
+            var model = datas.model;
+            var datecapture = datas.datecapture;
+            var memberstatus = datas.memberstatus;
+            var memberperiod = datas.memberperiod;
+            var nota = datas.nota;
+            var plateno = datas.plateno;
+            var total = datas.total;
+            var vehicletype = datas.vehicletype;
+            var inpos = datas.inpos;
+            var intime = datas.intime;
+            var outtime = datas.outtime;
+            var duration = datas.duration;
+            var pesan = datas.pesan;
+            
+            if (datas.paymenttype) {
+                var balance = datas.balance;
+                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                setInterval(function() {
+                    clear_out();
+                }, sec);
+            }
+            setimage(image, 'image');
+            setimage(imagein, 'imagein');
+            $('#info').text(pesan);
+            $('#posname').text(posname);
+            $('#posip').text(posip);
+            $('#memberstatus').text(memberstatus);
+            $('#lpr').text(lpr);
+            $('#datecapture').text(datecapture);
+            $('#nota').text('Nota : ' + nota);
+            $('#total').text(formatRupiah(total));
+            $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
+            $('#intime').text('Tanggal Masuk : ' + intime);
+            $('#outtime').text('Tanggal Keluar : ' + outtime);
+            $('#duration').text(duration);
+            $('#image').attr('src', image);
+            $('#imagein').attr('src', imagein);
+            // setInterval(function() {
+            //     hasResponse = hasResponse ? !hasResponse : hasResponse;
+            // }, sec);
+
+        });
         setInterval(function() {
             if (!hasResponse) {
                 clear();
@@ -66,10 +116,37 @@
             $('#lpr').text('-');
             $('#datecapture').text('-');
             $('#image').removeAttr('src');
-            $('#image').attr('src','https://placehold.co/600x400')
+            $('#image').attr('src', 'https://placehold.co/400x200')
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
 
+        function clear_out() {
+            $('#memberstatus').text('-');
+            $('#lpr').text('-');
+            $('#datecapture').text('-');
+            $('#nota').text('-');
+            $('#total').text('-');
+            $('#vehicletype').text('-');
+            $('#intime').text('-');
+            $('#outtime').text('-');
+            $('#duration').text('-');
+            $('#informasi-pembayaran').text(' ');
+            $('#image').removeAttr('src');
+            $('#imagein').removeAttr('src');
+            $('#image').attr('src', 'https://placehold.co/400x200')
+            $('#imagein').attr('src', 'https://placehold.co/400x200')
+            $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+        }
+
+        function formatRupiah(amount) {
+            const formatter = new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+            return formattedAmount = formatter.format(amount);
+        }
         // Set the video source
         // setVideo('\\\\192.168.9.223\\Share\\promosi.mp4');
     </script>

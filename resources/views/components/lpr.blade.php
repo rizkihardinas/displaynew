@@ -1,6 +1,6 @@
 <div class="p-2 flex-grow flex flex-col">
     <div class="flex-grow bg-[#04427b] flex items-center justify-center">
-        <img class="w-full h-full object-contain" alt="" id="image" src="https://placehold.co/600x400">
+        <img class="w-full h-full object-contain" alt="" id="image" src="https://placehold.co/400x200">
     </div>
     <div class="bg-[#04427b] p-2 mt-2 text-center">
         <span class="text-6xl" id="lpr">No. PLAT LPR</span>
@@ -12,6 +12,6 @@
         <span class="text-2xl" id="memberstatus">Member Info</span>
     </div>
     <div class="bg-[#f1ff00] p-2 mt-2 text-center text-black">
-        <span class="text-lg font-bold" id="info">Informasi bantuan, sesuai pesan UC</span>
+        <span class="text-3xl font-bold" id="info">Informasi bantuan, sesuai pesan UC</span>
     </div>
 </div>
