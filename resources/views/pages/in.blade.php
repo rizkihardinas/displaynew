@@ -82,10 +82,13 @@
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 setInterval(function() {
                     clear_out();
+                    
+                }, sec);
+                setInterval(function() {
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, sec);
+                }, 3000);
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
