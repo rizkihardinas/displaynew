@@ -76,12 +76,15 @@
             var outtime = datas.outtime;
             var duration = datas.duration;
             var pesan = datas.pesan;
-            
+            var done = false;
             if (datas.paymenttype) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 setInterval(function() {
                     clear_out();
+                    var html = `@include('components.in')`;
+                    $('#wrapper').html(html);
+                    
                 }, sec);
             }
             setimage(image, 'image');
