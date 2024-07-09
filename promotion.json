@@ -1,0 +1,20 @@
+{
+    "promotions" : [
+        {
+            "path" : "\\\\192.168.9.223\\Share\\promotion\\1.jpg",
+            "type" : "image"
+        },
+        {
+            "path" : "\\\\192.168.9.223\\Share\\promotion\\2.jpg",
+            "type" : "image"
+        },
+        {
+            "path" : "\\\\192.168.9.223\\Share\\promosi.mp4",
+            "type" : "video"
+        }
+        
+    ],
+    "text" : "Pesan promosi anda ada disini ya, ini percobaan text berjalan",
+    "duration" : 15000
+    
+}
