@@ -180,15 +180,15 @@ class IndexController extends Controller
         $ip = $this->ip_extract($filePath);
         $filePath = str_replace('\\\\' . $ip . '\\', 'file:///' . $setting->path, $filePath);
         $filePath = str_replace('\\', '/', $filePath);
+        return response()->json($setting->path);
+        // if (!file_exists($filePath)) {
+        //     return response()->json(['error' => 'File not found'], 404);
+        // }
 
-        if (!file_exists($filePath)) {
-            return response()->json(['error' => 'File not found'], 404);
-        }
+        // $videoData = file_get_contents($filePath);
+        // $base64 = base64_encode($videoData);
 
-        $videoData = file_get_contents($filePath);
-        $base64 = base64_encode($videoData);
-
-        return response()->json(['base64' => $base64]);
+        // return response()->json(['base64' => $base64]);
     }
     function ip_extract($uncPath)
     {
