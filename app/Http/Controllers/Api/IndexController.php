@@ -180,7 +180,7 @@ class IndexController extends Controller
         $ip = $this->ip_extract($filePath);
         $filePath = str_replace('\\\\' . $ip . '\\', 'file:///' . $setting->path, $filePath);
         $filePath = str_replace('\\', '/', $filePath);
-        return response()->json($setting->path);
+        return response()->json($setting);
         // if (!file_exists($filePath)) {
         //     return response()->json(['error' => 'File not found'], 404);
         // }
