@@ -18,3 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('hit-display',[IndexController::class,'hit_display']);
 Route::get('/generate-image',[IndexController::class,'generateImage'])->name('image');
 Route::get('/video-to-base64', [IndexController::class,'convertToBase64'])->name('video.to.base64');
+Route::post('/setting/display',[IndexController::class,'setupSetting']);
+Route::post('/setting/access',[IndexController::class,'setupSecurity']);

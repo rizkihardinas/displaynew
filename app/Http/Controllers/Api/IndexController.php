@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use PDO;
 use App\Events\InEvent;
+use App\Models\Setting;
 use App\Events\OutEvent;
 use App\Models\Security;
 use Illuminate\Http\Request;
 use App\Http\Traits\CryptAES;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
@@ -197,6 +199,30 @@ class IndexController extends Controller
             return $ipAddress;
         } else {
             return false;
+        }
+    }
+    function setupSetting(Request $request){
+        DB::beginTransaction();
+        try {
+            $setting = Setting::first()->update($request->all());
+            DB::commit();
+            return response()->json($setting);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json($th->getMessage(),200);
+            //throw $th;
+        }
+    }
+    function setupSecurity(Request $request){
+        DB::beginTransaction();
+        try {
+            $security = Security::first()->update($request->all());
+            DB::commit();
+            return response()->json($security);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json($th->getMessage(),200);
+            //throw $th;
         }
     }
 }
