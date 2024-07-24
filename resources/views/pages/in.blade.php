@@ -88,10 +88,8 @@
             if (action == 4 ) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                setInterval(function() {
-                    clear_out();
-                }, sec);
                 var t = setInterval(function() {
+                    clear_out();
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     // $('#info').text('Silahkan scan tiket atau tap kartu anda');
