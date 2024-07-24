@@ -12,7 +12,7 @@
 @endsection
 @push('scripts')
     <script>
-        var sec = 20 * 1000;
+        var sec = 5 * 1000;
         Pusher.logToConsole = true;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
