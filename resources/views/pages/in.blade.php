@@ -68,7 +68,7 @@
             var posip = datas.posip;
             var image = datas.image;
             var imagein = datas.imagein;
-            if(model == ''){
+            if(lpr == ''){
                 lpr = datas.lpr
                 model = datas.model;
                 datecapture = datas.datecapture;
