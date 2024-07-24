@@ -98,7 +98,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, 20000); // 1 menit
+                }, 18000); // 1 menit
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
@@ -119,7 +119,7 @@
             if(action == 1){
                 setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
-                }, 20000);
+                }, 18000);
             }
 
         });
