@@ -13,9 +13,10 @@
 @push('scripts')
     <script>
         var sec = 10 * 1000;
-        var model;
-        var datecapture;
-        var memberstatus;
+        var model = '';
+        var lpr = '';
+        var datecapture = '';
+        var memberstatus = '';
         Pusher.logToConsole = true;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
@@ -67,8 +68,8 @@
             var posip = datas.posip;
             var image = datas.image;
             var imagein = datas.imagein;
-            var lpr = datas.lpr;
             if(model == ''){
+                lpr = datas.lpr
                 model = datas.model;
                 datecapture = datas.datecapture;
                 memberstatus = datas.memberstatus;
