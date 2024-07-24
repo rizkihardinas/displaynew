@@ -115,9 +115,11 @@
             $('#duration').text(duration);
             $('#image').attr('src', image);
             $('#imagein').attr('src', imagein);
-            // setInterval(function() {
-            //     hasResponse = hasResponse ? !hasResponse : hasResponse;
-            // }, sec);
+            if(action == 1){
+                setInterval(function() {
+                    hasResponse = hasResponse ? !hasResponse : hasResponse;
+                }, sec);
+            }
 
         });
 
