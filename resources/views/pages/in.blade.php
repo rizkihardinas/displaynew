@@ -119,7 +119,7 @@
             if(action == 1){
                 setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
-                }, 22000);
+                }, 20000);
             }
 
         });
