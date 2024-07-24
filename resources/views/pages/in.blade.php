@@ -77,7 +77,7 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var done = false;
-            if (datas.paymenttype) {
+            if (job == 3 || job == 4 ) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 setInterval(function() {
