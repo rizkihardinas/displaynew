@@ -99,10 +99,12 @@
                     
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
+                    $('#memberstatus').text('-');
+                    $('#lpr').text('-');
+                    $('#datecapture').text('-');
+                    $('#imagein').attr('src', 'https://placehold.co/400x200');
                     // $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
-                    console.log('clear boss');
-                    clear_out();
                 }, 15000); // 30 detik
                 
             }
@@ -171,8 +173,8 @@
             $('#informasi-pembayaran').text(' ');
             $('#image').removeAttr('src');
             $('#imagein').removeAttr('src');
-            $('#image').attr('src', 'https://placehold.co/400x200')
-            $('#imagein').attr('src', 'https://placehold.co/400x200')
+            $('#image').attr('src', 'https://placehold.co/400x200');
+            $('#imagein').attr('src', 'https://placehold.co/400x200');
             $('#info').text('Silahkan scan tiket atau tap kartu anda');
             lpr = '';
             model = '';
