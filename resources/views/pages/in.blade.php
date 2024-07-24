@@ -12,7 +12,7 @@
 @endsection
 @push('scripts')
     <script>
-        var sec = 5 * 1000;
+        var sec = 10 * 1000;
         Pusher.logToConsole = true;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
@@ -83,12 +83,12 @@
                 setInterval(function() {
                     clear_out();
                     
-                }, 10000);
+                }, sec);
                 setInterval(function() {
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, 10000); // 10 detik
+                }, sec); // 10 detik
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
