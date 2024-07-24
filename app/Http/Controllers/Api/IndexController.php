@@ -65,12 +65,11 @@ class IndexController extends Controller
             $data->local_ip = $request->ip();
             switch ($action) {
                 case 1:
-                    if ($data->job == 'in') {
-                        $data->action = 1;
+                    $data->action = 1;
+                    if ($data->job == 'IN') {
                         $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent($data));
                     }else{
-                        $data->action = 1;
                         $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent($data));
                     }
