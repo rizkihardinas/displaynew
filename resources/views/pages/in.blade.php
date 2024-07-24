@@ -52,7 +52,6 @@
                 hasResponse = hasResponse ? !hasResponse : hasResponse;
                 if(action == 2){
                     clear();
-                    
                 }
                 clearInterval(r);
                 console.log('beres in action ' + action + ' sec : ' + sec);
@@ -102,6 +101,7 @@
                     $('#wrapper').html(html);
                     // $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
+                    console.log('clear boss');
                     clear_out();
                 }, 15000); // 30 detik
                 
