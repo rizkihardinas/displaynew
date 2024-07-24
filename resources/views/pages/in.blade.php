@@ -88,7 +88,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, sec); // 10 detik
+                }, 30000); // 30 detik
                 console.log('action 4 timer 10 detik');
             }
             if(action == 3){
@@ -97,7 +97,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, sec * 2); // 10 detik
+                }, 60000); // 1 menit
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
@@ -118,7 +118,7 @@
             if(action == 1){
                 setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
-                }, sec);
+                }, 20000);
             }
 
         });
