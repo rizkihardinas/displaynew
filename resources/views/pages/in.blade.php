@@ -13,12 +13,15 @@
 @push('scripts')
     <script>
         var sec = 10 * 1000;
+        var model;
+        var datecapture;
+        var memberstatus;
         Pusher.logToConsole = true;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
             cluster: 'mt1'
         });
-
+        
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
             hasResponse = true;
@@ -65,9 +68,11 @@
             var image = datas.image;
             var imagein = datas.imagein;
             var lpr = datas.lpr;
-            var model = datas.model;
-            var datecapture = datas.datecapture;
-            var memberstatus = datas.memberstatus;
+            if(model == ''){
+                model = datas.model;
+                datecapture = datas.datecapture;
+                memberstatus = datas.memberstatus;
+            }
             var memberperiod = datas.memberperiod;
             var nota = datas.nota;
             var plateno = datas.plateno;
@@ -84,7 +89,6 @@
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 setInterval(function() {
                     clear_out();
-                    
                 }, sec);
                 var t = setInterval(function() {
                     var html = `@include('components.in')`;
@@ -101,7 +105,6 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    console.log('beres');
                     clearInterval(time_out);
                 }, 15000); // 1 menit
                 
