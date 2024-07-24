@@ -94,7 +94,7 @@
                 var t = setInterval(function() {
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
-                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                    // $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
                 }, 30000); // 30 detik
                 
@@ -162,7 +162,7 @@
             $('#imagein').removeAttr('src');
             $('#image').attr('src', 'https://placehold.co/400x200')
             $('#imagein').attr('src', 'https://placehold.co/400x200')
-            $('#info').text(' ');
+            $('#info').text('Silahkan scan tiket atau tap kartu anda');
             lpr = '';
             model = '';
             datecapture = '';
