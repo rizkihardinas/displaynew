@@ -89,6 +89,7 @@
                 var t = setInterval(function() {
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
+                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
                 }, 30000); // 30 detik
                 
@@ -96,7 +97,7 @@
             if(action == 3){
                 var i = 0;
                 var time_out = setInterval(function() {
-                    clear_out();
+                    // clear_out();
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
