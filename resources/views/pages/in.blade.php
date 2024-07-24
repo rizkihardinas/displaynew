@@ -111,11 +111,6 @@
             // }, sec);
 
         });
-        setInterval(function() {
-            if (!hasResponse) {
-                clear();
-            }
-        }, sec);
 
         function clear() {
             $('#memberstatus').text('-');
