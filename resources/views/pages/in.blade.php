@@ -31,6 +31,7 @@
             var posname = datas.posname;
             var image = datas.image;
             var job = datas.job;
+            var action = datas.action;
             var posip = datas.posip;
             if(lpr == ''){
                 lpr = datas.lpr
@@ -53,7 +54,7 @@
                 clearInterval(r);
                 clear();
                 console.log('beres in action ' + action + ' sec : ' + sec);
-            }, sec);
+            }, 10000);
             
 
         });
