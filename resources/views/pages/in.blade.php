@@ -123,7 +123,8 @@
             $('#datecapture').text('-');
             $('#image').removeAttr('src');
             $('#image').attr('src', 'https://placehold.co/400x200')
-            $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+            // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+            $('#info').text(' ');
         }
 
         function clear_out() {
@@ -141,7 +142,8 @@
             $('#imagein').removeAttr('src');
             $('#image').attr('src', 'https://placehold.co/400x200')
             $('#imagein').attr('src', 'https://placehold.co/400x200')
-            $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+            $('#info').text(' ');
+            // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
 
         function formatRupiah(amount) {
