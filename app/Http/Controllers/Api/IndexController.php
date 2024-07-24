@@ -19,7 +19,8 @@ class IndexController extends Controller
     use CryptAES;
     function hit_display(Request $request)
     {
-        Log::info(['pertama di hit : ' => now()]);
+        $noww = now()->format('Y-m-d H:i:s.v');
+        Log::info(['pertama di hit : ' => $noww]);
         $action = $request->action;
 
         $security = Security::first();
@@ -111,7 +112,8 @@ class IndexController extends Controller
                 'action' => $request->action,
                 'data' => $data
             ];
-            Log::info(['Waktu ditampilkan : ' => now()]);
+            Log::info(['Lama Proses : ' => now()->diffInSeconds($noww)]);
+            Log::info(['Waktu ditampilkan : ' => now()->format('Y-m-d H:i:s.v')]);
             return response()->json($response);
         } catch (\Throwable $th) {
             $response = [
