@@ -163,6 +163,10 @@
             $('#image').attr('src', 'https://placehold.co/400x200')
             $('#imagein').attr('src', 'https://placehold.co/400x200')
             $('#info').text(' ');
+            lpr = '';
+            model = '';
+            datecapture = '';
+            memberstatus = '';
             // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
 
