@@ -83,7 +83,7 @@
                 setInterval(function() {
                     clear_out();
                     
-                }, sec);
+                }, 10000);
                 setInterval(function() {
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
