@@ -77,7 +77,7 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var done = false;
-            if (job == 3 || job == 4 ) {
+            if (action == 3 || action == 4 ) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 setInterval(function() {
@@ -88,7 +88,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, 3000);
+                }, 10000); // 10 detik
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
