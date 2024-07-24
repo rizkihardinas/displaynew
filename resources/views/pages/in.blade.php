@@ -43,8 +43,9 @@
             $('#info').text(pesan);
             var r = setInterval(function() {
                 hasResponse = hasResponse ? !hasResponse : hasResponse;
+                clearInterval(r);
             }, sec);
-            clearInterval(r);
+            
 
         });
 
@@ -88,19 +89,21 @@
                 var t = setInterval(function() {
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
-                    
+                    clearInterval(t);    
                 }, 30000); // 30 detik
-                clearInterval(t);
+                
             }
             if(action == 3){
+                var i = 0;
                 var time_out = setInterval(function() {
                     clear_out();
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     console.log('beres');
+                    clearInterval(time_out);
                 }, 15000); // 1 menit
-                clearInterval(time_out);
+                
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
@@ -122,8 +125,9 @@
                 var t = setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
                     action = 0;
+                    clearInterval(t);
                 }, 15000);
-                clearInterval(t);
+                
             }
 
         });
