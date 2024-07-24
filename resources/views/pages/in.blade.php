@@ -92,13 +92,12 @@
                 console.log('action 4 timer 10 detik');
             }
             if(action == 3){
-                console.log('action 3 timer 10 detik');
                 setInterval(function() {
                     clear_out();
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
-                    
-                }, 18000); // 1 menit
+                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                }, 15000); // 1 menit
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
@@ -119,7 +118,7 @@
             if(action == 1){
                 setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
-                }, 18000);
+                }, 15000);
             }
 
         });
