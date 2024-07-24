@@ -1,6 +1,6 @@
 <div class="relative h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}">
     @foreach ($datas as $item)
-        <div class="hidden duration-2000 ease-in-out" data-carousel-item="">
+        <div class="duration-2000 ease-in-out" data-carousel-item="">
             @if ($item['type'] == 'image')
                 <img class="object-fill margin-0 w-full h-full" src="data:image/png;base64,{{ $item['path'] }}" alt="...">
             @else
