@@ -24,7 +24,6 @@
         });
         
         var channel = pusher.subscribe('my-channel');
-
         channel.bind('my-event-out', function(data) {
             hasResponse = true;
 
@@ -57,18 +56,7 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var done = false;
-            if (action == 4 ) {
-                var balance = datas.balance;
-                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                var t = setInterval(function() {
-                    clear_out();
-                    var html = `@include('components.in')`;
-                    $('#wrapper').html(html);
-                    // $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(t);    
-                }, 30000); // 30 detik
-                
-            }
+            
             if(action == 3){
                 var i = 0;
                 var time_out = setInterval(function() {
@@ -104,6 +92,28 @@
                 }, 15000);
                 
             }
+            if (action == 4 ) {
+                var balance = datas.balance;
+                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                console.log('beres boss');
+                var t = setInterval(function() {
+                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+                    console.log('clear boss');
+                    $('#memberstatus').text('-');
+                    $('#lpr').text('-');
+                    $('#datecapture').text('-');
+                    $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+                    var html = `@include('components.in')`;
+                    $('#wrapper').html(html);
+                    lpr = '';
+                    model = '';
+                    datecapture = '';
+                    memberstatus = '';
+                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                    clearInterval(t);    
+                }, 15000); // 30 detik
+                
+            }
 
         });
 
@@ -134,8 +144,8 @@
             $('#informasi-pembayaran').text(' ');
             $('#image').removeAttr('src');
             $('#imagein').removeAttr('src');
-            $('#image').attr('src', 'https://placehold.co/400x200')
-            $('#imagein').attr('src', 'https://placehold.co/400x200')
+            $('#image').attr('src', 'https://placehold.co/400x200');
+            $('#imagein').attr('src', 'https://placehold.co/400x200');
             $('#info').text('Silahkan scan tiket atau tap kartu anda');
             lpr = '';
             model = '';
