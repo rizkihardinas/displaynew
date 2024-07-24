@@ -98,7 +98,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, 25000); // 1 menit
+                }, 20000); // 1 menit
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
