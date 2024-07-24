@@ -22,7 +22,7 @@ class IndexController extends Controller
         foreach ($promotions->promotions as $key => $value) {
             $upac = [];
             $ip = $this->ip_extract($value->path);
-            $filePath = str_replace('\\\\'.$ip.'\\','file:///'.$setting->path,$value->path);
+            $filePath = str_replace('\\\\'.$ip.'\\image','file:///'.$setting->path,$value->path);
             $filePath = str_replace('\\','/',$filePath);
             $upac['path'] = $this->convertToBase64($filePath);
             $upac['type'] = $value->type;

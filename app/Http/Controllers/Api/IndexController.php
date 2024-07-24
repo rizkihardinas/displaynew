@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\CryptAES;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
@@ -18,7 +19,7 @@ class IndexController extends Controller
     use CryptAES;
     function hit_display(Request $request)
     {
-
+        Log::info('pertama di hit : ',now());
         $action = $request->action;
 
         $security = Security::first();
@@ -110,7 +111,7 @@ class IndexController extends Controller
                 'action' => $request->action,
                 'data' => $data
             ];
-
+            Log::info('Waktu ditampilkan : ',now());
             return response()->json($response);
         } catch (\Throwable $th) {
             $response = [
@@ -180,7 +181,7 @@ class IndexController extends Controller
         $setting = Setting::first();
         $filePath = $request->input('i');
         $ip = $this->ip_extract($filePath);
-        $filePath = str_replace('\\\\' . $ip . '\\', 'file:///' . $setting->path, $filePath);
+        $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $filePath);
         $filePath = str_replace('\\', '/', $filePath);
         if (!file_exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
