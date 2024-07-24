@@ -94,6 +94,7 @@
             if(action == 3){
                 console.log('action 3 timer 10 detik');
                 setInterval(function() {
+                    clear_out();
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
@@ -118,7 +119,7 @@
             if(action == 1){
                 setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
-                }, 20000);
+                }, 25000);
             }
 
         });
