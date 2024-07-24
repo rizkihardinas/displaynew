@@ -102,7 +102,7 @@
                     $('#wrapper').html(html);
                     // $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
-                }, 30000); // 30 detik
+                }, 20000); // 30 detik
                 
             }
             if(action == 3){

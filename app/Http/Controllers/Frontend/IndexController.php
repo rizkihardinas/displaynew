@@ -32,11 +32,24 @@ class IndexController extends Controller
         return view('pages.in',compact('datas','ip','setting'));
     }
     function out(){
-        $setting = ModelsSetting::first();
         $json = Storage::disk('public')->get('promotion.json');
         $promotions = json_decode($json);
+
+        $setting = ModelsSetting::first();
+        $promotion_text = $setting->text_promotion;
+        $interval_standby = $setting->duration;
+        $datas = [];
+        foreach ($promotions->promotions as $key => $value) {
+            $upac = [];
+            $ip = $this->ip_extract($value->path);
+            $filePath = str_replace('\\\\'.$ip.'\\image','file:///'.$setting->path,$value->path);
+            $filePath = str_replace('\\','/',$filePath);
+            $upac['path'] = $this->convertToBase64($filePath);
+            $upac['type'] = $value->type;
+            $datas[] = $upac;
+        }
         $ip = getHostByName(getHostName());
-        return view('pages.out',compact('ip','setting'));
+        return view('pages.out',compact('ip','datas','setting'));
     }
     public function convertToBase64($filePath)
     {
