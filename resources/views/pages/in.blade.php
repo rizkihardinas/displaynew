@@ -32,10 +32,12 @@
             var image = datas.image;
             var job = datas.job;
             var posip = datas.posip;
-            var lpr = datas.lpr;
-            var model = datas.model;
-            var datecapture = datas.datecapture;
-            var memberstatus = datas.memberstatus;
+            if(lpr == ''){
+                lpr = datas.lpr
+                model = datas.model;
+                datecapture = datas.datecapture;
+                memberstatus = datas.memberstatus;
+            }
             var memberperiod = datas.memberperiod;
             var pesan = datas.pesan;
             setimage(image, 'image');
@@ -47,6 +49,7 @@
             $('#info').text(pesan);
             var r = setInterval(function() {
                 hasResponse = hasResponse ? !hasResponse : hasResponse;
+                clear();
                 clearInterval(r);
             }, sec);
             
@@ -140,9 +143,13 @@
             $('#lpr').text('-');
             $('#datecapture').text('-');
             $('#image').removeAttr('src');
+            
             $('#image').attr('src', 'https://placehold.co/400x200')
-            // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
-            $('#info').text(' ');
+            $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+            lpr = '';
+            model = '';
+            datecapture = '';
+            memberstatus = '';
         }
 
         function clear_out() {
