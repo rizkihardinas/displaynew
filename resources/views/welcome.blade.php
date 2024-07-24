@@ -13,10 +13,9 @@
     <div class="mx-auto p-4 flex flex-col h-full">
         <div class="flex justify-between bg-[#94ceff] text-white p-2">
             <div>
-                <div class="text-2xl text-black font-bold">POS : <span id="posname">PM_LOBBY</span></div>
+                <div class="text-2xl text-black font-bold">POS : <span id="posname">NAMA POS</span></div>
                 <div>
-                    <span class="text-xl text-green-500 font-bold text-black " id="posip">(ip pos masuk, ip
-                        display)</span>
+                    <span class="text-xl text-green-500 font-bold text-black " id="posip">IP</span>
                     <span class="text-xl font-bold text-black " id="posip">{{ $ip }}</span>
                 </div>
             </div>
