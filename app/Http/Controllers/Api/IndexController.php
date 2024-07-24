@@ -74,8 +74,6 @@ class IndexController extends Controller
                         $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent($data));
                     }
-                    $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
-                    event(new InEvent($data));
                     break;
                 case 2:
                     $data->action = 2;
