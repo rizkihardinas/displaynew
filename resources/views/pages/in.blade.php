@@ -97,12 +97,13 @@
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 var t = setInterval(function() {
-                    clear_out();
+                    
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     // $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
-                }, 20000); // 30 detik
+                    clear_out();
+                }, 15000); // 30 detik
                 
             }
             if(action == 3){
