@@ -50,9 +50,11 @@
             $('#info').text(pesan);
             var r = setInterval(function() {
                 hasResponse = hasResponse ? !hasResponse : hasResponse;
-                
+                if(action == 2){
+                    clear();
+                    
+                }
                 clearInterval(r);
-                clear();
                 console.log('beres in action ' + action + ' sec : ' + sec);
             }, 10000);
             
