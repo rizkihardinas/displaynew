@@ -88,7 +88,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, 20000); // 30 detik
+                }, 30000); // 30 detik
                 console.log('action 4 timer 10 detik');
             }
             if(action == 3){
@@ -97,7 +97,7 @@
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     
-                }, 30000); // 1 menit
+                }, 25000); // 1 menit
             }
             setimage(image, 'image');
             setimage(imagein, 'imagein');
