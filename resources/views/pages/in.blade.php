@@ -95,15 +95,20 @@
             if (action == 4 ) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                console.log('beres boss');
                 var t = setInterval(function() {
                     $('#image').attr('src', 'https://placehold.co/400x200');
+                    console.log('clear boss');
                     $('#memberstatus').text('-');
                     $('#lpr').text('-');
                     $('#datecapture').text('-');
                     $('#imagein').attr('src', 'https://placehold.co/400x200');
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
-                    
+                    lpr = '';
+                    model = '';
+                    datecapture = '';
+                    memberstatus = '';
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);    
                 }, 15000); // 30 detik
