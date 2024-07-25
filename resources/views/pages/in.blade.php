@@ -1,7 +1,7 @@
 @extends('welcome')
 @section('contents')
     @php
-        $landscape = true;
+        $landscape = false;
         
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 h-[735px]' : '' }}">
