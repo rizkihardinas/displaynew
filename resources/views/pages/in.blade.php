@@ -1,10 +1,14 @@
 @extends('welcome')
 @section('contents')
-    <div class="grid grid-cols-2 gap-2 flex-grow mt-2">
+    @php
+        $landscape = true;
+        
+    @endphp
+    <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 h-[735px]' : '' }}">
         <div class="flex flex-col bg-gray-300 text-white">
             @include('components.lpr')
         </div>
-        <div id="wrapper" class="h-full">
+        <div id="wrapper" class="h-[735px]">
             @include('components.in')
         </div>
 

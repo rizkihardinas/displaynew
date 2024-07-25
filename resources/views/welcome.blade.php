@@ -25,14 +25,15 @@
             </div>
         </div>
         @yield('contents')
-        <div class="flex justify-between items-center bg-[#94ceff] text-black p-2 mt-2 font-bold">
-            <div><span class="text-xl"><img src="{{ asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
-            </div>
-            <div class="text-center flex-grow">
-                <marquee class="text-4xl">{{ $setting->text_promotion }}</marquee>
-            </div>
-            <div>Logo Operator</div>
+        
+    </div>
+    <div class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[#94ceff] text-black p-2 mt-2 font-bold">
+        <div><span class="text-xl"><img src="{{ asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
         </div>
+        <div class="text-center flex-grow">
+            <marquee class="text-4xl">{{ $setting->text_promotion }}</marquee>
+        </div>
+        <div>Logo Operator</div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -93,6 +94,7 @@
                 console.error('Error loading video:', error);
             });
     }
+
 </script>
 
 </html>
