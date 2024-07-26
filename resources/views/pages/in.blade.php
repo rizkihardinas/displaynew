@@ -8,7 +8,7 @@
         <div class="flex flex-col bg-gray-300 text-white">
             @include('components.lpr')
         </div>
-        <div id="wrapper" class="{{ $landscape ? 'h-[735px]' : 'h-[900px]' }} ">
+        <div id="wrapper" class="{{ $landscape ? 'h-[735px]' : 'h-[930px]' }} ">
             @include('components.in')
         </div>
 
