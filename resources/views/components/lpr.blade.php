@@ -1,6 +1,6 @@
 <div class="p-2 flex-grow flex flex-col">
     <div class="flex-grow bg-[#04427b] flex items-center justify-center">
-        <img class="w-full h-full object-contain" alt="" id="image" src="{{ request()->is('/out') ? asset('public/out.jpg') : asset('public/in.jpg') }}">
+        <img class="w-full h-full object-contain" alt="" id="image" src="{{ request()->routeIs('out') ? asset('public/out.jpg') : asset('public/in.jpg')    }}">
     </div>
     <div class="bg-[#04427b] p-2 mt-2 text-center">
         <span class="text-6xl" id="lpr">No. PLAT LPR</span>
