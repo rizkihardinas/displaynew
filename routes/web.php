@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',[IndexController::class,'in']);
-Route::get('/out',[IndexController::class,'out']);
+Route::get('/',[IndexController::class,'in'])->name('in');
+Route::get('/out',[IndexController::class,'out'])->name('out');
 
