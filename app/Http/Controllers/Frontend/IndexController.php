@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\Setting;
 use App\Models\Security;
 use App\Models\Setting as ModelsSetting;
+use App\Models\Rate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,8 +30,11 @@ class IndexController extends Controller
             $upac['type'] = $value->type;
             $datas[] = $upac;
         }
+
+        $vehicle = isset($request->v) ? $request->v : Rate::where('is_default',1)->first()->vehicle;
+        $rate = Rate::where('vehicle',$vehicle)->first();
         $ip = getHostByName(getHostName());
-        return view('pages.in',compact('datas','ip','setting'));
+        return view('pages.in',compact('datas','ip','setting','rate'));
     }
     function out(){
         $json = Storage::disk('public')->get('promotion_out.json');
