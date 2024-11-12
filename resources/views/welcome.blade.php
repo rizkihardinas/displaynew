@@ -7,7 +7,7 @@
     <title>Display API</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    @livewireStyles
+    {{-- @livewireStyles --}}
 </head>
 
 <body class=" bg-gray-200 h-dvh">
