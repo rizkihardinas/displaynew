@@ -174,9 +174,10 @@ class IndexController extends Controller
         //     return response()->json(['error' => 'Invalid file type'], 400);
         // }
     }
-    public function convertToBase64($filePath)
+    public function convertToBase64(Request $request)
     {
         $setting = Setting::first();
+        $filePath = $request->i;
         $ip = $this->ip_extract($filePath);
         $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $filePath);
         $filePath = str_replace('\\', '/', $filePath);
