@@ -2,13 +2,13 @@
     <div class="bg-[#04427B] border-4 border-black p-2">
         <span class=" text-xl text-white text-center align-center font-bold">IN</span>
         <div class="bg-[#04427B] flex-grow text-center flex items-center justify-center">
-            <img class="w-full h-[120px] object-contain" alt="" id="image">
+            <img class="w-full h-[130px] object-contain" alt="" id="image">
         </div>
     </div>
 
 
     <div class="flex bg-[#04427B]">
-        <p class="text-white text-xl p-2 font-bold">
+        <p class="text-white text-sm p-2 font-bold">
             <span id="nota">No Nota/No Plat In</span> <br>
             <span id="vehicletype">Jenis Kendaraan</span><br>
             <span id="intime">Jam masuk/ Pos Masuk</span> <br>
