@@ -62,6 +62,8 @@ class IndexController extends Controller
             $data = $this->decrypt($request->data, $parameter);
             $data = json_decode($data);
             $data->local_ip = $request->ip();
+            $data->image = $this->convertToBase64($data->image);
+            $data->imagein = $this->convertToBase64($data->imagein);
             switch ($action) {
                 case 1:
                     $data->action = 1;
@@ -101,8 +103,7 @@ class IndexController extends Controller
                     return response()->json($response);
                     break;
             }
-            $data->image = $this->convertToBase64($data->image);
-            $data->imagein = $this->convertToBase64($data->imagein);
+            
             $response = [
                 'userID' => $request->userID,
                 'locationID' => $request->locationID,
