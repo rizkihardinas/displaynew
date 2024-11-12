@@ -188,8 +188,8 @@ class IndexController extends Controller
 
         $videoData = file_get_contents($filePath);
         $base64 = base64_encode($videoData);
-
-        return response()->json(['base64' => $base64]);
+        
+        return $base64;
     }
     function ip_extract($uncPath)
     {
