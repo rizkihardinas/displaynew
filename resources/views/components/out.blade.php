@@ -1,9 +1,8 @@
 <div class="flex flex-col">
     <div class="bg-[#04427B] border-4 border-black p-2">
-        <span class=" text-2xl text-white text-center align-center font-bold">IN</span>
-        <div class="bg-[#04427B] flex-grow text-center p-2 flex items-center justify-center">
-
-            <img class="w-full h-[250px] object-contain" alt="" id="image">
+        <span class=" text-xl text-white text-center align-center font-bold">IN</span>
+        <div class="bg-[#04427B] flex-grow text-center flex items-center justify-center">
+            <img class="w-full h-[230px] object-contain" alt="" id="image">
         </div>
     </div>
 
