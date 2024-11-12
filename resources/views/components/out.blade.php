@@ -9,19 +9,19 @@
 
 
     <div class="flex bg-[#04427B]">
-        <p class="text-white text-2xl p-2 font-bold">
+        <p class="text-white text-xl p-2 font-bold">
             <span id="nota">No Nota/No Plat In</span> <br>
             <span id="vehicletype">Jenis Kendaraan</span><br>
             <span id="intime">Jam masuk/ Pos Masuk</span> <br>
             <span id="outtime">Jam keluar/ Pos Keluar</span> <br>
         </p>
     </div>
-    <div class="bg-[#f1ff00] p-4 font-bold  text-2xl">
+    <div class="bg-[#f1ff00] p-4 font-bold  text-xl">
         <div class="flex justify-between">
-            Lama Parkir : <span id="duration" class="text-4xl">0 Jam 0 Menit</span>
+            Lama Parkir : <span id="duration" class="text-2xl">0 Jam 0 Menit</span>
         </div>
         <div class="flex justify-between">
-            Total : <span class="text-6xl" id="total">0</span>
+            Total : <span class="text-4xl" id="total">0</span>
         </div>
         <div class="" id="informasi-pembayaran">
             [Informasi Pembayaran]
