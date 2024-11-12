@@ -42,7 +42,7 @@
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-@livewireScripts
+{{-- @livewireScripts --}}
 @stack('scripts')
 <script>
     $(document).on('click', 'body', function() {
