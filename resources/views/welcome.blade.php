@@ -90,6 +90,7 @@
             })
             .then(function(response) {
                 const base64 = response.data.base64;
+                console.log(base64);
                 $('#'+attr).attr('src','data:image/png;base64,' + base64);
             })
             .catch(function(error) {

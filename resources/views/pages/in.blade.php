@@ -135,8 +135,8 @@
             $('#intime').text('Tanggal Masuk : ' + intime);
             $('#outtime').text('Tanggal Keluar : ' + outtime);
             $('#duration').text(duration);
-            $('#image').attr('src', imagein);
-            $('#imagein').attr('src', image);
+            // $('#image').attr('src', imagein);
+            // $('#imagein').attr('src', image);
             $('#video').addClass('hidden');
             $('#imagein').removeClass('hidden');
             $('#labelin').removeClass('hidden');

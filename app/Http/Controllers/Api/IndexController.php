@@ -62,8 +62,6 @@ class IndexController extends Controller
             $data = $this->decrypt($request->data, $parameter);
             $data = json_decode($data);
             $data->local_ip = $request->ip();
-            $data->image = $this->convertToBase64($data->image);
-            $data->imagein = $this->convertToBase64($data->imagein);
             switch ($action) {
                 case 1:
                     $data->action = 1;
@@ -103,7 +101,6 @@ class IndexController extends Controller
                     return response()->json($response);
                     break;
             }
-            
             $response = [
                 'userID' => $request->userID,
                 'locationID' => $request->locationID,
@@ -189,8 +186,8 @@ class IndexController extends Controller
 
         $videoData = file_get_contents($filePath);
         $base64 = base64_encode($videoData);
-        
-        return $base64;
+
+        return response()->json(['base64' => $base64]);
     }
     function ip_extract($uncPath)
     {
