@@ -172,8 +172,14 @@ trait Setting
 		$array['data'][] = $json;
 		$senddata = $array;
 		$setup = $this->_getSetup();
+		$sendjson = json_encode($senddata);
+		$sendRequest = [];
+		$sendRequest['locationID'] = $setup->Kode_Lokasi;
+		$sendRequest['encode'] = 1;
+		$sendRequest['timestamp'] = \Carbon\Carbon::now()->format('Y/m/d H:i:s');
+		$sendRequest['senddata'] = $this->encrypt($sendjson, $parameter);
 		DB::table('t_logweb_t')->insert([
-			'logdata' => json_encode($senddata),
+			'logdata' => json_encode($sendRequest),
 			'barcode' => null,
 			'logfrom' => 'InternalDashboardDataMaster' . $title,
 			'no_nota' => '',
@@ -185,12 +191,6 @@ trait Setting
 			'pos_id' => 0,
 			'petugas_id' => 0
 		]);
-		$sendjson = json_encode($senddata);
-		$sendRequest = [];
-		$sendRequest['locationID'] = $setup->Kode_Lokasi;
-		$sendRequest['encode'] = 1;
-		$sendRequest['timestamp'] = \Carbon\Carbon::now()->format('Y/m/d H:i:s');
-		$sendRequest['senddata'] = $this->encrypt($sendjson, $parameter);
 		return ['data' => $sendRequest];
 	}
 	function sendRequestMaster(Request $request, $urlforward, $req, $title, $id = null)

@@ -1,14 +1,14 @@
 @extends('welcome')
 @section('contents')
     @php
-        $landscape = false;
-        
+        $landscape = true;
+
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 h-[735px]' : '' }}">
         <div class="flex flex-col bg-gray-300 text-white">
             @include('components.lpr')
         </div>
-        <div id="wrapper" class="{{ $landscape ? 'h-[735px]' : 'h-[930px]' }} ">
+        <div id="wrapper" class="{{ $landscape ? 'h-[590px]' : 'h-[930px]' }} ">
             @include('components.in')
         </div>
 
@@ -26,7 +26,7 @@
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
             cluster: 'mt1'
         });
-        
+
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
             hasResponse = true;
@@ -37,12 +37,22 @@
             var job = datas.job;
             var action = datas.action;
             var posip = datas.posip;
-            if(lpr == ''){
+            if (lpr == '') {
                 lpr = datas.lpr
                 model = datas.model;
                 datecapture = datas.datecapture;
                 memberstatus = datas.memberstatus;
             }
+            var html = `@include('components.rate')`;
+            $('#wrapper').html(html);
+
+            var time_out = setInterval(function() {
+                // clear_out();
+                var html = `@include('components.in')`;
+                $('#wrapper').html(html);
+                $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                clearInterval(time_out);
+            }, 15000); // 1 menit
             var memberperiod = datas.memberperiod;
             var pesan = datas.pesan;
             setimage(image, 'image');
@@ -54,13 +64,13 @@
             $('#info').text(pesan);
             var r = setInterval(function() {
                 hasResponse = hasResponse ? !hasResponse : hasResponse;
-                if(action == 2){
+                if (action == 2) {
                     clear();
                 }
                 clearInterval(r);
                 console.log('beres in action ' + action + ' sec : ' + sec);
             }, 10000);
-            
+
 
         });
 
@@ -79,7 +89,7 @@
             var posip = datas.posip;
             var image = datas.image;
             var imagein = datas.imagein;
-            if(lpr == ''){
+            if (lpr == '') {
                 lpr = datas.lpr
                 model = datas.model;
                 datecapture = datas.datecapture;
@@ -96,25 +106,28 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var done = false;
-            
-            if(action == 3){
+            console.log(plateno);
+            if (action == 3) {
                 var i = 0;
                 var time_out = setInterval(function() {
                     // clear_out();
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
+                    $('#video').removeClass('hidden');
+                    $('#labelin').addClass('hidden');
+                    $('#imagein').addClass('hidden');
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(time_out);
                 }, 15000); // 1 menit
-                
+
             }
-            setimage(image, 'image');
-            setimage(imagein, 'imagein');
+            setimage(imagein, 'image');
+            setimage(image, 'imagein');
             $('#info').text(pesan);
             $('#posname').text(posname);
             $('#posip').text(posip);
             $('#memberstatus').text(memberstatus);
-            $('#lpr').text(lpr);
+            $('#plate').text(plateno);
             $('#datecapture').text(datecapture);
             $('#nota').text('Nota : ' + nota);
             $('#total').text(formatRupiah(total));
@@ -122,17 +135,20 @@
             $('#intime').text('Tanggal Masuk : ' + intime);
             $('#outtime').text('Tanggal Keluar : ' + outtime);
             $('#duration').text(duration);
-            $('#image').attr('src', image);
-            $('#imagein').attr('src', imagein);
-            if(action == 1){
+            $('#image').attr('src', imagein);
+            $('#imagein').attr('src', image);
+            $('#video').addClass('hidden');
+            $('#imagein').removeClass('hidden');
+            $('#labelin').removeClass('hidden');
+            if (action == 1) {
                 var t = setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
                     action = 0;
                     clearInterval(t);
                 }, 15000);
-                
+
             }
-            if (action == 4 ) {
+            if (action == 4) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 console.log('beres boss');
@@ -150,9 +166,11 @@
                     datecapture = '';
                     memberstatus = '';
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(t);    
+                    clearInterval(t);
+                    $('#video').removeClass('hidden');
+                    $('#imagein').addClass('hidden');
                 }, 15000); // 30 detik
-                
+
             }
 
         });
@@ -162,7 +180,7 @@
             $('#lpr').text('-');
             $('#datecapture').text('-');
             $('#image').removeAttr('src');
-            
+
             $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
             lpr = '';

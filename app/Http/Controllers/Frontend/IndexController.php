@@ -30,7 +30,6 @@ class IndexController extends Controller
             $upac['type'] = $value->type;
             $datas[] = $upac;
         }
-
         $vehicle = isset($request->v) ? $request->v : Rate::where('is_default',1)->first()->vehicle;
         $rate = Rate::where('vehicle',$vehicle)->first();
         $ip = getHostByName(getHostName());

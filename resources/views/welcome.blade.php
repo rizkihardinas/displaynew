@@ -7,6 +7,7 @@
     <title>Display API</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    @livewireStyles
 </head>
 
 <body class=" bg-gray-200 h-dvh">
@@ -31,7 +32,7 @@
         <div><span class="text-xl"><img src="{{ asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
         </div>
         <div class="text-center flex-grow">
-            <marquee class="text-4xl">{{ $setting->text_promotion }}</marquee>
+            <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
         </div>
         <div>Logo Operator</div>
     </div>
@@ -41,6 +42,7 @@
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+@livewireScripts
 @stack('scripts')
 <script>
     $(document).on('click', 'body', function() {

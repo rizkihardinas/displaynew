@@ -31,7 +31,6 @@ class IndexController extends Controller
         $kode_lokasi =  $security->location;
         $isOk = true;
         $message = '';
-        
         if(is_null($request->password) || $request->password == ''){
             $isOk = false;
             $message = 'Password kosong';
@@ -66,7 +65,7 @@ class IndexController extends Controller
             switch ($action) {
                 case 1:
                     $data->action = 1;
-                    if ($data->job == 'IN') {
+                    if ($data->job == 'in') {
                         $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent($data));
                     }else{
