@@ -17,7 +17,7 @@
                 <div class="text-2xl text-black font-bold">POS : <span id="posname">NAMA POS</span></div>
                 <div>
                     <span class="text-xl text-green-500 font-bold text-black " id="posip">IP</span>
-                    <span class="text-xl font-bold text-black " id="posip">{{ $ip }}</span>
+                    <span class="text-xl font-bold text-black " id="posip">{{ config('app.ip_server') }}</span>
                 </div>
             </div>
             <div class="text-right text-xl font-bold text-black">
