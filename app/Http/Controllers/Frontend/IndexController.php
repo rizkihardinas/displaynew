@@ -39,7 +39,7 @@ class IndexController extends Controller
     function out(){
         $json = Storage::disk('public')->get('promotion_out.json');
         $promotions = json_decode($json);
-
+        Log::info("Promotions :" . $promotions);
         $setting = ModelsSetting::first();
         $promotion_text = $setting->text_promotion;
         $interval_standby = $setting->duration;
