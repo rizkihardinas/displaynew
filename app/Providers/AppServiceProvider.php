@@ -30,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         Config::set('ffmpeg.port', $setting->ffmpeg_port);
         Config::set('ffmpeg.username', $setting->ffmpeg_username);
         Config::set('ffmpeg.password', $setting->ffmpeg_password);
+        Config::set('app.ip_server', $setting->ip);
     }
 }
