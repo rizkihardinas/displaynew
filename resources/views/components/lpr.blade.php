@@ -27,7 +27,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         var video = document.getElementById('video');
-        var videoSrc = "{{ asset('stream/stream.m3u8') }}";
+        var videoSrc = "{{ asset('public/stream/stream.m3u8') }}";
 
         if (Hls.isSupported()) {
             var hls = new Hls();
