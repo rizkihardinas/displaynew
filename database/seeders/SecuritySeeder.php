@@ -18,7 +18,7 @@ class SecuritySeeder extends Seeder
             'username' => 'userBDI',
             'password' => 'userBDIpass',
             'key' => 'PARTNERKEY',
-            'location' => 3107
+            'location' => 2115
         ]);
     }
 }

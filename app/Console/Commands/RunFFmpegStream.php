@@ -38,7 +38,6 @@ class RunFFmpegStream extends Command
             // 
             $command = 'cd '.base_path().' && ffmpeg -v info -rtsp_transport tcp -i rtsp://'.config('ffmpeg.username').':'.config('ffmpeg.password').'@'.config('ffmpeg.host').':'.config('ffmpeg.port').'/0 -c:v copy -c:a copy -threads 10  -maxrate 400k -bufsize 1835k -pix_fmt yuv420p -flags -global_header -hls_time 2  -hls_list_size 2 -tune zerolatency -g 15  -start_number 1  -fflags +genpts -probesize 32 -flags low_delay -s 320x180 -b:v 240k -preset ultrafast -hls_flags delete_segments -an -r 15 public/stream/stream.m3u8';
             // $process->mustRun();
-            Log::info($command);
             shell_exec($command . ' 2>&1');
             // $this->info($command);
         } catch (ProcessFailedException $exception) {
