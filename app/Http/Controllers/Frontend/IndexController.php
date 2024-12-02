@@ -8,6 +8,7 @@ use App\Models\Security;
 use App\Models\Setting as ModelsSetting;
 use App\Models\Rate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
@@ -48,6 +49,7 @@ class IndexController extends Controller
             $ip = $this->ip_extract($value->path);
             $filePath = str_replace('\\\\'.$ip.'\\image','file:///'.$setting->path,$value->path);
             $filePath = str_replace('\\','/',$filePath);
+            Log::info($filePath);
             $upac['path'] = $this->convertToBase64($filePath);
             $upac['type'] = $value->type;
             $datas[] = $upac;
