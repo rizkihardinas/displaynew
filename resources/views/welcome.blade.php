@@ -34,7 +34,7 @@
         <div class="text-center flex-grow">
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
         </div>
-        <div>Logo Operator</div>
+        <div><span class="text-xl"><img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-24" alt=""></span>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
