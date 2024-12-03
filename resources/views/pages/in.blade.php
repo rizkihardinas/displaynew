@@ -21,7 +21,7 @@
         var lpr = '';
         var datecapture = '';
         var memberstatus = '';
-        Pusher.logToConsole = true;
+        Pusher.logToConsole = false;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
             cluster: 'mt1'
@@ -33,6 +33,7 @@
             var datas = data.data;
             var local_ip = datas.local_ip;
             var posname = datas.posname;
+
             var image = datas.image;
             var job = datas.job;
             var action = datas.action;
@@ -41,10 +42,9 @@
                 lpr = datas.lpr
                 model = datas.model;
                 datecapture = datas.datecapture;
-                memberstatus = datas.memberstatus;
+                memberstatus = datas.memberstatus + ' - ' + datas.memberperiod;
             }
-            var html = `@include('components.rate')`;
-            $('#wrapper').html(html);
+
 
             var time_out = setInterval(function() {
                 // clear_out();
@@ -55,10 +55,15 @@
             }, 15000); // 1 menit
             var memberperiod = datas.memberperiod;
             var pesan = datas.pesan;
-            setimage(image, 'image');
+            setimage(image, 'imagein');
             $('#posname').text(posname);
             $('#posip').text(posip);
-            $('#memberstatus').text(memberstatus);
+            if (typeof datas.memberstatus  !== "undefined") {
+                $('#memberstatus').text(memberstatus);
+            }else{
+                $('#memberstatus').text('-');
+            }
+            
             $('#lpr').text(lpr);
             $('#datecapture').text(datecapture);
             $('#info').text(pesan);
@@ -115,7 +120,7 @@
                     $('#wrapper').html(html);
                     $('#video').removeClass('hidden');
                     $('#labelin').addClass('hidden');
-                    $('#imagein').addClass('hidden');
+                    // $('#imagein').addClass('hidden');
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(time_out);
                 }, 15000); // 1 menit
@@ -153,12 +158,12 @@
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 console.log('beres boss');
                 var t = setInterval(function() {
-                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+                    $('#image').attr('src', `{{ asset('out.jpg') }}`);
                     console.log('clear boss');
                     $('#memberstatus').text('-');
                     $('#lpr').text('-');
                     $('#datecapture').text('-');
-                    $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+                    $('#imagein').attr('src', `{{ asset('in.jpg') }}`);
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     lpr = '';
@@ -179,7 +184,8 @@
             $('#memberstatus').text('-');
             $('#lpr').text('-');
             $('#datecapture').text('-');
-            $('#image').removeAttr('src');
+            $('#imagein').removeAttr('src');
+            $('#imagein').attr('src', 'https://placehold.co/600x300');
 
             $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');

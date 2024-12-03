@@ -31,20 +31,20 @@ class IndexController extends Controller
         $kode_lokasi =  $security->location;
         $isOk = true;
         $message = '';
-        if(is_null($request->password) || $request->password == ''){
+        if (is_null($request->password) || $request->password == '') {
             $isOk = false;
             $message = 'Password kosong';
         }
         $password_req = $this->decrypt($request->password, $parameter);
-        if($password_req == false){
+        if ($password_req == false) {
             $isOk = false;
             $message = 'Decrypting password gagal';
         }
-        if(($username != $request->userId || $password != str_replace('"', '', $password_req)) == false){
+        if (($username != $request->userId || $password != str_replace('"', '', $password_req)) == false) {
             $isOk = false;
             $message = 'username atau password tidak sama';
         }
-        if(($request->locationID != $kode_lokasi)){
+        if (($request->locationID != $kode_lokasi)) {
             $isOk = false;
             $message = 'Kode lokasi berbeda';
         }
@@ -62,45 +62,47 @@ class IndexController extends Controller
             $data = $this->decrypt($request->data, $parameter);
             $data = json_decode($data);
             $data->local_ip = $request->ip();
-            switch ($action) {
-                case 1:
-                    $data->action = 1;
-                    if ($data->job == 'in') {
-                        $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
+
+                switch ($action) {
+                    case 1:
+                        $data->action = 1;
+                        if ($data->job == 'in') {
+                            $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
+                            event(new InEvent($data));
+                        } else {
+                            $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
+                            event(new OutEvent($data));
+                        }
+                        break;
+                    case 2:
+                        $data->action = 2;
+                        $data->pesan = 'Terima kasih, silahkan masuk.';
                         event(new InEvent($data));
-                    }else{
-                        $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
+                        break;
+                    case 3:
+                        $data->action = 3;
+                        $data->pesan = 'Silahkan melakukan pembayaran dengan E-Payment Card';
                         event(new OutEvent($data));
-                    }
-                    break;
-                case 2:
-                    $data->action = 2;
-                    $data->pesan = 'Terima kasih, silahkan masuk.';
-                    event(new InEvent($data));
-                    break;
-                case 3:
-                    $data->action = 3;
-                    $data->pesan = 'Silahkan melakukan pembayaran dengan E-Payment Card';
-                    event(new OutEvent($data));
-                    break;
-                case 4:
-                    $data->action = 4;
-                    $data->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
-                    event(new OutEvent($data));
-                    break;
+                        break;
+                    case 4:
+                        $data->action = 4;
+                        $data->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
+                        event(new OutEvent($data));
+                        break;
 
-                default:
-                    $response = [
-                        'userID' => $request->userID,
-                        'locationID' => $request->locationID,
-                        'daterequest' => $request->daterequest,
-                        'action' => $request->action,
-                        'data' => ['message' => 'Invalid action']
-                    ];
+                    default:
+                        $response = [
+                            'userID' => $request->userID,
+                            'locationID' => $request->locationID,
+                            'daterequest' => $request->daterequest,
+                            'action' => $request->action,
+                            'data' => ['message' => 'Invalid action']
+                        ];
 
-                    return response()->json($response);
-                    break;
-            }
+                        return response()->json($response);
+                        break;
+                }
+
             $response = [
                 'userID' => $request->userID,
                 'locationID' => $request->locationID,
@@ -108,8 +110,8 @@ class IndexController extends Controller
                 'action' => $request->action,
                 'data' => $data
             ];
-            Log::info(['Lama Proses : ' => now()->diffInSeconds($noww)]);
-            Log::info(['Waktu ditampilkan : ' => now()->format('Y-m-d H:i:s.v')]);
+            // Log::info(['Lama Proses : ' => now()->diffInSeconds($noww)]);
+            // Log::info(['Waktu ditampilkan : ' => now()->format('Y-m-d H:i:s.v')]);
             return response()->json($response);
         } catch (\Throwable $th) {
             $response = [
@@ -176,16 +178,20 @@ class IndexController extends Controller
     }
     public function convertToBase64(Request $request)
     {
-        $setting = Setting::first();
         $filePath = $request->i;
-        $ip = $this->ip_extract($filePath);
-        $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $filePath);
-        $filePath = str_replace('\\', '/', $filePath);
-        Log::info("File Path : " . $filePath);
-        if (!file_exists($filePath)) {
-            return response()->json(['error' => 'File not found'], 404);
-        }
+        if (env('IS_WINDOWS')) {
+            $filePath = $filePath;
+        } else {
+            $setting = Setting::first();
 
+            $ip = $this->ip_extract($filePath);
+            $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $filePath);
+            $filePath = str_replace('\\', '/', $filePath);
+            Log::info("File Path : " . $filePath);
+            if (!file_exists($filePath)) {
+                return response()->json(['error' => 'File not found'], 404);
+            }
+        }
         $videoData = file_get_contents($filePath);
         $base64 = base64_encode($videoData);
 
@@ -201,7 +207,8 @@ class IndexController extends Controller
             return false;
         }
     }
-    function setupSetting(Request $request){
+    function setupSetting(Request $request)
+    {
         DB::beginTransaction();
         try {
             $setting = Setting::first()->update($request->all());
@@ -209,11 +216,12 @@ class IndexController extends Controller
             return response()->json($setting);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json($th->getMessage(),200);
+            return response()->json($th->getMessage(), 200);
             //throw $th;
         }
     }
-    function setupSecurity(Request $request){
+    function setupSecurity(Request $request)
+    {
         DB::beginTransaction();
         try {
             $security = Security::first()->update($request->all());
@@ -221,7 +229,7 @@ class IndexController extends Controller
             return response()->json($security);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json($th->getMessage(),200);
+            return response()->json($th->getMessage(), 200);
             //throw $th;
         }
     }
