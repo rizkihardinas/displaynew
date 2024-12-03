@@ -155,15 +155,16 @@
             }
             if (action == 4) {
                 var balance = datas.balance;
-                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                console.log('beres boss');
+
+            $('#text-informasi-pembayaran').text('Saldo');
+                $('#informasi-pembayaran').text(formatRupiah(balance));
                 var t = setInterval(function() {
                     $('#image').attr('src', `{{ asset('out.jpg') }}`);
                     console.log('clear boss');
                     $('#memberstatus').text('-');
                     $('#lpr').text('-');
                     $('#datecapture').text('-');
-                    $('#imagein').attr('src', `{{ asset('in.jpg') }}`);
+                    $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
                     var html = `@include('components.in')`;
                     $('#wrapper').html(html);
                     lpr = '';
@@ -173,7 +174,7 @@
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(t);
                     $('#video').removeClass('hidden');
-                    $('#imagein').addClass('hidden');
+                    $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
                 }, 15000); // 30 detik
 
             }
@@ -185,7 +186,7 @@
             $('#lpr').text('-');
             $('#datecapture').text('-');
             $('#imagein').removeAttr('src');
-            $('#imagein').attr('src', 'https://placehold.co/600x300');
+            $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
 
             $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');

@@ -7,7 +7,7 @@
             Your browser does not support the video tag. --}}
             </video>
         @else
-            <img class=" w-full h-96 object-contain" alt="" id="imagein" src="{{ asset('in.jpg') }}">
+            <img class=" w-full h-96 object-contain" alt="" id="imagein" src="{{ asset('public/Logo_Operator.jpg') }}">
         @endif
 
 
