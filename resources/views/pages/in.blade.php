@@ -24,7 +24,7 @@
         Pusher.logToConsole = false;
         var hasResponse = false;
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
-            cluster: 'mt1'
+            cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}'
         });
 
         var channel = pusher.subscribe('my-channel');
