@@ -31,8 +31,8 @@
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
         </div>
         <div>
-            <div class="text-2xl text-black font-bold"><span id="posname">NAMA POS</span></div>
-            <span class="text-xl text-green-500 font-bold text-black " id="posip">IP</span>
+            <div class="text-2xl text-black font-bold"><span id="posname">&nbsp;</span></div>
+            <span class="text-xl text-green-500 font-bold text-black " id="posip">&nbsp;</span>
             <span class="text-xl font-bold text-black " id="posip">{{ config('app.ip_server') }}</span></span>
         </div>
 </body>
