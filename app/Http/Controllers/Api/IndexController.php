@@ -12,6 +12,7 @@ use App\Http\Traits\CryptAES;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class IndexController extends Controller
 {
@@ -59,7 +60,8 @@ class IndexController extends Controller
             $data = $this->decrypt($request->data, $parameter);
             $data = json_decode($data);
             $data->local_ip = $request->ip();
-
+            $data->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $data->datecapture)->format('d/m/Y H:i:s');
+            $data->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $data->memberperiod)->format('d/m/Y H:i:s');
             switch ($action) {
                 case 1:
                     $data->action = 1;
@@ -70,6 +72,7 @@ class IndexController extends Controller
                         $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($data)));
                     }
+                    
                     break;
                 case 2:
                     $data->action = 2;
@@ -95,7 +98,7 @@ class IndexController extends Controller
                         'action' => $request->action,
                         'data' => ['message' => 'Invalid action']
                     ];
-                    
+
                     return response()->json($response);
                     break;
             }

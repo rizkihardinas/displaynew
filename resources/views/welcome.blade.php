@@ -18,7 +18,6 @@
             </div>
             <div class="text-right text-xl font-bold text-black">
                 <div id="time">-</div>
-                <div>Available parking</div>
             </div>
         </div>
         @yield('contents')
