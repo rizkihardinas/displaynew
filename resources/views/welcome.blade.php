@@ -14,7 +14,7 @@
     <div class="mx-auto p-4 flex flex-col h-full">
         <div class="flex justify-between bg-[#94ceff] text-white p-2">
             <div>
-                <img src="{{ asset('Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
+                <img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
             </div>
             <div class="text-right text-xl font-bold text-black">
                 <div id="time">-</div>
