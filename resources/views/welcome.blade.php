@@ -90,12 +90,11 @@
             })
             .then(function(response) {
                 const base64 = response.data.base64;
-                console.log(base64);
                 $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
             })
             .catch(function(error) {
                 $('#' + attr).attr('src', '{{ asset('public/not-found.jpg') }}');
-                console.error('Error loading video:', error);
+                console.error('Error memuat video / image:', error);
             });
     }
 </script>
