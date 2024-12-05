@@ -14,16 +14,16 @@
         {{-- <img class="w-full h-full object-contain" alt="" id="image" src="{{ request()->routeIs('out') ? asset('public/out.jpg') : asset('public/in.jpg') }}"> --}}
     </div>
     <div class="bg-[#04427b] py-1 mt-1 text-center">
-        <span class="text-3xl" id="plate">No. PLAT LPR</span>
+        <span class="text-3xl" id="plate">&nbsp;</span>
     </div>
     <div class="bg-[#04427b] py-1 mt-1 text-center">
-        <span class="text-xl" id="datecapture">Hari, Tgl dan jam capture</span>
+        <span class="text-xl" id="datecapture">&nbsp;</span>
     </div>
     <div class="bg-[#04427b] py-1 mt-1 text-center">
-        <span class="text-xl" id="memberstatus">Member Info</span>
+        <span class="text-xl" id="memberstatus">&nbsp;</span>
     </div>
     <div class="bg-[#f1ff00] py-1 mt-1 text-center text-black">
-        <span class="text-xl font-bold" id="info">Informasi bantuan, sesuai pesan UC</span>
+        <span class="text-xl font-bold" id="info">&nbsp;</span>
     </div>
 </div>
 
