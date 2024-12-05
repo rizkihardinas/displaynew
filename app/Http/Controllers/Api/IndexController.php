@@ -10,17 +10,14 @@ use App\Models\Security;
 use Illuminate\Http\Request;
 use App\Http\Traits\CryptAES;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {
     use CryptAES;
     function hit_display(Request $request)
     {
-        $noww = now()->format('Y-m-d H:i:s.v');
-        Log::info(['pertama di hit : ' => $noww]);
         $action = $request->action;
 
         $security = Security::first();
@@ -63,46 +60,45 @@ class IndexController extends Controller
             $data = json_decode($data);
             $data->local_ip = $request->ip();
 
-                switch ($action) {
-                    case 1:
-                        $data->action = 1;
-                        if ($data->job == 'in') {
-                            $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
-                            event(new InEvent($data));
-                        } else {
-                            $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
-                            event(new OutEvent($data));
-                        }
-                        break;
-                    case 2:
-                        $data->action = 2;
-                        $data->pesan = 'Terima kasih, silahkan masuk.';
-                        event(new InEvent($data));
-                        break;
-                    case 3:
-                        $data->action = 3;
-                        $data->pesan = 'Silahkan melakukan pembayaran dengan E-Payment Card';
-                        event(new OutEvent($data));
-                        break;
-                    case 4:
-                        $data->action = 4;
-                        $data->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
-                        event(new OutEvent($data));
-                        break;
+            switch ($action) {
+                case 1:
+                    $data->action = 1;
+                    if ($data->job == 'in') {
+                        $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
+                        event(new InEvent(json_encode($data)));
+                    } else {
+                        $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
+                        event(new OutEvent(json_encode($data)));
+                    }
+                    break;
+                case 2:
+                    $data->action = 2;
+                    $data->pesan = 'Terima kasih, silahkan masuk.';
+                    event(new InEvent(json_encode($data)));
+                    break;
+                case 3:
+                    $data->action = 3;
+                    $data->pesan = 'Silahkan melakukan pembayaran dengan E-Payment Card';
+                    event(new OutEvent(json_encode($data)));
+                    break;
+                case 4:
+                    $data->action = 4;
+                    $data->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
+                    event(new OutEvent(json_encode($data)));
+                    break;
 
-                    default:
-                        $response = [
-                            'userID' => $request->userID,
-                            'locationID' => $request->locationID,
-                            'daterequest' => $request->daterequest,
-                            'action' => $request->action,
-                            'data' => ['message' => 'Invalid action']
-                        ];
-
-                        return response()->json($response);
-                        break;
-                }
-
+                default:
+                    $response = [
+                        'userID' => $request->userID,
+                        'locationID' => $request->locationID,
+                        'daterequest' => $request->daterequest,
+                        'action' => $request->action,
+                        'data' => ['message' => 'Invalid action']
+                    ];
+                    
+                    return response()->json($response);
+                    break;
+            }
             $response = [
                 'userID' => $request->userID,
                 'locationID' => $request->locationID,
@@ -110,8 +106,6 @@ class IndexController extends Controller
                 'action' => $request->action,
                 'data' => $data
             ];
-            // Log::info(['Lama Proses : ' => now()->diffInSeconds($noww)]);
-            // Log::info(['Waktu ditampilkan : ' => now()->format('Y-m-d H:i:s.v')]);
             return response()->json($response);
         } catch (\Throwable $th) {
             $response = [
@@ -163,18 +157,6 @@ class IndexController extends Controller
                 exit;
             }
         }
-        // if ($mime) {
-        //     if (file_exists($img)) {
-        //         return response()->file($img, [
-        //             'Content-Type' => $mime,
-        //             'Content-Length' => filesize($img)
-        //         ]);
-        //     } else {
-        //         return response()->json(['error' => 'File not found'], 404);
-        //     }
-        // } else {
-        //     return response()->json(['error' => 'Invalid file type'], 400);
-        // }
     }
     public function convertToBase64(Request $request)
     {

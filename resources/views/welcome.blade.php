@@ -26,24 +26,26 @@
             </div>
         </div>
         @yield('contents')
-        
+
     </div>
-    <div class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[#94ceff] text-black p-2 mt-2 font-bold">
+    <div
+        class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[#94ceff] text-black p-2 mt-2 font-bold">
         <div><span class="text-xl"><img src="{{ asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
         </div>
         <div class="text-center flex-grow">
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
         </div>
-        <div><span class="text-xl"><img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-24" alt=""></span>
-    </div>
+        <div><span class="text-xl"><img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-24"
+                    alt=""></span>
+        </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src=" {{ asset('js/app.js') }}"></script>
 {{-- @livewireScripts --}}
-@stack('scripts')
+
 <script>
     $(document).on('click', 'body', function() {
         if (document.documentElement.requestFullscreen) {
@@ -91,13 +93,14 @@
             .then(function(response) {
                 const base64 = response.data.base64;
                 console.log(base64);
-                $('#'+attr).attr('src','data:image/png;base64,' + base64);
+                $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
             })
             .catch(function(error) {
+                $('#' + attr).attr('src', '{{ asset("public/not-found.jpg") }}');
                 console.error('Error loading video:', error);
             });
     }
-
 </script>
+@stack('scripts')
 
 </html>

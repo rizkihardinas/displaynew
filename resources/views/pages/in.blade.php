@@ -21,165 +21,171 @@
         var lpr = '';
         var datecapture = '';
         var memberstatus = '';
-        Pusher.logToConsole = false;
         var hasResponse = false;
-        var pusher = new Pusher('{{ $setting->pusher_key }}', {
-            cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}'
-        });
+        window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
+            .listen('.my-event', (e) => {
+                var jsonString = e.message;
+                var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
+                try {
+                    var jsonObject = JSON.parse(escapedJsonString);
+                    hasResponse = true;
+                    var datas = jsonObject;
+                    var local_ip = datas.local_ip;
+                    var posname = datas.posname;
 
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function(data) {
-            hasResponse = true;
-            var datas = data.data;
-            var local_ip = datas.local_ip;
-            var posname = datas.posname;
-
-            var image = datas.image;
-            var job = datas.job;
-            var action = datas.action;
-            var posip = datas.posip;
-            if (lpr == '') {
-                lpr = datas.lpr
-                model = datas.model;
-                datecapture = datas.datecapture;
-                memberstatus = datas.memberstatus + ' - ' + datas.memberperiod;
-            }
+                    var image = datas.image.replace(/\\\\/g, '\\');
+                    var job = datas.job;
+                    var action = datas.action;
+                    var posip = datas.posip;
+                    if (lpr == '') {
+                        lpr = datas.lpr
+                        model = datas.model;
+                        datecapture = datas.datecapture;
+                        memberstatus = datas.memberstatus + ' - ' + datas.memberperiod;
+                    }
 
 
-            var time_out = setInterval(function() {
-                // clear_out();
-                var html = `@include('components.in')`;
-                $('#wrapper').html(html);
-                $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                clearInterval(time_out);
-            }, 15000); // 1 menit
-            var memberperiod = datas.memberperiod;
-            var pesan = datas.pesan;
-            setimage(image, 'imagein');
-            $('#posname').text(posname);
-            $('#posip').text(posip);
-            if (typeof datas.memberstatus  !== "undefined") {
-                $('#memberstatus').text(memberstatus);
-            }else{
-                $('#memberstatus').text('-');
-            }
-            
-            $('#lpr').text(lpr);
-            $('#datecapture').text(datecapture);
-            $('#info').text(pesan);
-            var r = setInterval(function() {
-                hasResponse = hasResponse ? !hasResponse : hasResponse;
-                if (action == 2) {
-                    clear();
+                    var time_out = setInterval(function() {
+                        // clear_out();
+                        var html = `@include('components.in')`;
+                        $('#wrapper').html(html);
+                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                        clearInterval(time_out);
+                    }, 15000); // 1 menit
+                    var memberperiod = datas.memberperiod;
+                    var pesan = datas.pesan;
+                    setimage(image, 'imagein');
+                    $('#posname').text(posname);
+                    $('#posip').text(posip);
+                    if (typeof datas.memberstatus !== "undefined") {
+                        $('#memberstatus').text(memberstatus);
+                    } else {
+                        $('#memberstatus').text('-');
+                    }
+
+                    $('#lpr').text(lpr);
+                    $('#datecapture').text(datecapture);
+                    $('#info').text(pesan);
+                    var r = setInterval(function() {
+                        hasResponse = hasResponse ? !hasResponse : hasResponse;
+                        if (action == 2) {
+                            clear();
+                        }
+                        clearInterval(r);
+                        console.log('beres in action ' + action + ' sec : ' + sec);
+                    }, 10000);
+                } catch (error) {
+                    console.error("Error parsing JSON: ", error);
                 }
-                clearInterval(r);
-                console.log('beres in action ' + action + ' sec : ' + sec);
-            }, 10000);
+
+            })
+            .listen('.my-event-out', (e) => {
 
 
-        });
+                var jsonString = e.message;
+                var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
+                var jsonObject = JSON.parse(escapedJsonString);
+                
+                hasResponse = true;
 
-        channel.bind('my-event-out', function(data) {
-            hasResponse = true;
-
-            var datas = data.data;
-            var action = datas.action;
-            if (action == 3 || action == 4) {
-                var html = `@include('components.out')`;
-                $('#wrapper').html(html);
-            }
-            var local_ip = data.local_ip;
-            var job = datas.job;
-            var posname = datas.posname;
-            var posip = datas.posip;
-            var image = datas.image;
-            var imagein = datas.imagein;
-            if (lpr == '') {
-                lpr = datas.lpr
-                model = datas.model;
-                datecapture = datas.datecapture;
-                memberstatus = datas.memberstatus;
-            }
-            var memberperiod = datas.memberperiod;
-            var nota = datas.nota;
-            var plateno = datas.plateno;
-            var total = datas.total;
-            var vehicletype = datas.vehicletype;
-            var inpos = datas.inpos;
-            var intime = datas.intime;
-            var outtime = datas.outtime;
-            var duration = datas.duration;
-            var pesan = datas.pesan;
-            var done = false;
-            console.log(plateno);
-            if (action == 3) {
-                var i = 0;
-                var time_out = setInterval(function() {
-                    // clear_out();
-                    var html = `@include('components.in')`;
+                var datas = jsonObject;
+                console.log(datas);
+                var action = datas.action;
+                if (action == 3 || action == 4) {
+                    var html = `@include('components.out')`;
                     $('#wrapper').html(html);
-                    $('#video').removeClass('hidden');
-                    $('#labelin').addClass('hidden');
-                    // $('#imagein').addClass('hidden');
-                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(time_out);
-                }, 15000); // 1 menit
+                }
+                var local_ip = datas.local_ip;
+                var job = datas.job;
+                var posname = datas.posname;
+                var posip = datas.posip;
+                var image = datas.image.replace(/\\\\/g, '\\');
+                console.log(image);
+                var imagein = datas.imagein.replace(/\\\\/g, '\\');
+                if (lpr == '') {
+                    lpr = datas.lpr
+                    model = datas.model;
+                    datecapture = datas.datecapture;
+                    memberstatus = datas.memberstatus;
+                }
+                var memberperiod = datas.memberperiod;
+                var nota = datas.nota;
+                var plateno = datas.plateno;
+                var total = datas.total;
+                var vehicletype = datas.vehicletype;
+                var inpos = datas.inpos;
+                var intime = datas.intime;
+                var outtime = datas.outtime;
+                var duration = datas.duration;
+                var pesan = datas.pesan;
+                var done = false;
+                console.log(plateno);
+                if (action == 3) {
+                    var i = 0;
+                    var time_out = setInterval(function() {
+                        // clear_out();
+                        var html = `@include('components.in')`;
+                        $('#wrapper').html(html);
+                        $('#video').removeClass('hidden');
+                        $('#labelin').addClass('hidden');
+                        // $('#imagein').addClass('hidden');
+                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                        clearInterval(time_out);
+                    }, 15000); // 1 menit
 
-            }
-            setimage(imagein, 'image');
-            setimage(image, 'imagein');
-            $('#info').text(pesan);
-            $('#posname').text(posname);
-            $('#posip').text(posip);
-            $('#memberstatus').text(memberstatus);
-            $('#plate').text(plateno);
-            $('#datecapture').text(datecapture);
-            $('#nota').text('Nota : ' + nota);
-            $('#total').text(formatRupiah(total));
-            $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
-            $('#intime').text('Tanggal Masuk : ' + intime);
-            $('#outtime').text('Tanggal Keluar : ' + outtime);
-            $('#duration').text(duration);
-            // $('#image').attr('src', imagein);
-            // $('#imagein').attr('src', image);
-            $('#video').addClass('hidden');
-            $('#imagein').removeClass('hidden');
-            $('#labelin').removeClass('hidden');
-            if (action == 1) {
-                var t = setInterval(function() {
-                    hasResponse = hasResponse ? !hasResponse : hasResponse;
-                    action = 0;
-                    clearInterval(t);
-                }, 15000);
+                }
+                setimage(imagein, 'image');
+                setimage(image, 'imagein');
+                $('#info').text(pesan);
+                $('#posname').text(posname);
+                $('#posip').text(posip);
+                $('#memberstatus').text(memberstatus);
+                $('#plate').text(plateno);
+                $('#datecapture').text(datecapture);
+                $('#nota').text('Nota : ' + nota);
+                $('#total').text(formatRupiah(total));
+                $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
+                $('#intime').text('Tanggal Masuk : ' + intime);
+                $('#outtime').text('Tanggal Keluar : ' + outtime);
+                $('#duration').text(duration);
+                // $('#image').attr('src', imagein);
+                // $('#imagein').attr('src', image);
+                $('#video').addClass('hidden');
+                $('#imagein').removeClass('hidden');
+                $('#labelin').removeClass('hidden');
+                if (action == 1) {
+                    var t = setInterval(function() {
+                        hasResponse = hasResponse ? !hasResponse : hasResponse;
+                        action = 0;
+                        clearInterval(t);
+                    }, 15000);
 
-            }
-            if (action == 4) {
-                var balance = datas.balance;
+                }
+                if (action == 4) {
+                    var balance = datas.balance;
+                    $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                    var t = setInterval(function() {
+                        $('#image').attr('src', `{{ asset('out.jpg') }}`);
+                        console.log('clear boss');
+                        $('#memberstatus').text('-');
+                        $('#lpr').text('-');
+                        $('#datecapture').text('-');
+                        $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
+                        var html = `@include('components.in')`;
+                        $('#wrapper').html(html);
+                        lpr = '';
+                        model = '';
+                        datecapture = '';
+                        memberstatus = '';
+                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                        clearInterval(t);
+                        $('#video').removeClass('hidden');
+                        $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
+                    }, 15000); // 30 detik
 
-            $('#text-informasi-pembayaran').text('Saldo');
-                $('#informasi-pembayaran').text(formatRupiah(balance));
-                var t = setInterval(function() {
-                    $('#image').attr('src', `{{ asset('out.jpg') }}`);
-                    console.log('clear boss');
-                    $('#memberstatus').text('-');
-                    $('#lpr').text('-');
-                    $('#datecapture').text('-');
-                    $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-                    var html = `@include('components.in')`;
-                    $('#wrapper').html(html);
-                    lpr = '';
-                    model = '';
-                    datecapture = '';
-                    memberstatus = '';
-                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(t);
-                    $('#video').removeClass('hidden');
-                    $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-                }, 15000); // 30 detik
+                }
 
-            }
-
-        });
+            });
 
         function clear() {
             $('#memberstatus').text('-');

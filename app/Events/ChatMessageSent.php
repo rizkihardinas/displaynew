@@ -10,8 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class InEvent implements ShouldBroadcastNow
+class ChatMessageSent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -34,12 +35,12 @@ class InEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('my-channel');
+        return new Channel('test-channel');
     }
 
     public function broadcastAs()
     {
-        return 'my-event';
+        return 'test-event';
     }
 
     public function broadcastWith()
