@@ -119,7 +119,6 @@
                 var duration = datas.duration;
                 var pesan = datas.pesan;
                 var done = false;
-                console.log(plateno);
                 if (action == 3) {
                     var i = 0;
                     var time_out = setInterval(function() {
@@ -196,6 +195,7 @@
 
             $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+            $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
             lpr = '';
             model = '';
             datecapture = '';
