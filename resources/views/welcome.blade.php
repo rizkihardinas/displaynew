@@ -14,11 +14,7 @@
     <div class="mx-auto p-4 flex flex-col h-full">
         <div class="flex justify-between bg-[#94ceff] text-white p-2">
             <div>
-                <div class="text-2xl text-black font-bold">POS : <span id="posname">NAMA POS</span></div>
-                <div>
-                    <span class="text-xl text-green-500 font-bold text-black " id="posip">IP</span>
-                    <span class="text-xl font-bold text-black " id="posip">{{ config('app.ip_server') }}</span>
-                </div>
+                <img src="{{ asset('Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
             </div>
             <div class="text-right text-xl font-bold text-black">
                 <div id="time">-</div>
@@ -35,8 +31,10 @@
         <div class="text-center flex-grow">
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
         </div>
-        <div><span class="text-xl"><img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-24"
-                    alt=""></span>
+        <div>
+            <div class="text-2xl text-black font-bold"><span id="posname">NAMA POS</span></div>
+            <span class="text-xl text-green-500 font-bold text-black " id="posip">IP</span>
+            <span class="text-xl font-bold text-black " id="posip">{{ config('app.ip_server') }}</span></span>
         </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -96,7 +94,7 @@
                 $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
             })
             .catch(function(error) {
-                $('#' + attr).attr('src', '{{ asset("public/not-found.jpg") }}');
+                $('#' + attr).attr('src', '{{ asset('public/not-found.jpg') }}');
                 console.error('Error loading video:', error);
             });
     }
