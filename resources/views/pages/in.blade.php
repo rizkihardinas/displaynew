@@ -60,7 +60,7 @@
                     if (typeof datas.memberstatus !== "undefined") {
                         $('#memberstatus').text(memberstatus);
                     } else {
-                        $('#memberstatus').text('-');
+                        $('#memberstatus').text('');
                     }
 
                     $('#lpr').text(lpr);
@@ -166,9 +166,9 @@
                     var t = setInterval(function() {
                         $('#image').attr('src', `{{ asset('out.jpg') }}`);
                         console.log('clear boss');
-                        $('#memberstatus').text('-');
-                        $('#lpr').text('-');
-                        $('#datecapture').text('-');
+                        $('#memberstatus').text('');
+                        $('#lpr').text('');
+                        $('#datecapture').text('');
                         $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
                         var html = `@include('components.in')`;
                         $('#wrapper').html(html);
@@ -187,9 +187,9 @@
             });
 
         function clear() {
-            $('#memberstatus').text('-');
-            $('#lpr').text('-');
-            $('#datecapture').text('-');
+            $('#memberstatus').text('');
+            $('#lpr').text('');
+            $('#datecapture').text('');
             $('#imagein').removeAttr('src');
             $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
 
@@ -203,15 +203,15 @@
         }
 
         function clear_out() {
-            $('#memberstatus').text('-');
-            $('#lpr').text('-');
-            $('#datecapture').text('-');
-            $('#nota').text('-');
-            $('#total').text('-');
-            $('#vehicletype').text('-');
-            $('#intime').text('-');
-            $('#outtime').text('-');
-            $('#duration').text('-');
+            $('#memberstatus').text('');
+            $('#lpr').text('');
+            $('#datecapture').text('');
+            $('#nota').text('');
+            $('#total').text('');
+            $('#vehicletype').text('');
+            $('#intime').text('');
+            $('#outtime').text('');
+            $('#duration').text('');
             $('#informasi-pembayaran').text(' ');
             $('#image').removeAttr('src');
             $('#imagein').removeAttr('src');
