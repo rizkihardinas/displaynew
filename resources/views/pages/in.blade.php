@@ -165,6 +165,8 @@
                     
                     if(balance){
                         $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                    }else{
+                        $('#informasi-pembayaran').addClass('hidden');
                     }
                     var t = setInterval(function() {
                         $('#image').attr('src', `{{ asset('out.jpg') }}`);
