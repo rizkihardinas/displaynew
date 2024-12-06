@@ -40,7 +40,12 @@
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src=" {{ asset('public/js/app.js') }}"></script>
+@if (env('IS_WINDOWS'))
+<script src=" {{ asset('js/app.js') }}"></script>    
+@else
+<script src=" {{ asset('public/js/app.js') }}"></script>    
+@endif
+
 {{-- @livewireScripts --}}
 
 <script>
