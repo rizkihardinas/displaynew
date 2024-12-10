@@ -61,7 +61,10 @@ class IndexController extends Controller
             $data = json_decode($data);
             $data->local_ip = $request->ip();
             $data->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $data->datecapture)->format('d/m/Y H:i:s');
-            $data->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $data->memberperiod)->format('d/m/Y H:i:s');
+            if(isset($data->memberperiod)){
+                $data->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $data->memberperiod)->format('d/m/Y H:i:s');
+            }
+            
             switch ($action) {
                 case 1:
                     $data->action = 1;
