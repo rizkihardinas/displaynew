@@ -55,6 +55,7 @@ class IndexController extends Controller
         } else {
             $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $value->path);
             $filePath = str_replace('\\', '/', $filePath);
+            Log::info($filePath);
             $upac['hasEnc'] = true;
             $upac['path'] = $this->convertToBase64($filePath);
             // $upac['path'] = $this->convertToBase64($value->path);
