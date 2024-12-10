@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Events\InEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Setting;
+use App\Models\Promotion;
 use App\Models\Security;
 use App\Models\Setting as ModelsSetting;
 use App\Models\Rate;
@@ -16,49 +17,51 @@ class IndexController extends Controller
 {
     function in()
     {
-        $json = Storage::disk('public')->get('promotion.json');
-        $promotions = json_decode($json);
-
+        $promotions = Promotion::whereNull('is_operator')->get();
+        $promotion_operators = Promotion::whereNotNull('is_operator')->get();
         $setting = ModelsSetting::first();
         $promotion_text = $setting->text_promotion;
         $interval_standby = $setting->duration;
         $datas = [];
-        foreach ($promotions->promotions as $key => $value) {
-            $upac = [];
-            $ip = $this->ip_extract($value->path);
-            $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $value->path);
-            $filePath = str_replace('\\', '/', $filePath);
-            $upac['path'] = $this->convertToBase64($filePath);
-            // $upac['path'] = $this->convertToBase64($value->path);
-            $upac['type'] = $value->type;
+        $datas_operator = [];
+
+
+        foreach ($promotions as $key => $value) {
+            $upac = $this->extractByOs($setting,$value);
             $datas[] = $upac;
+        }
+
+        foreach ($promotion_operators as $key => $value) {
+            $upac = [];
+            $upac = $this->extractByOs($setting,$value);
+            $datas_operator[] = $upac;
         }
         $vehicle = isset($request->v) ? $request->v : Rate::where('is_default', 1)->first()->vehicle;
         $rate = Rate::where('vehicle', $vehicle)->first();
         $ip = getHostByName(getHostName());
-        return view('pages.in', compact('datas', 'ip', 'setting', 'rate'));
+        return view('pages.in', compact('datas', 'ip', 'setting', 'rate','datas_operator'));
     }
-    function out()
+
+    function extractByOs(ModelsSetting $setting,$value)
     {
-        $json = Storage::disk('public')->get('promotion_out.json');
-        $promotions = json_decode($json);
-        Log::info("Promotions :" . $promotions);
-        $setting = ModelsSetting::first();
-        $promotion_text = $setting->text_promotion;
-        $interval_standby = $setting->duration;
-        $datas = [];
-        foreach ($promotions->promotions as $key => $value) {
-            $upac = [];
-            $ip = $this->ip_extract($value->path);
+        $ip = $this->ip_extract($value->path);
+
+        if (env('IS_WINDOWS')) {
+            $filePath = str_replace('\\\\', '\\', $value->path);
+            $upac['hasEnc'] = true;
+            $upac['path'] = $this->convertToBase64($filePath);
+            // $upac['path'] = $this->convertToBase64($value->path);
+            $upac['type'] = $value->type;
+        } else {
             $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $value->path);
             $filePath = str_replace('\\', '/', $filePath);
-            Log::info($filePath);
+            $upac['hasEnc'] = true;
             $upac['path'] = $this->convertToBase64($filePath);
+            // $upac['path'] = $this->convertToBase64($value->path);
             $upac['type'] = $value->type;
-            $datas[] = $upac;
         }
-        $ip = getHostByName(getHostName());
-        return view('pages.out', compact('ip', 'datas', 'setting'));
+
+        return $upac;
     }
     public function convertToBase64($filePath)
     {

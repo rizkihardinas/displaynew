@@ -4,12 +4,19 @@
         $landscape = true;
 
     @endphp
-    <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 h-[735px]' : '' }}">
+    <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 flex-grow' : '' }}">
         <div class="flex flex-col bg-gray-300 text-white">
             @include('components.lpr')
         </div>
-        <div id="wrapper" class="{{ $landscape ? 'h-[590px]' : 'h-[930px]' }} ">
-            @include('components.in')
+        {{-- <div id="wrapper" class="{{ $landscape ? 'h-[590px]' : 'h-[930px]' }} "> --}}
+        <div id="wrapper" class="full">
+            <div id="standby" class="w-full h-full">
+                @include('components.in')
+            </div>
+            <div id="page-out" class="hidden w-full h-full">
+                @include('components.out')
+            </div>
+
         </div>
 
     </div>
@@ -37,24 +44,30 @@
                     var job = datas.job;
                     var action = datas.action;
                     var posip = datas.posip;
+
+                    $('#promosi_operator').addClass('hidden');
+                    $('#imagein').removeClass('hidden');
                     if (lpr == '') {
                         lpr = datas.lpr
                         model = datas.model;
-                        datecapture = datas.datecapture.replace('\\','').replace('\\','');
-                        console.log('datas.datecapture : ' + datas.datecapture);
-                        console.log('datas.datecapture replace : ' + datecapture);
-                        memberstatus = datas.memberstatus + ' - ' + datas.memberperiod.replace('\\','').replace('\\','');
+
+
                     }
 
-
+                    datecapture = datas.datecapture.replace('\\', '').replace('\\', '');
+                    if (datas.memberstatus) {
+                        memberstatus = datas.memberstatus + ' - ' + datas.memberperiod.replace('\\', '').replace('\\',
+                            '');
+                    }
                     var time_out = setInterval(function() {
                         clear();
-                        var html = `@include('components.in')`;
-                        $('#wrapper').html(html);
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
                     }, 15000); // 1 menit
-                    var memberperiod = datas.memberperiod.replace('\\','').replace('\\','');
+                    if (datas.memberperiod) {
+                        var memberperiod = datas.memberperiod.replace('\\', '').replace('\\', '');
+                    }
+
                     var pesan = datas.pesan;
                     setimage(image, 'imagein');
                     $('#posname').text(posname);
@@ -87,14 +100,16 @@
                 var jsonString = e.message;
                 var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
                 var jsonObject = JSON.parse(escapedJsonString);
-                
+
                 hasResponse = true;
 
                 var datas = jsonObject;
                 var action = datas.action;
+                $('#promosi_operator').addClass('hidden');
+                $('#imagein').removeClass('hidden');
                 if (action == 3 || action == 4) {
-                    var html = `@include('components.out')`;
-                    $('#wrapper').html(html);
+                    $('#standby').addClass('hidden');
+                    $('#page-out').removeClass('hidden');
                 }
                 var local_ip = datas.local_ip;
                 var job = datas.job;
@@ -105,17 +120,17 @@
                 if (lpr == '') {
                     lpr = datas.lpr
                     model = datas.model;
-                    datecapture = datas.datecapture.replace('\\','').replace('\\','');
+                    datecapture = datas.datecapture.replace('\\', '').replace('\\', '');
                     memberstatus = datas.memberstatus;
                 }
-                var memberperiod = datas.memberperiod.replace('\\','').replace('\\','');
+                var memberperiod = datas.memberperiod.replace('\\', '').replace('\\', '');
                 var nota = datas.nota;
                 var plateno = datas.plateno;
                 var total = datas.total;
                 var vehicletype = datas.vehicletype;
                 var inpos = datas.inpos;
-                var intime = datas.intime.replace('\\','').replace('\\','');
-                var outtime = datas.outtime.replace('\\','').replace('\\','');
+                var intime = datas.intime.replace('\\', '').replace('\\', '');
+                var outtime = datas.outtime.replace('\\', '').replace('\\', '');
                 var duration = datas.duration;
                 var pesan = datas.pesan;
                 var done = false;
@@ -123,11 +138,8 @@
                     var i = 0;
                     var time_out = setInterval(function() {
                         clear_out();
-                        var html = `@include('components.in')`;
-                        $('#wrapper').html(html);
-                        $('#video').removeClass('hidden');
-                        $('#labelin').addClass('hidden');
-                        // $('#imagein').addClass('hidden');
+
+
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
                     }, 15000); // 1 menit
@@ -162,29 +174,20 @@
                 }
                 if (action == 4) {
                     var balance = datas.balance;
-                    
-                    if(balance){
+
+                    if (balance) {
                         $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                    }else{
+                    } else {
                         $('#informasi-pembayaran').addClass('hidden');
                     }
                     var t = setInterval(function() {
-                        $('#image').attr('src', `{{ asset('out.jpg') }}`);
-                        console.log('clear boss');
-                        $('#memberstatus').text('');
-                        $('#lpr').text('');
-                        $('#datecapture').text('');
-                        $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-                        var html = `@include('components.in')`;
-                        $('#wrapper').html(html);
                         lpr = '';
                         model = '';
                         datecapture = '';
                         memberstatus = '';
-                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                        clear_out();
                         clearInterval(t);
-                        $('#video').removeClass('hidden');
-                        $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
+                        
                     }, 15000); // 30 detik
 
                 }
@@ -192,14 +195,17 @@
             });
 
         function clear() {
-            $('#memberstatus').text('   ');
-            $('#lpr').text('   ');
-            $('#datecapture').text('   ');
+            $('#memberstatus').text('\t');
+            $('#lpr').text('\t');
+            $('#datecapture').text('\t');
+
+            $('#promosi_operator').removeClass('hidden');
+            $('#imagein').addClass('hidden');
             $('#imagein').removeAttr('src');
             $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
             $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
-            
+
             lpr = '';
             model = '';
             datecapture = '';
@@ -209,6 +215,7 @@
         function clear_out() {
             $('#memberstatus').text('');
             $('#lpr').text('');
+            $('#plate').text('');
             $('#datecapture').text('');
             $('#nota').text('');
             $('#total').text('');
@@ -217,10 +224,17 @@
             $('#outtime').text('');
             $('#duration').text('');
             $('#informasi-pembayaran').text(' ');
-            $('#image').removeAttr('src');
-            $('#imagein').removeAttr('src');
-            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-            $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+
+            $('#standby').removeClass('hidden');
+            $('#page-out').addClass('hidden');
+            $('#video').removeClass('hidden');
+            $('#labelin').addClass('hidden');
+            $('#imagein').addClass('hidden');
+            $('#promosi_operator').removeClass('hidden');
+            // $('#image').removeAttr('src');
+            // $('#imagein').removeAttr('src');
+            // $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+            // $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
             $('#info').text('Silahkan scan tiket atau tap kartu anda');
             lpr = '';
             model = '';
