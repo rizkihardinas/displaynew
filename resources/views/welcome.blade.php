@@ -8,11 +8,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     {{-- @livewireStyles --}}
+    <style>
+        @keyframes blink {
+
+            0%,
+            100% {
+                background-color: {{ config('uno.style.secondary') }};
+                /* Blue */
+                color: #000000;
+                /* White text */
+            }
+
+            50% {
+                background-color: #f43f5e;
+                /* Red */
+                color: #000000;
+                /* Black text */
+            }
+        }
+
+        .animate-blink {
+            animation: blink 0.5s infinite;
+        }
+    </style>
 </head>
 
-<body class=" bg-gray-200 h-dvh">
+<body class=" bg-[{{ config('uno.style.background') }}] h-dvh">
     <div class="mx-auto p-4 flex flex-col h-full">
-        <div class="flex justify-between bg-[#94ceff] text-white p-2">
+        <div class="flex justify-between bg-[{{ config('uno.style.header') }}] text-white p-2">
             <div>
                 <img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
             </div>
@@ -24,16 +47,16 @@
 
     </div>
     <div
-        class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[#94ceff] text-black p-2 mt-2 font-bold">
+        class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[{{ config('uno.style.footer') }}] text-black p-2 mt-2 font-bold">
         <div><span class="text-xl"><img src="{{ asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
         </div>
-        <div class="text-center flex-grow">
+        <div class="text-center flex-grow mx-24">
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
         </div>
         <div>
             <div class="text-2xl text-black font-bold"><span id="posname">&nbsp;</span></div>
-            <span class="text-xl text-green-500 font-bold text-black " id="posip">&nbsp;</span>
-            <span class="text-xl font-bold text-black " id="posip">{{ config('app.ip_server') }}</span></span>
+            <span class="text-md text-green-500 font-bold text-black " id="posip">&nbsp;</span>
+            <span class="text-md font-bold text-black " id="posip">{{ config('app.ip_server') }}</span></span>
         </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -41,9 +64,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 @if (env('IS_WINDOWS'))
-<script src=" {{ asset('js/app.js') }}"></script>    
+    <script src=" {{ asset('js/app.js') }}"></script>
 @else
-<script src=" {{ asset('public/js/app.js') }}"></script>    
+    <script src=" {{ asset('public/js/app.js') }}"></script>
 @endif
 
 {{-- @livewireScripts --}}

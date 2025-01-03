@@ -16,7 +16,8 @@ class SettingSeeder extends Seeder
     {
         Setting::updateOrCreate(['id' => 1],[
             'text_promotion' => 'Teks promosi anda disini',
-            'duration' => 15
+            'duration' => 15,
+            'timeout' => 30
         ]);
     }
 }

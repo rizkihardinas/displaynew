@@ -59,12 +59,14 @@ class IndexController extends Controller
         try {
             $data = $this->decrypt($request->data, $parameter);
             $data = json_decode($data);
-            $data->local_ip = $request->ip();
+            $data->local_ip = $this->removeIp($request->ip());
+            $data->posip = $this->removeIp($data->posip);
+
             $data->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $data->datecapture)->format('d/m/Y H:i:s');
-            if(isset($data->memberperiod)){
+            if (isset($data->memberperiod)) {
                 $data->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $data->memberperiod)->format('d/m/Y H:i:s');
             }
-            
+
             switch ($action) {
                 case 1:
                     $data->action = 1;
@@ -75,7 +77,7 @@ class IndexController extends Controller
                         $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($data)));
                     }
-                    
+
                     break;
                 case 2:
                     $data->action = 2;
@@ -220,5 +222,16 @@ class IndexController extends Controller
             return response()->json($th->getMessage(), 200);
             //throw $th;
         }
+    }
+    function removeIp($ip)
+    {
+        $segments = explode('.', $ip);
+
+        // Ambil segmen ke-3 dan ke-4
+        $filteredSegments = array_slice($segments, 2, 2);
+
+        // Gabungkan kembali segmen tersebut
+        $result = implode('.', $filteredSegments);
+        return $result;
     }
 }

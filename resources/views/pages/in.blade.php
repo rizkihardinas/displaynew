@@ -23,7 +23,7 @@
 @endsection
 @push('scripts')
     <script>
-        var sec = 10 * 1000;
+        var sec = {{ config('uno.timeout_in') }} * 1000;
         var model = '';
         var lpr = '';
         var datecapture = '';
@@ -31,6 +31,7 @@
         var hasResponse = false;
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
+                blink();
                 var jsonString = e.message;
                 var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
                 try {
@@ -63,7 +64,7 @@
                         clear();
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
-                    }, 15000); // 1 menit
+                    }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
                     if (datas.memberperiod) {
                         var memberperiod = datas.memberperiod.replace('\\', '').replace('\\', '');
                     }
@@ -88,7 +89,7 @@
                         }
                         clearInterval(r);
                         console.log('beres in action ' + action + ' sec : ' + sec);
-                    }, 10000);
+                    }, {{ config('uno.timeout_in') * 1000 }});
                 } catch (error) {
                     console.error("Error parsing JSON: ", error);
                 }
@@ -96,7 +97,7 @@
             })
             .listen('.my-event-out', (e) => {
 
-
+                blink();
                 var jsonString = e.message;
                 var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
                 var jsonObject = JSON.parse(escapedJsonString);
@@ -142,7 +143,7 @@
 
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
-                    }, 15000); // 1 menit
+                    }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
 
                 }
                 setimage(imagein, 'image');
@@ -169,15 +170,16 @@
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
                         clearInterval(t);
-                    }, 15000);
+                    }, {{ config('uno.timeout_out') * 1000 }});
 
                 }
                 if (action == 4) {
                     var balance = datas.balance;
-
+                    $('#informasi-pembayaran-row').removeClass('hidden');
                     if (balance) {
                         $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                     } else {
+                        $('#informasi-pembayaran-row').addClass('hidden');
                         $('#informasi-pembayaran').addClass('hidden');
                     }
                     var t = setInterval(function() {
@@ -187,8 +189,8 @@
                         memberstatus = '';
                         clear_out();
                         clearInterval(t);
-                        
-                    }, 15000); // 30 detik
+
+                    }, {{ config('uno.timeout_out') * 1000 }}); // 30 detik
 
                 }
 
@@ -251,6 +253,13 @@
                 maximumFractionDigits: 0
             });
             return formattedAmount = formatter.format(amount);
+        }
+
+        function blink() {
+            $('#wrapper-info').addClass('animate-blink');
+            setTimeout(function() {
+                $('#wrapper-info').removeClass('animate-blink');
+            }, 2000);
         }
         // Set the video source
         // setVideo('\\\\192.168.9.223\\Share\\promosi.mp4');

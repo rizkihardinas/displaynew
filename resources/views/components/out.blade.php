@@ -1,14 +1,14 @@
 <div class="flex flex-col">
-    <div class="bg-[#04427B] border-4 border-black p-2">
+    <div class="bg-[{{ config('uno.style.primary') }}] border-4 border-black p-2">
         <span class=" text-xl text-white text-center align-center font-bold">IN</span>
-        <div class="bg-[#04427B] flex-grow text-center flex items-center justify-center">
+        <div class="bg-[{{ config('uno.style.primary') }}] flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-[300px] object-contain" alt="" id="image">
         </div>
     </div>
 
 
-    <div class="flex bg-[#04427B]">
+    <div class="flex bg-[{{ config('uno.style.primary') }}]">
         <p class="text-white text-sm p-2 font-bold">
             <span id="nota">No Nota/No Plat In</span> <br>
             <span id="vehicletype">Jenis Kendaraan</span><br>
@@ -16,16 +16,23 @@
             <span id="outtime">Jam keluar/ Pos Keluar</span> <br>
         </p>
     </div>
-    <div class="bg-[#f1ff00] p-4 font-bold  text-xl">
-        <div class="flex justify-between">
-            Lama Parkir : <span id="duration" class="text-2xl">0 Jam 0 Menit</span>
-        </div>
-        <div class="flex justify-between">
-            Total : <span class="text-4xl" id="total">0</span>
-        </div>
-        <div class="" id="informasi-pembayaran">
-            [Informasi Pembayaran]
-        </div>
-
+    <div class="bg-[{{ config('uno.style.secondary') }}] p-4 font-bold  text-xl">
+        <table class="w-full">
+            <tr>
+                <td class="text-left" width="150">Lama Parkir</td>
+                <td>:</td>
+                <td class="text-right text-2xl" id="duration">0 Jam 0 Menit</td>
+            </tr>
+            <tr>
+                <td class="text-left"  width="150">Total</td>
+                <td>:</td>
+                <td class="text-right text-4xl" id="total">0</td>
+            </tr>
+            <tr id="informasi-pembayaran-row" class="hidden">
+                <td class="text-left"  width="150">[Informasi Pembayaran]</td>
+                <td>:</td>
+                <td class="text-right text-4xl" id="informasi-pembayaran"></td>
+            </tr>
+        </table>
     </div>
 </div>

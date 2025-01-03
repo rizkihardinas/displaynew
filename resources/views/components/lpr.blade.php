@@ -1,6 +1,6 @@
 <div class="px-2 py-1 h-full flex flex-col">
-    {{-- <span class="bg-[#04427b] my-1 text-2xl text-white px-1 font-bold hidden" id="labelin">OUT</span> --}}
-    <div class="flex-grow bg-[#04427b] flex items-center justify-center">
+    {{-- <span class="bg-[{{ config('uno.style.primary') }}] my-1 text-2xl text-white px-1 font-bold hidden" id="labelin">OUT</span> --}}
+    <div class="flex-grow bg-[{{ config('uno.style.primary') }}] flex items-center justify-center">
         @if (env('USE_LIVESTREAM'))
             <video id="video" autoplay controls data-url="" class="w-full h-auto">
                 {{-- <source src="{{ asset('stream/stream.m3u8') }}" type="application/x-mpegURL">
@@ -39,17 +39,17 @@
 
         {{-- <img class="w-full h-full object-contain" alt="" id="image" src="{{ request()->routeIs('out') ? asset('public/out.jpg') : asset('public/in.jpg') }}"> --}}
     </div>
-    <div class="flex-none bg-[#04427b] py-1 mt-1 text-center">
+    <div class="flex-none bg-[{{ config('uno.style.primary') }}] py-1 mt-1 text-center">
         <span class="text-3xl" id="plate">&nbsp;</span>
     </div>
-    <div class="flex-none bg-[#04427b] py-1 mt-1 text-center">
+    <div class="flex-none bg-[{{ config('uno.style.primary') }}] py-1 mt-1 text-center">
         <span class="text-xl" id="datecapture">&nbsp;</span>
     </div>
-    <div class="flex-none bg-[#04427b] py-1 mt-1 text-center">
+    <div class="flex-none bg-[{{ config('uno.style.primary') }}] py-1 mt-1 text-center">
         <span class="text-xl" id="memberstatus">&nbsp;</span>
     </div>
-    <div class="flex-none bg-[#f1ff00] py-1 mt-1 text-center text-black">
-        <span class="text-xl font-bold" id="info">&nbsp;</span>
+    <div class="flex-none bg-[{{ config('uno.style.secondary') }}] py-1 mt-1 text-center text-black" id="wrapper-info">
+        <span class="text-2xl font-bold" id="info">&nbsp;</span>
     </div>
 </div>
 
