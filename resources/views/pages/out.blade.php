@@ -37,6 +37,7 @@
                 var html = `@include('components.out')`;
                 $('#wrapper').html(html);
             }
+            console.log(datas);
             var local_ip = data.local_ip;
             var job = datas.job;
             var posname = datas.posname;
@@ -60,9 +61,12 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var done = false;
-            
             if(action == 3){
                 var i = 0;
+
+                if(memberperiod){
+                    $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
+                }
                 var time_out = setInterval(function() {
                     // clear_out();
                     var html = `@include('components.in')`;
@@ -99,10 +103,8 @@
             if (action == 4 ) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                console.log('beres boss');
                 var t = setInterval(function() {
                     $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-                    console.log('clear boss');
                     $('#memberstatus').text('-');
                     $('#lpr').text('-');
                     $('#datecapture').text('-');

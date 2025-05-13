@@ -37,7 +37,12 @@
     <div class="mx-auto p-4 flex flex-col h-full">
         <div class="flex justify-between bg-[{{ config('uno.style.header') }}] text-white p-2">
             <div>
-                <img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
+                @if (env('IS_WINDOWS'))
+                    <img src="{{ asset('Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
+                @else
+                    <img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
+                @endif
+
             </div>
             <div class="text-right text-xl font-bold text-black">
                 <div id="time"></div>
@@ -48,7 +53,7 @@
     </div>
     <div
         class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[{{ config('uno.style.footer') }}] text-black p-2 mt-2 font-bold">
-        <div><span class="text-xl"><img src="{{ asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
+        <div><span class="text-xl"><img src="{{ env('IS_WINDOWS') ? asset('Logo_UNO.jpg') : asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
         </div>
         <div class="text-center flex-grow mx-24">
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
@@ -95,8 +100,7 @@
         hours = hours < 10 ? '0' + hours : hours;
         minutes = minutes < 10 ? '0' + minutes : minutes;
         seconds = seconds < 10 ? '0' + seconds : seconds;
-
-        var formattedTime = now.getDate() + '/' + now.getMonth() + '/' + now.getFullYear() + ' ' + hours + ':' +
+        var formattedTime = now.getDate() + '/' + now.getMonth() + 1 + '/' + now.getFullYear() + ' ' + hours + ':' +
             minutes + ':' + seconds;
 
         // Update the clock div with the current time

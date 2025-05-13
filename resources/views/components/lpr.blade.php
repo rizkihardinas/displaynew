@@ -32,8 +32,14 @@
                     @endforeach
                 </div>
             @endif
-            <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
-                src="{{ asset('public/Logo_Operator.jpg') }}">
+            @if (env('IS_WINDOWS'))
+                <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
+                    src="{{ asset('Logo_Operator.jpg') }}">
+            @else
+                <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
+                    src="{{ asset('public/Logo_Operator.jpg') }}">
+            @endif
+
         @endif
 
 
@@ -49,7 +55,7 @@
         <span class="text-xl" id="memberstatus">&nbsp;</span>
     </div>
     <div class="flex-none bg-[{{ config('uno.style.secondary') }}] py-1 mt-1 text-center text-black" id="wrapper-info">
-        <span class="text-2xl font-bold" id="info">&nbsp;</span>
+        <span class="text-3xl font-bold" id="info">&nbsp;</span>
     </div>
 </div>
 

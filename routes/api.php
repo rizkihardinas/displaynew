@@ -20,3 +20,4 @@ Route::get('/generate-image',[IndexController::class,'generateImage'])->name('im
 Route::get('/video-to-base64', [IndexController::class,'convertToBase64'])->name('video.to.base64');
 Route::post('/setting/display',[IndexController::class,'setupSetting']);
 Route::post('/setting/access',[IndexController::class,'setupSecurity']);
+Route::post('/setting/preference',[IndexController::class,'setupPreference']);

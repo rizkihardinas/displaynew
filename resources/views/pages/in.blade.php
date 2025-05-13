@@ -151,7 +151,7 @@
                 $('#info').text(pesan);
                 $('#posname').text(posname);
                 $('#posip').text(posip);
-                $('#memberstatus').text(memberstatus);
+                $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 $('#plate').text(plateno);
                 $('#datecapture').text(datecapture);
                 $('#nota').text('Nota : ' + nota);
@@ -215,10 +215,10 @@
         }
 
         function clear_out() {
-            $('#memberstatus').text('');
-            $('#lpr').text('');
-            $('#plate').text('');
-            $('#datecapture').text('');
+            $('#memberstatus').text('\u00A0');
+            $('#lpr').text('\u00A0');
+            $('#plate').text('\u00A0');
+            $('#datecapture').text('\u00A0');
             $('#nota').text('');
             $('#total').text('');
             $('#vehicletype').text('');

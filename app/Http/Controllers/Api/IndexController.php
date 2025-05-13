@@ -12,6 +12,7 @@ use App\Http\Traits\CryptAES;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\Preference;
 use Carbon\Carbon;
 
 class IndexController extends Controller
@@ -202,6 +203,19 @@ class IndexController extends Controller
         DB::beginTransaction();
         try {
             $setting = Setting::first()->update($request->all());
+            DB::commit();
+            return response()->json($setting);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json($th->getMessage(), 200);
+            //throw $th;
+        }
+    }
+    function setupPreference(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $setting = Preference::first()->update($request->all());
             DB::commit();
             return response()->json($setting);
         } catch (\Throwable $th) {

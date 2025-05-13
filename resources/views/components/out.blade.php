@@ -29,9 +29,14 @@
                 <td class="text-right text-4xl" id="total">0</td>
             </tr>
             <tr id="informasi-pembayaran-row" class="hidden">
-                <td class="text-left"  width="150">[Informasi Pembayaran]</td>
+                <td class="text-left"  width="150" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>
                 <td>:</td>
                 <td class="text-right text-4xl" id="informasi-pembayaran"></td>
+            </tr>
+            <tr id="informasi-member-row" class="hidden">
+                <td class="text-left"  width="150" id="informasi-pembayaran-title">Masa Aktif Member</td>
+                <td>:</td>
+                <td class="text-right text-4xl" id="informasi-member"></td>
             </tr>
         </table>
     </div>
