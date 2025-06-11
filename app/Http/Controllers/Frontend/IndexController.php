@@ -39,7 +39,7 @@ class IndexController extends Controller
         $vehicle = isset($request->v) ? $request->v : Rate::where('is_default', 1)->first()->vehicle;
         $rate = Rate::where('vehicle', $vehicle)->first();
         $ip = getHostByName(getHostName());
-        return view('pages.in', compact('datas', 'ip', 'setting', 'rate', 'datas_operator'));
+        return view('pages.v2.in', compact('datas', 'ip', 'setting', 'rate', 'datas_operator'));
     }
 
     function extractByOs(ModelsSetting $setting, $value)

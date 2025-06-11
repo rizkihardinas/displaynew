@@ -45,16 +45,16 @@
 
         {{-- <img class="w-full h-full object-contain" alt="" id="image" src="{{ request()->routeIs('out') ? asset('public/out.jpg') : asset('public/in.jpg') }}"> --}}
     </div>
-    <div class="flex-none bg-[{{ config('uno.style.primary') }}] py-1 mt-1 text-center">
+    <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
         <span class="text-3xl" id="plate">&nbsp;</span>
     </div>
-    <div class="flex-none bg-[{{ config('uno.style.primary') }}] py-1 mt-1 text-center">
+    <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="datecapture">&nbsp;</span>
     </div>
-    <div class="flex-none bg-[{{ config('uno.style.primary') }}] py-1 mt-1 text-center">
+    <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="memberstatus">&nbsp;</span>
     </div>
-    <div class="flex-none bg-[{{ config('uno.style.secondary') }}] py-1 mt-1 text-center text-black" id="wrapper-info">
+    <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center text-black" id="wrapper-info">
         <span class="text-3xl font-bold" id="info">&nbsp;</span>
     </div>
 </div>

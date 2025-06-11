@@ -71,7 +71,7 @@ class IndexController extends Controller
             switch ($action) {
                 case 1:
                     $data->action = 1;
-                    if ($data->job == 'in') {
+                    if ($data->job == 'in' || $data->job == 'IN' ) {
                         $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent(json_encode($data)));
                     } else {

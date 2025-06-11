@@ -1,14 +1,14 @@
 <div class="flex flex-col">
-    <div class="bg-[{{ config('uno.style.primary') }}] border-4 border-black p-2">
+    <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <span class=" text-xl text-white text-center align-center font-bold">IN</span>
-        <div class="bg-[{{ config('uno.style.primary') }}] flex-grow text-center flex items-center justify-center">
+        <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-[300px] object-contain" alt="" id="image">
         </div>
     </div>
 
 
-    <div class="flex bg-[{{ config('uno.style.primary') }}]">
+    <div class="flex {{ config('uno.style.primary') }}">
         <p class="text-white text-sm p-2 font-bold">
             <span id="nota">No Nota/No Plat In</span> <br>
             <span id="vehicletype">Jenis Kendaraan</span><br>
@@ -16,7 +16,7 @@
             <span id="outtime">Jam keluar/ Pos Keluar</span> <br>
         </p>
     </div>
-    <div class="bg-[{{ config('uno.style.secondary') }}] p-4 font-bold  text-xl">
+    <div class="{{ config('uno.style.secondary') }} p-4 font-bold  text-xl">
         <table class="w-full">
             <tr>
                 <td class="text-left" width="150">Lama Parkir</td>
