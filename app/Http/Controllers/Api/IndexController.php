@@ -21,7 +21,7 @@ class IndexController extends Controller
     function hit_display(Request $request)
     {
         $action = $request->action;
-
+        $setting = Setting::first();
         $security = Security::first();
         $username = $security->username;
         $password = $security->password;
@@ -64,7 +64,7 @@ class IndexController extends Controller
             $data->posip = $this->removeIp($data->posip);
 
             $data->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $data->datecapture)->format('d/m/Y H:i:s');
-            if (isset($data->memberperiod)) {
+            if (isset($data->memberperiod) && !empty($data->memberperiod)) {
                 $data->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $data->memberperiod)->format('d/m/Y H:i:s');
             }
 
@@ -83,6 +83,7 @@ class IndexController extends Controller
                 case 2:
                     $data->action = 2;
                     $data->pesan = 'Terima kasih, silahkan masuk.';
+                    sleep($setting->sleep);
                     event(new InEvent(json_encode($data)));
                     break;
                 case 3:
