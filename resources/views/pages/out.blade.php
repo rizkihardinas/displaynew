@@ -2,7 +2,7 @@
 @section('contents')
     @php
         $landscape = false;
-        
+
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 h-[735px]' : '' }}">
         <div class="flex flex-col bg-gray-300 text-white">
@@ -26,7 +26,7 @@
         var pusher = new Pusher('{{ $setting->pusher_key }}', {
             cluster: 'mt1'
         });
-        
+
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event-out', function(data) {
             hasResponse = true;
@@ -37,14 +37,13 @@
                 var html = `@include('components.out')`;
                 $('#wrapper').html(html);
             }
-            console.log(datas);
             var local_ip = data.local_ip;
             var job = datas.job;
             var posname = datas.posname;
             var posip = datas.posip;
             var image = datas.image;
             var imagein = datas.imagein;
-            if(lpr == ''){
+            if (lpr == '') {
                 lpr = datas.lpr
                 model = datas.model;
                 datecapture = datas.datecapture;
@@ -60,11 +59,12 @@
             var outtime = datas.outtime;
             var duration = datas.duration;
             var pesan = datas.pesan;
+            var qr = datas.qris;
             var done = false;
-            if(action == 3){
+            if (action == 3) {
                 var i = 0;
 
-                if(memberperiod){
+                if (memberperiod) {
                     $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
                 }
                 var time_out = setInterval(function() {
@@ -73,9 +73,11 @@
                     $('#wrapper').html(html);
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
                     clearInterval(time_out);
+
                 }, 15000); // 1 menit
-                
+
             }
+
             setimage(image, 'image');
             setimage(imagein, 'imagein');
             $('#info').text(pesan);
@@ -84,23 +86,23 @@
             $('#memberstatus').text(memberstatus);
             $('#lpr').text(lpr);
             $('#datecapture').text(datecapture);
-            $('#nota').text('Nota : ' + nota);
+            $('#nota').text(nota);
             $('#total').text(formatRupiah(total));
-            $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
-            $('#intime').text('Tanggal Masuk : ' + intime);
-            $('#outtime').text('Tanggal Keluar : ' + outtime);
+            $('#vehicletype').text(vehicletype);
+            $('#intime').text(intime);
+            $('#outtime').text(outtime);
             $('#duration').text(duration);
             $('#image').attr('src', image);
             $('#imagein').attr('src', imagein);
-            if(action == 1){
+            if (action == 1) {
                 var t = setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
                     action = 0;
                     clearInterval(t);
                 }, 15000);
-                
+
             }
-            if (action == 4 ) {
+            if (action == 4) {
                 var balance = datas.balance;
                 $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
                 var t = setInterval(function() {
@@ -116,9 +118,9 @@
                     datecapture = '';
                     memberstatus = '';
                     $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(t);    
+                    clearInterval(t);
                 }, 15000); // 30 detik
-                
+
             }
 
         });
@@ -128,7 +130,7 @@
             $('#lpr').text('-');
             $('#datecapture').text('-');
             $('#image').removeAttr('src');
-            
+
             $('#image').attr('src', 'https://placehold.co/400x200')
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
             lpr = '';

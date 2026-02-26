@@ -31,7 +31,7 @@
         var hasResponse = false;
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
-                blink();
+                
                 var jsonString = e.message;
                 var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
                 try {
@@ -45,7 +45,7 @@
                     var job = datas.job;
                     var action = datas.action;
                     var posip = datas.posip;
-
+                    blink(action);
                     $('#promosi_operator').addClass('hidden');
                     $('#imagein').removeClass('hidden');
                     if (lpr == '') {
@@ -97,7 +97,6 @@
             })
             .listen('.my-event-out', (e) => {
 
-                blink();
                 var jsonString = e.message;
                 var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
                 var jsonObject = JSON.parse(escapedJsonString);
@@ -106,6 +105,7 @@
 
                 var datas = jsonObject;
                 var action = datas.action;
+                blink(action);
                 $('#promosi_operator').addClass('hidden');
                 $('#imagein').removeClass('hidden');
                 if (action == 3 || action == 4) {
@@ -255,10 +255,10 @@
             return formattedAmount = formatter.format(amount);
         }
 
-        function blink() {
-            $('#wrapper-info').addClass('animate-blink');
+        function blink(action) {
+            $('#wrapper-info').addClass('animate-blink'+action);
             setTimeout(function() {
-                $('#wrapper-info').removeClass('animate-blink');
+                $('#wrapper-info').removeClass('animate-blink'+action);
             }, 2000);
         }
         // Set the video source

@@ -10,24 +10,50 @@
     <link href="{{ asset('css/flowbite.min.css') }}" rel="stylesheet" />
 
     <style>
-        @keyframes blink {
+        @keyframes blink1 {
 
             0%,
             100% {
                 background-color:
-                    {{ config('uno.style.secondary') }}
-                ;
+                    {{ config('uno.style.secondary') }};
                 color: #000000;
             }
 
             50% {
-                background-color: #f43f5e;
+                background-color: #fcf803;
                 color: #000000;
             }
         }
 
-        .animate-blink {
-            animation: blink 0.5s infinite;
+        @keyframes blink2 {
+
+            0%,
+            100% {
+                background-color:
+                    {{ config('uno.style.secondary') }};
+                color: #000000;
+            }
+
+            50% {
+                background-color: #0307fc;
+                color: #000000;
+            }
+        }
+
+        .animate-blink1 {
+            animation: blink1 0.5s infinite;
+        }
+
+        .animate-blink2 {
+            animation: blink2 0.5s infinite;
+        }
+
+        .animate-blink3 {
+            animation: blink1 0.5s infinite;
+        }
+
+        .animate-blink4 {
+            animation: blink2 0.5s infinite;
         }
     </style>
 </head>
@@ -60,8 +86,8 @@
         class="shrink-0 flex justify-between items-center {{ config('uno.style.footer') }} text-black p-2 mt-2 font-bold">
         <div>
             <span class="text-xl">
-                <img src="{{ env('IS_WINDOWS') ? asset('Logo_UNO.jpg') : asset('public/Logo_UNO.jpg') }}" class="w-24"
-                    alt="">
+                <img src="{{ env('IS_WINDOWS') ? asset('Logo_UNO.jpg') : asset('public/Logo_UNO.jpg') }}"
+                    class="w-24" alt="">
             </span>
         </div>
         <div class="text-center flex-grow mx-24">
@@ -76,13 +102,15 @@
     <script src="{{ asset('js/flowbite.min.js') }}"></script>
     @if (env('IS_WINDOWS'))
         <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/qrcode.min.js') }}"></script>
     @else
         <script src="{{ asset('public/js/app.js') }}"></script>
+        <script src="{{ asset('public/js/qrcode.min.js') }}"></script>
     @endif
 
 
     <script>
-        $(document).on('click', 'body', function () {
+        $(document).on('click', 'body', function() {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             } else if (document.documentElement.mozRequestFullScreen) { // Firefox
@@ -118,17 +146,17 @@
 
         function setimage(img, attr) {
             axios({
-                url: '{{ route('video.to.base64') }}',
-                method: 'GET',
-                params: {
-                    i: img
-                },
-            })
-                .then(function (response) {
+                    url: '{{ route('video.to.base64') }}',
+                    method: 'GET',
+                    params: {
+                        i: img
+                    },
+                })
+                .then(function(response) {
                     const base64 = response.data.base64;
                     $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     $('#' + attr).attr('src', '{{ asset('public/not-found.jpg') }}');
                     console.error('Error memuat video / image:', error);
                 });

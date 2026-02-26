@@ -71,7 +71,7 @@ class IndexController extends Controller
             switch ($action) {
                 case 1:
                     $data->action = 1;
-                    if ($data->job == 'in' || $data->job == 'IN' ) {
+                    if ($data->job == 'in' || $data->job == 'IN') {
                         $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent(json_encode($data)));
                     } else {
@@ -88,7 +88,15 @@ class IndexController extends Controller
                     break;
                 case 3:
                     $data->action = 3;
-                    $data->pesan = 'Silahkan melakukan pembayaran dengan E-Payment Card';
+                    if (isset($data->qris)) {
+                        $payment = 'QRIS';
+                        $expired = now()->addMinutes(15)->format('d/m/Y H:i:s');
+                    } else {
+                        $payment = 'E-Payment Card';
+                        $expired = '';
+                    }
+                    $data->pesan = 'Silahkan melakukan pembayaran dengan ' . $payment;
+                    $data->expired = $expired;
                     event(new OutEvent(json_encode($data)));
                     break;
                 case 4:

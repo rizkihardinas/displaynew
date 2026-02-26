@@ -46,7 +46,7 @@
         {{-- <img class="w-full h-full object-contain" alt="" id="image" src="{{ request()->routeIs('out') ? asset('public/out.jpg') : asset('public/in.jpg') }}"> --}}
     </div>
     <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
-        <span class="text-3xl" id="plate">&nbsp;</span>
+        <span class="text-3xl" id="lpr">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="datecapture">&nbsp;</span>

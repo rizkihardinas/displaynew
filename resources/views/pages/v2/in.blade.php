@@ -62,7 +62,7 @@
                         memberstatus = datas.memberstatus + ' - ' + datas.memberperiod.replace('\\', '').replace('\\',
                             '');
                     }
-                    var time_out = setInterval(function () {
+                    var time_out = setInterval(function() {
                         clear();
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
@@ -83,7 +83,7 @@
                     $('#lpr').text(lpr);
                     $('#datecapture').text(datecapture);
                     $('#info').text(pesan);
-                    var r = setInterval(function () {
+                    var r = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         if (action == 2) {
                             clear();
@@ -113,12 +113,13 @@
                     $('#standby').addClass('hidden');
                     $('#page-out').removeClass('hidden');
                 }
+                // Render QR setelah elemen visible (hindari render saat hidden)
+
                 var local_ip = datas.local_ip;
                 var job = datas.job;
                 var posname = datas.posname;
                 var posip = datas.posip;
                 var image = datas.image.replace(/\\\\/g, '\\');
-                console.log(datas);
                 var imagein = datas.imagein.replace(/\\\\/g, '\\');
                 if (lpr == '') {
                     lpr = datas.lpr
@@ -138,8 +139,22 @@
                 var pesan = datas.pesan;
                 var done = false;
                 if (action == 3) {
+                    $('#statusOut').text('QR Payment');
+                    $('#image').addClass('hidden');
+                    $('#qr-container').removeClass('hidden');
+                    var qr = datas.qris;
+                    var qrEl = document.getElementById('qr');
+                    if (qrEl) {
+                        qrEl.innerHTML = ''; // Bersihkan QR sebelumnya
+                    }
+                    if (qr && qrEl) {
+                        var qrcode = new QRCode(qrEl);
+                        qrcode.makeCode(qr);
+                    }
                     var i = 0;
-                    var time_out = setInterval(function () {
+                    $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
+
+                    var time_out = setInterval(function() {
                         clear_out();
 
 
@@ -156,11 +171,11 @@
                 $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 $('#plate').text(plateno);
                 $('#datecapture').text(datecapture);
-                $('#nota').text('Nota : ' + nota);
+                $('#nota').text(nota);
                 $('#total').text(formatRupiah(total));
-                $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
-                $('#intime').text('Tanggal Masuk : ' + intime);
-                $('#outtime').text('Tanggal Keluar : ' + outtime);
+                $('#vehicletype').text(vehicletype);
+                $('#intime').text(intime);
+                $('#outtime').text(outtime);
                 $('#duration').text(duration);
                 // $('#image').attr('src', imagein);
                 // $('#imagein').attr('src', image);
@@ -168,7 +183,7 @@
                 $('#imagein').removeClass('hidden');
                 $('#labelin').removeClass('hidden');
                 if (action == 1) {
-                    var t = setInterval(function () {
+                    var t = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
                         clearInterval(t);
@@ -177,6 +192,9 @@
                 }
                 if (action == 4) {
                     var balance = datas.balance;
+                    $('#statusOut').text('IN');
+                    $('#image').removeClass('hidden');
+                    $('#qr-container').addClass('hidden');
                     $('#informasi-pembayaran-row').removeClass('hidden');
                     if (balance) {
                         $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
@@ -184,7 +202,7 @@
                         $('#informasi-pembayaran-row').addClass('hidden');
                         $('#informasi-pembayaran').addClass('hidden');
                     }
-                    var t = setInterval(function () {
+                    var t = setInterval(function() {
                         lpr = '';
                         model = '';
                         datecapture = '';
@@ -259,7 +277,7 @@
 
         function blink() {
             $('#wrapper-info').addClass('animate-blink');
-            setTimeout(function () {
+            setTimeout(function() {
                 $('#wrapper-info').removeClass('animate-blink');
             }, 2000);
         }

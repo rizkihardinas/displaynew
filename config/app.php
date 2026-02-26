@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'ip_server' => env('IP_SERVER','127.0.0.1'),
+    'ip_server' => env('IP_SERVER', '127.0.0.1'),
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
 
     /*
     |--------------------------------------------------------------------------
