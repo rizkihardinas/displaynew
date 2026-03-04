@@ -82,6 +82,8 @@
             setimage(imagein, 'imagein');
             $('#info').text(pesan);
             $('#posname').text(posname);
+            $('#qris-merchant').text(posname);
+            $('#qris-issuer').text(posname);
             $('#posip').text(posip);
             $('#memberstatus').text(memberstatus);
             $('#lpr').text(lpr);

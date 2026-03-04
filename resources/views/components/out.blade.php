@@ -4,8 +4,27 @@
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-[300px] object-contain" alt="" id="image">
-            <div class="w-full h-[300px] flex flex-col items-center justify-center bg-white p-4" id="qr-container">
-                <div id="qr"></div>
+            <div class="w-full flex flex-col items-center justify-center bg-white p-4" id="qr-container">
+                {{-- QRIS Template --}}
+                <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
+                    {{-- Header: QRIS + GPN logo --}}
+                    <div class="flex items-center justify-between px-3 pt-3 pb-2 border-b border-gray-200">
+                        <img src="{{ env('IS_WINDOWS') ? asset('assets/qris.png') : asset('public/assets/qris.png') }}"
+                            alt="QRIS" class="h-8 w-auto">
+                        <img src="{{ env('IS_WINDOWS') ? asset('assets/gpn.svg') : asset('public/assets/gpn.svg') }}"
+                            alt="GPN" class="h-8 w-auto">
+                    </div>
+                    {{-- Merchant Name --}}
+                    <div class="text-center py-2 px-3">
+                        <span id="qris-merchant"
+                            class="text-sm font-bold tracking-widest uppercase text-gray-800">BYTEDEVICE</span>
+                    </div>
+                    {{-- QR Code --}}
+                    <div class="flex justify-center px-4 pb-2">
+                        <div id="qr" class="border border-gray-300"></div>
+                    </div>
+                    {{-- Footer --}}
+                </div>
                 <span id="expired" class="text-red-500 font-bold mt-2"></span>
             </div>
         </div>
