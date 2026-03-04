@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Display API</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/flowbite.min.css') }}" rel="stylesheet" />
+    @if (env('IS_WINDOWS'))
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/flowbite.min.css') }}" rel="stylesheet" />
+    @else
+        <link href="{{ asset('public/css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('public/css/flowbite.min.css') }}" rel="stylesheet" />
+    @endif
 
     <style>
         @keyframes blink1 {
@@ -99,11 +104,13 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/flowbite.min.js') }}"></script>
+
     @if (env('IS_WINDOWS'))
+        <script src="{{ asset('js/flowbite.min.js') }}"></script>
         <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/qrcode.min.js') }}"></script>
     @else
+        <script src="{{ asset('public/js/flowbite.min.js') }}"></script>
         <script src="{{ asset('public/js/app.js') }}"></script>
         <script src="{{ asset('public/js/qrcode.min.js') }}"></script>
     @endif
