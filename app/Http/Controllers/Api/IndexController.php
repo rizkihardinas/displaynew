@@ -90,6 +90,10 @@ class IndexController extends Controller
                     $data->action = 3;
                     if (isset($data->qris)) {
                         $payment = 'QRIS';
+                        if(!empty($data->qris)){
+                            session()->put('qris', $data->qris);
+                            $data->qris = session()->get('qris');
+                        }
                         $expired = now()->addMinutes(15)->format('d/m/Y H:i:s');
                     } else {
                         $payment = 'E-Payment Card';
