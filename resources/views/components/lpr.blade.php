@@ -32,13 +32,8 @@
                     @endforeach
                 </div>
             @endif
-            @if (env('IS_WINDOWS'))
-                <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
-                    src="{{ asset('Logo_Operator.jpg') }}">
-            @else
-                <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
-                    src="{{ asset('public/Logo_Operator.jpg') }}">
-            @endif
+            <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
+                src="{{ asset('Logo_Operator.jpg') }}">
 
         @endif
 

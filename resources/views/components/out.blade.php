@@ -9,10 +9,8 @@
                 <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
                     {{-- Header: QRIS + GPN logo --}}
                     <div class="flex items-center justify-between px-3 pt-3 pb-2 border-b border-gray-200">
-                        <img src="{{ env('IS_WINDOWS') ? asset('assets/qris.png') : asset('public/assets/qris.png') }}"
-                            alt="QRIS" class="h-8 w-auto">
-                        <img src="{{ env('IS_WINDOWS') ? asset('assets/gpn.svg') : asset('public/assets/gpn.svg') }}"
-                            alt="GPN" class="h-8 w-auto">
+                        <img src="{{ asset('assets/qris.png') }}" alt="QRIS" class="h-8 w-auto">
+                        <img src="{{ asset('assets/gpn.svg') }}" alt="GPN" class="h-8 w-auto">
                     </div>
                     {{-- Merchant Name --}}
                     <div class="text-center py-2 px-3">

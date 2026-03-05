@@ -37,12 +37,7 @@
     <div class="mx-auto p-4 flex flex-col h-full">
         <div class="flex justify-between bg-[{{ config('uno.style.header') }}] text-white p-2">
             <div>
-                @if (env('IS_WINDOWS'))
-                    <img src="{{ asset('Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
-                @else
-                    <img src="{{ asset('public/Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
-                @endif
-
+                <img src="{{ asset('Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
             </div>
             <div class="text-right text-xl font-bold text-black">
                 <div id="time"></div>
@@ -53,7 +48,7 @@
     </div>
     <div
         class="mx-4 mb-2 fixed bottom-0 left-0 right-0 flex justify-between items-center bg-[{{ config('uno.style.footer') }}] text-black p-2 mt-2 font-bold">
-        <div><span class="text-xl"><img src="{{ env('IS_WINDOWS') ? asset('Logo_UNO.jpg') : asset('public/Logo_UNO.jpg') }}" class="w-24" alt=""></span>
+        <div><span class="text-xl"><img src="{{ asset('Logo_UNO.jpg') }}" class="w-24" alt=""></span>
         </div>
         <div class="text-center flex-grow mx-24">
             <marquee class="text-2xl">{{ $setting->text_promotion }}</marquee>
@@ -68,11 +63,7 @@
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-@if (env('IS_WINDOWS'))
-    <script src=" {{ asset('js/app.js') }}"></script>
-@else
-    <script src=" {{ asset('public/js/app.js') }}"></script>
-@endif
+<script src=" {{ asset('js/app.js') }}"></script>
 
 {{-- @livewireScripts --}}
 
