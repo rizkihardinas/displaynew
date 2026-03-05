@@ -88,18 +88,36 @@ class IndexController extends Controller
                     break;
                 case 3:
                     $data->action = 3;
+
+                    // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
+                    $cacheTicketKey = 'ticket_' . $request->locationID;
+                    $cacheQrisKey   = 'qris_' . $request->locationID;
+
+                    $savedTicket = cache()->get($cacheTicketKey);
+
+                    // Jika tiket berganti, update tiket di cache dan hapus qris lama
+                    if (empty($savedTicket) || $savedTicket != $data->nota) {
+                        cache()->put($cacheTicketKey, $data->nota, now()->addMinutes(60));
+                        cache()->forget($cacheQrisKey);
+                    }
+
+                    // Jika qris ada di request ini dan tidak kosong, simpan ke cache
+                    if (isset($data->qris) && $data->qris != '') {
+                        cache()->put($cacheQrisKey, $data->qris, now()->addMinutes(60));
+                    }
+                    // Jika tidak ada di request, tapi di cache masih ada qris (berarti tiketnya sama), ambil dari cache
+                    elseif (cache()->has($cacheQrisKey)) {
+                        $data->qris = cache()->get($cacheQrisKey);
+                    }
+
                     if (isset($data->qris)) {
                         $payment = 'QRIS';
-                        if (!empty($data->qris) || $data->qris != '') {
-                            session()->put('qris', $data->qris);
-                        } else {
-                            $data->qris = session()->get('qris');
-                        }
                         $expired = now()->addMinutes(10)->format('d/m/Y H:i:s');
                     } else {
                         $payment = 'E-Payment Card';
                         $expired = '';
                     }
+
                     $data->pesan = 'Silahkan melakukan pembayaran dengan ' . $payment;
                     $data->expired = $expired;
                     event(new OutEvent(json_encode($data)));
@@ -108,7 +126,6 @@ class IndexController extends Controller
                     $data->action = 4;
                     $data->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
                     event(new OutEvent(json_encode($data)));
-                    break;
 
                 default:
                     $response = [
@@ -131,6 +148,7 @@ class IndexController extends Controller
             ];
             return response()->json($response);
         } catch (\Throwable $th) {
+            dd($th);
             $response = [
                 'userID' => $request->userID,
                 'locationID' => $request->locationID,
