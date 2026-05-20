@@ -124,8 +124,13 @@
             hours = hours < 10 ? '0' + hours : hours;
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
-            var formattedTime = now.getDate() + '/' + now.getMonth() + 1 + '/' + now.getFullYear() + ' ' + hours + ':' +
-                minutes + ':' + seconds;
+
+            var day = String(now.getDate()).padStart(2, '0');
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+
+            var formattedTime =
+                day + '/' + month + '/' + now.getFullYear() + ' ' +
+                hours + ':' + minutes + ':' + seconds;
 
             // Update the clock div with the current time
             $('#time').text(formattedTime);
