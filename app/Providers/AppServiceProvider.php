@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,11 +20,15 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('setting', function () {
-            return Setting::first();
+            return Cache::rememberForever('setting_first', function () {
+                return Setting::first();
+            });
         });
 
         $this->app->singleton('security', function () {
-            return Security::first();
+            return Cache::rememberForever('security_first', function () {
+                return Security::first();
+            });
         });
     }
 

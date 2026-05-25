@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\CryptAES;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Models\Preference;
 use Carbon\Carbon;
@@ -238,6 +239,7 @@ class IndexController extends Controller
         try {
             $setting = Setting::first()->update($request->all());
             DB::commit();
+            Cache::forget('setting_first');
             return response()->json($setting);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -264,6 +266,7 @@ class IndexController extends Controller
         try {
             $security = Security::first()->update($request->all());
             DB::commit();
+            Cache::forget('security_first');
             return response()->json($security);
         } catch (\Throwable $th) {
             DB::rollBack();
