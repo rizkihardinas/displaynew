@@ -99,7 +99,7 @@
                                 
                                 $('#expired').text('Masa Berlaku : ' + (datas.expired || ''));
                                 $('#informasi-pembayaran-row').removeClass('hidden');
-                                $('#qr-container').removeClass('hidden');
+                                $('#qr-container').show();
                                 console.log('✓ QR Code generated successfully');
                                 console.log('✓ qr-container class:', $('#qr-container').attr('class'));
                             } else {
@@ -111,7 +111,7 @@
                             console.error('Stack:', e.stack);
                         }
                     } else {
-                        $('#qr-container').addClass('hidden');
+                        $('#qr-container').hide();
                         console.log('⚠ QRIS string kosong atau tidak ada');
                     }
                 }, 300);
@@ -149,10 +149,11 @@
             // Handle image display - tampilkan image jika tidak ada QR
             if (!qr || qr.trim() == '') {
                 $('#image').show();
-                $('#qr-container').addClass('hidden');
+                $('#qr-container').hide();
                 console.log('Showing image (no QR)');
             } else {
                 $('#image').hide();
+                $('#qr-container').show();
                 console.log('Hiding image (QR present)');
             }
             if (action == 1) {
