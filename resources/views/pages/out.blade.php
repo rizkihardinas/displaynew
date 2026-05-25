@@ -32,6 +32,7 @@
             hasResponse = true;
 
             var datas = data.data;
+            console.log('Received data:', datas);
             var action = datas.action;
             if (action == 3 || action == 4) {
                 var html = `@include('components.out')`;
