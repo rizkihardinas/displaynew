@@ -34,9 +34,13 @@
             var datas = data.data;
             console.log('Received data:', datas);
             var action = datas.action;
+            
+            console.log('Action:', action);
             if (action == 3 || action == 4) {
+                console.log('Injecting out component');
                 var html = `@include('components.out')`;
                 $('#wrapper').html(html);
+                console.log('Out component injected, checking for qr-container:', document.getElementById('qr-container') !== null);
             }
             var local_ip = data.local_ip;
             var job = datas.job;
@@ -66,18 +70,26 @@
             var done = false;
             if (action == 3) {
                 var i = 0;
+                console.log('Action 3 detected, scheduling QR generation...');
                 // Gunakan setTimeout untuk memastikan DOM sudah siap sebelum membuat QR Code
                 setTimeout(function() {
-                    console.log('=== Starting QR Code Generation ===');
+                    console.log('=== Starting QR Code Generation (timeout 1s) ===');
                     console.log('QRIS value:', qr);
                     console.log('QRIS length:', qr ? qr.length : 0);
                     console.log('QRIS is empty:', !qr || qr.trim() == '');
+                    
+                    // Check if container exists
+                    var qrContainer = document.getElementById('qr-container');
+                    console.log('QR Container exists:', qrContainer !== null);
+                    if (qrContainer) {
+                        console.log('QR Container parent:', qrContainer.parentElement ? qrContainer.parentElement.id : 'no parent');
+                    }
                     
                     if (qr && qr.trim() != '') {
                         try {
                             // Check if QRCode library is available
                             if (typeof QRCode === 'undefined') {
-                                console.error('QRCode library not loaded!');
+                                console.error('❌ QRCode library not loaded!');
                                 return;
                             }
                             
@@ -107,15 +119,18 @@
                                 $('#informasi-pembayaran-row').removeClass('hidden');
                                 
                                 // Use display style instead of show() to avoid Flowbite conflict
-                                var qrContainer = document.getElementById('qr-container');
                                 if (qrContainer) {
                                     qrContainer.style.display = 'flex';
+                                    console.log('✓ QR Container displayed (flex)');
+                                    console.log('✓ QR Container display value:', window.getComputedStyle(qrContainer).display);
+                                } else {
+                                    console.error('❌ QR Container not found at generation time!');
                                 }
                                 
                                 console.log('✓ QR Code generated successfully');
                             } else {
                                 console.error('❌ Element #qr tidak ditemukan');
-                                console.log('Available elements:', document.querySelectorAll('[id]').length);
+                                console.log('Available elements with id:', Array.from(document.querySelectorAll('[id]')).map(el => el.id).join(', '));
                             }
                         } catch (e) {
                             console.error('❌ Error generating QR code:', e.message);
@@ -123,13 +138,13 @@
                         }
                     } else {
                         // Hide QR container if QRIS is empty
-                        var qrContainer = document.getElementById('qr-container');
                         if (qrContainer) {
                             qrContainer.style.display = 'none';
+                            console.log('⚠ QR Container hidden (QRIS empty)');
                         }
                         console.log('⚠ QRIS string kosong atau tidak ada');
                     }
-                }, 500);
+                }, 1000);
 
                 if (memberperiod) {
                     $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
