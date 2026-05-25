@@ -162,6 +162,11 @@
                                 correctLevel: QRCode.CorrectLevel.M,
                                 useSVG: false
                             });
+                            fetch('/api/log-frontend', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({message: 'QRCode displayed at ' + new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) + ' | nota: ' + nota})
+                            });
                         }
                     }
                     var i = 0;

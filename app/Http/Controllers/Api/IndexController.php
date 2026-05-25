@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\CryptAES;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Models\Preference;
 use Carbon\Carbon;
@@ -20,9 +21,15 @@ class IndexController extends Controller
     use CryptAES;
     function hit_display(Request $request)
     {
+        Log::info('[Backend] ' . now()->format('Y-m-d H:i:s'));
         $action = $request->action;
-        $setting = Setting::first();
-        $security = Security::first();
+        $setting = Cache::rememberForever('setting_first', function () {
+            return Setting::first();
+        });
+
+        $security = Cache::rememberForever('security_first', function () {
+            return Security::first();
+        });
         $username = $security->username;
         $password = $security->password;
         $key = $security->key;
@@ -205,7 +212,9 @@ class IndexController extends Controller
         if (env('IS_WINDOWS')) {
             $filePath = $filePath;
         } else {
-            $setting = Setting::first();
+            $setting = Cache::rememberForever('setting_first', function () {
+                return Setting::first();
+            });
 
             $ip = $this->ip_extract($filePath);
             $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $filePath);
@@ -236,6 +245,7 @@ class IndexController extends Controller
         try {
             $setting = Setting::first()->update($request->all());
             DB::commit();
+            Cache::forget('setting_first');
             return response()->json($setting);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -262,6 +272,7 @@ class IndexController extends Controller
         try {
             $security = Security::first()->update($request->all());
             DB::commit();
+            Cache::forget('security_first');
             return response()->json($security);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -279,5 +290,11 @@ class IndexController extends Controller
         // Gabungkan kembali segmen tersebut
         $result = implode('.', $filteredSegments);
         return $result;
+    }
+
+    function logFrontend(Request $request)
+    {
+        Log::info('[Frontend] ' . $request->input('message', 'no message'));
+        return response()->json(['status' => 'ok']);
     }
 }

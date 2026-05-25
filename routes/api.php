@@ -21,3 +21,4 @@ Route::get('/video-to-base64', [IndexController::class,'convertToBase64'])->name
 Route::post('/setting/display',[IndexController::class,'setupSetting']);
 Route::post('/setting/access',[IndexController::class,'setupSecurity']);
 Route::post('/setting/preference',[IndexController::class,'setupPreference']);
+Route::post('/log-frontend',[IndexController::class,'logFrontend']);
