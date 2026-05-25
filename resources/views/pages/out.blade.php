@@ -89,20 +89,30 @@
                                 qrElement.innerHTML = '';
                                 console.log('Creating QRCode with text:', qr.substring(0, 50) + '...');
                                 
-                                var qrcode = new QRCode(qrElement, {
-                                    text: qr,
-                                    width: 200,
-                                    height: 200,
-                                    colorDark: "#000000",
-                                    colorLight: "#ffffff",
-                                    correctLevel: QRCode.CorrectLevel.H
-                                });
+                                try {
+                                    var qrcode = new QRCode(qrElement, {
+                                        text: qr,
+                                        width: 200,
+                                        height: 200,
+                                        colorDark: "#000000",
+                                        colorLight: "#ffffff",
+                                        correctLevel: QRCode.CorrectLevel.H
+                                    });
+                                    console.log('✓ QRCode object created');
+                                } catch (qrErr) {
+                                    console.error('Error creating QRCode:', qrErr);
+                                }
                                 
                                 $('#expired').text('Masa Berlaku : ' + (datas.expired || ''));
                                 $('#informasi-pembayaran-row').removeClass('hidden');
-                                $('#qr-container').show();
+                                
+                                // Use display style instead of show() to avoid Flowbite conflict
+                                var qrContainer = document.getElementById('qr-container');
+                                if (qrContainer) {
+                                    qrContainer.style.display = 'flex';
+                                }
+                                
                                 console.log('✓ QR Code generated successfully');
-                                console.log('✓ qr-container class:', $('#qr-container').attr('class'));
                             } else {
                                 console.error('❌ Element #qr tidak ditemukan');
                                 console.log('Available elements:', document.querySelectorAll('[id]').length);
@@ -112,10 +122,14 @@
                             console.error('Stack:', e.stack);
                         }
                     } else {
-                        $('#qr-container').hide();
+                        // Hide QR container if QRIS is empty
+                        var qrContainer = document.getElementById('qr-container');
+                        if (qrContainer) {
+                            qrContainer.style.display = 'none';
+                        }
                         console.log('⚠ QRIS string kosong atau tidak ada');
                     }
-                }, 300);
+                }, 500);
 
                 if (memberperiod) {
                     $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
@@ -149,12 +163,16 @@
             
             // Handle image display - tampilkan image jika tidak ada QR
             if (!qr || qr.trim() == '') {
-                $('#image').show();
-                $('#qr-container').hide();
+                // Show image, hide QR container
+                var imgElement = document.getElementById('image');
+                var qrElement = document.getElementById('qr-container');
+                if (imgElement) imgElement.style.display = 'block';
+                if (qrElement) qrElement.style.display = 'none';
                 console.log('Showing image (no QR)');
             } else {
-                $('#image').hide();
-                $('#qr-container').show();
+                // Hide image, QR will be shown by setTimeout above
+                var imgElement = document.getElementById('image');
+                if (imgElement) imgElement.style.display = 'none';
                 console.log('Hiding image (QR present)');
             }
             if (action == 1) {
