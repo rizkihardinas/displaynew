@@ -29,194 +29,239 @@
 
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event-out', function(data) {
-            hasResponse = true;
+            try {
+                hasResponse = true;
 
-            var datas = data.data;
-            console.log('Received data:', datas);
-            var action = datas.action;
-            
-            console.log('Action:', action);
-            if (action == 3 || action == 4) {
-                console.log('Injecting out component');
-                var html = `@include('components.out')`;
-                $('#wrapper').html(html);
-                console.log('Out component injected, checking for qr-container:', document.getElementById('qr-container') !== null);
-            }
-            var local_ip = data.local_ip;
-            var job = datas.job;
-            var posname = datas.posname;
-            var posip = datas.posip;
-            var image = datas.image;
-            var imagein = datas.imagein;
-            if (lpr == '') {
-                lpr = datas.lpr
-                model = datas.model;
-                datecapture = datas.datecapture;
-                memberstatus = datas.memberstatus;
-            }
-            var memberperiod = datas.memberperiod;
-            var nota = datas.nota;
-            var plateno = datas.plateno;
-            var total = datas.total;
-            var vehicletype = datas.vehicletype;
-            var inpos = datas.inpos;
-            var intime = datas.intime;
-            var outtime = datas.outtime;
-            var duration = datas.duration;
-            var pesan = datas.pesan;
-            var qr = datas.qris;
-            console.log('Received QRIS:', qr);
-            console.log('QRCode library available:', typeof QRCode !== 'undefined');
-            var done = false;
-            if (action == 3) {
-                var i = 0;
-                console.log('Action 3 detected, scheduling QR generation...');
-                // Gunakan setTimeout untuk memastikan DOM sudah siap sebelum membuat QR Code
-                setTimeout(function() {
-                    console.log('=== Starting QR Code Generation (timeout 1s) ===');
-                    console.log('QRIS value:', qr);
-                    console.log('QRIS length:', qr ? qr.length : 0);
-                    console.log('QRIS is empty:', !qr || qr.trim() == '');
+                var datas = data.data;
+                console.log('Received data:', datas);
+                var action = datas.action;
+                
+                console.log('Action:', action);
+                if (action == 3 || action == 4) {
+                    console.log('Injecting out component');
+                    var html = `@include('components.out')`;
                     
-                    // Check if container exists
-                    var qrContainer = document.getElementById('qr-container');
-                    console.log('QR Container exists:', qrContainer !== null);
-                    if (qrContainer) {
-                        console.log('QR Container parent:', qrContainer.parentElement ? qrContainer.parentElement.id : 'no parent');
+                    // Use vanilla JS to avoid Flowbite conflicts
+                    var wrapperEl = document.getElementById('wrapper');
+                    if (wrapperEl) {
+                        wrapperEl.innerHTML = html;
+                        console.log('Out component injected, checking for qr-container:', document.getElementById('qr-container') !== null);
                     }
-                    
-                    if (qr && qr.trim() != '') {
-                        try {
-                            // Check if QRCode library is available
-                            if (typeof QRCode === 'undefined') {
-                                console.error('❌ QRCode library not loaded!');
-                                return;
-                            }
-                            
-                            // Clear elemen terlebih dahulu jika ada
-                            var qrElement = document.getElementById("qr");
-                            console.log('QR Element found:', qrElement !== null);
-                            
-                            if (qrElement) {
-                                qrElement.innerHTML = '';
-                                console.log('Creating QRCode with text:', qr.substring(0, 50) + '...');
-                                
-                                try {
-                                    var qrcode = new QRCode(qrElement, {
-                                        text: qr,
-                                        width: 200,
-                                        height: 200,
-                                        colorDark: "#000000",
-                                        colorLight: "#ffffff",
-                                        correctLevel: QRCode.CorrectLevel.H
-                                    });
-                                    console.log('✓ QRCode object created');
-                                } catch (qrErr) {
-                                    console.error('Error creating QRCode:', qrErr);
-                                }
-                                
-                                $('#expired').text('Masa Berlaku : ' + (datas.expired || ''));
-                                $('#informasi-pembayaran-row').removeClass('hidden');
-                                
-                                // Use display style instead of show() to avoid Flowbite conflict
-                                if (qrContainer) {
-                                    qrContainer.style.display = 'flex';
-                                    console.log('✓ QR Container displayed (flex)');
-                                    console.log('✓ QR Container display value:', window.getComputedStyle(qrContainer).display);
-                                } else {
-                                    console.error('❌ QR Container not found at generation time!');
-                                }
-                                
-                                console.log('✓ QR Code generated successfully');
-                            } else {
-                                console.error('❌ Element #qr tidak ditemukan');
-                                console.log('Available elements with id:', Array.from(document.querySelectorAll('[id]')).map(el => el.id).join(', '));
-                            }
-                        } catch (e) {
-                            console.error('❌ Error generating QR code:', e.message);
-                            console.error('Stack:', e.stack);
-                        }
-                    } else {
-                        // Hide QR container if QRIS is empty
-                        if (qrContainer) {
-                            qrContainer.style.display = 'none';
-                            console.log('⚠ QR Container hidden (QRIS empty)');
-                        }
-                        console.log('⚠ QRIS string kosong atau tidak ada');
-                    }
-                }, 1000);
-
-                if (memberperiod) {
-                    $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
                 }
-                var time_out = setInterval(function() {
-                    // clear_out();
-                    var html = `@include('components.in')`;
-                    $('#wrapper').html(html);
-                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(time_out);
+                var local_ip = data.local_ip;
+                var job = datas.job;
+                var posname = datas.posname;
+                var posip = datas.posip;
+                var image = datas.image;
+                var imagein = datas.imagein;
+                if (lpr == '') {
+                    lpr = datas.lpr
+                    model = datas.model;
+                    datecapture = datas.datecapture;
+                    memberstatus = datas.memberstatus;
+                }
+                var memberperiod = datas.memberperiod;
+                var nota = datas.nota;
+                var plateno = datas.plateno;
+                var total = datas.total;
+                var vehicletype = datas.vehicletype;
+                var inpos = datas.inpos;
+                var intime = datas.intime;
+                var outtime = datas.outtime;
+                var duration = datas.duration;
+                var pesan = datas.pesan;
+                var qr = datas.qris;
+                console.log('Received QRIS:', qr);
+                console.log('QRCode library available:', typeof QRCode !== 'undefined');
+                var done = false;
+                if (action == 3) {
+                    var i = 0;
+                    console.log('Action 3 detected, scheduling QR generation...');
+                    // Gunakan setTimeout untuk memastikan DOM sudah siap sebelum membuat QR Code
+                    setTimeout(function() {
+                        console.log('=== Starting QR Code Generation (timeout 1s) ===');
+                        console.log('QRIS value:', qr);
+                        console.log('QRIS length:', qr ? qr.length : 0);
+                        console.log('QRIS is empty:', !qr || qr.trim() == '');
+                        
+                        // Check if container exists
+                        var qrContainer = document.getElementById('qr-container');
+                        console.log('QR Container exists:', qrContainer !== null);
+                        if (qrContainer) {
+                            console.log('QR Container parent:', qrContainer.parentElement ? qrContainer.parentElement.id : 'no parent');
+                        }
+                        
+                        if (qr && qr.trim() != '') {
+                            try {
+                                // Check if QRCode library is available
+                                if (typeof QRCode === 'undefined') {
+                                    console.error('❌ QRCode library not loaded!');
+                                    return;
+                                }
+                                
+                                // Clear elemen terlebih dahulu jika ada
+                                var qrElement = document.getElementById("qr");
+                                console.log('QR Element found:', qrElement !== null);
+                                
+                                if (qrElement) {
+                                    qrElement.innerHTML = '';
+                                    console.log('Creating QRCode with text:', qr.substring(0, 50) + '...');
+                                    
+                                    try {
+                                        var qrcode = new QRCode(qrElement, {
+                                            text: qr,
+                                            width: 200,
+                                            height: 200,
+                                            colorDark: "#000000",
+                                            colorLight: "#ffffff",
+                                            correctLevel: QRCode.CorrectLevel.H
+                                        });
+                                        console.log('✓ QRCode object created');
+                                    } catch (qrErr) {
+                                        console.error('Error creating QRCode:', qrErr);
+                                    }
+                                    
+                                    try {
+                                        $('#expired').text('Masa Berlaku : ' + (datas.expired || ''));
+                                        $('#informasi-pembayaran-row').removeClass('hidden');
+                                    } catch (jqErr) {
+                                        console.warn('jQuery error (non-fatal):', jqErr);
+                                    }
+                                    
+                                    // Use display style instead of show() to avoid Flowbite conflict
+                                    if (qrContainer) {
+                                        qrContainer.style.display = 'flex';
+                                        console.log('✓ QR Container displayed (flex)');
+                                        console.log('✓ QR Container display value:', window.getComputedStyle(qrContainer).display);
+                                    } else {
+                                        console.error('❌ QR Container not found at generation time!');
+                                    }
+                                    
+                                    console.log('✓ QR Code generated successfully');
+                                } else {
+                                    console.error('❌ Element #qr tidak ditemukan');
+                                    console.log('Available elements with id:', Array.from(document.querySelectorAll('[id]')).map(el => el.id).join(', '));
+                                }
+                            } catch (e) {
+                                console.error('❌ Error generating QR code:', e.message);
+                                console.error('Stack:', e.stack);
+                            }
+                        } else {
+                            // Hide QR container if QRIS is empty
+                            if (qrContainer) {
+                                qrContainer.style.display = 'none';
+                                console.log('⚠ QR Container hidden (QRIS empty)');
+                            }
+                            console.log('⚠ QRIS string kosong atau tidak ada');
+                        }
+                    }, 1000);
 
-                }, 15000); // 1 menit
+                    if (memberperiod) {
+                        try {
+                            $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
+                        } catch (e) {
+                            console.warn('jQuery error setting memberperiod:', e);
+                        }
+                    }
+                    var time_out = setInterval(function() {
+                        // clear_out();
+                        var html = `@include('components.in')`;
+                        var wrapperEl = document.getElementById('wrapper');
+                        if (wrapperEl) {
+                            wrapperEl.innerHTML = html;
+                        }
+                        try {
+                            $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                        } catch (e) {
+                            console.warn('jQuery error:', e);
+                        }
+                        clearInterval(time_out);
 
-            }
+                    }, 15000); // 1 menit
 
-            setimage(image, 'image');
-            setimage(imagein, 'imagein');
-            $('#info').text(pesan);
-            $('#posname').text(posname);
-            $('#qris-merchant').text(posname);
-            $('#posip').text(posip);
-            $('#memberstatus').text(memberstatus);
-            $('#lpr').text(lpr);
-            $('#datecapture').text(datecapture);
-            $('#nota').text(nota);
-            $('#total').text(formatRupiah(total));
-            $('#vehicletype').text(vehicletype);
-            $('#intime').text(intime);
-            $('#outtime').text(outtime);
-            $('#duration').text(duration);
-            
-            // Handle image display - tampilkan image jika tidak ada QR
-            if (!qr || qr.trim() == '') {
-                // Show image, hide QR container
-                var imgElement = document.getElementById('image');
-                var qrElement = document.getElementById('qr-container');
-                if (imgElement) imgElement.style.display = 'block';
-                if (qrElement) qrElement.style.display = 'none';
-                console.log('Showing image (no QR)');
-            } else {
-                // Hide image, QR will be shown by setTimeout above
-                var imgElement = document.getElementById('image');
-                if (imgElement) imgElement.style.display = 'none';
-                console.log('Hiding image (QR present)');
-            }
-            if (action == 1) {
-                var t = setInterval(function() {
-                    hasResponse = hasResponse ? !hasResponse : hasResponse;
-                    action = 0;
-                    clearInterval(t);
-                }, 15000);
+                }
 
-            }
-            if (action == 4) {
-                var balance = datas.balance;
-                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                var t = setInterval(function() {
-                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-                    $('#memberstatus').text('-');
-                    $('#lpr').text('-');
-                    $('#datecapture').text('-');
-                    $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
-                    var html = `@include('components.in')`;
-                    $('#wrapper').html(html);
-                    lpr = '';
-                    model = '';
-                    datecapture = '';
-                    memberstatus = '';
-                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    clearInterval(t);
-                }, 15000); // 30 detik
+                setimage(image, 'image');
+                setimage(imagein, 'imagein');
+                try {
+                    $('#info').text(pesan);
+                    $('#posname').text(posname);
+                    $('#qris-merchant').text(posname);
+                    $('#posip').text(posip);
+                    $('#memberstatus').text(memberstatus);
+                    $('#lpr').text(lpr);
+                    $('#datecapture').text(datecapture);
+                    $('#nota').text(nota);
+                    $('#total').text(formatRupiah(total));
+                    $('#vehicletype').text(vehicletype);
+                    $('#intime').text(intime);
+                    $('#outtime').text(outtime);
+                    $('#duration').text(duration);
+                } catch (e) {
+                    console.warn('jQuery DOM manipulation error:', e);
+                }
+                
+                // Handle image display - tampilkan image jika tidak ada QR
+                if (!qr || qr.trim() == '') {
+                    // Show image, hide QR container
+                    var imgElement = document.getElementById('image');
+                    var qrElement = document.getElementById('qr-container');
+                    if (imgElement) imgElement.style.display = 'block';
+                    if (qrElement) qrElement.style.display = 'none';
+                    console.log('Showing image (no QR)');
+                } else {
+                    // Hide image, QR will be shown by setTimeout above
+                    var imgElement = document.getElementById('image');
+                    if (imgElement) imgElement.style.display = 'none';
+                    console.log('Hiding image (QR present)');
+                }
+                if (action == 1) {
+                    var t = setInterval(function() {
+                        hasResponse = hasResponse ? !hasResponse : hasResponse;
+                        action = 0;
+                        clearInterval(t);
+                    }, 15000);
 
+                }
+                if (action == 4) {
+                    var balance = datas.balance;
+                    try {
+                        $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                    } catch (e) {
+                        console.warn('jQuery error setting balance:', e);
+                    }
+                    var t = setInterval(function() {
+                        try {
+                            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+                            $('#memberstatus').text('-');
+                            $('#lpr').text('-');
+                            $('#datecapture').text('-');
+                            $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+                        } catch (e) {
+                            console.warn('jQuery error:', e);
+                        }
+                        var html = `@include('components.in')`;
+                        var wrapperEl = document.getElementById('wrapper');
+                        if (wrapperEl) {
+                            wrapperEl.innerHTML = html;
+                        }
+                        try {
+                            $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                        } catch (e) {
+                            console.warn('jQuery error:', e);
+                        }
+                        lpr = '';
+                        model = '';
+                        datecapture = '';
+                        memberstatus = '';
+                        clearInterval(t);
+                    }, 15000); // 30 detik
+
+                }
+
+            } catch (e) {
+                console.error('Fatal error in Pusher event handler:', e);
+                console.error('Stack:', e.stack);
             }
 
         });
