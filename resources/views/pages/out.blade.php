@@ -60,6 +60,7 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var qr = datas.qris;
+            console.log('Received data:', qr);
             var done = false;
             if (action == 3) {
                 var i = 0;
