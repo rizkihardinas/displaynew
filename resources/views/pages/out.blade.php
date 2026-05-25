@@ -63,6 +63,37 @@
             var done = false;
             if (action == 3) {
                 var i = 0;
+                // Gunakan setTimeout untuk memastikan DOM sudah siap sebelum membuat QR Code
+                setTimeout(function() {
+                    if (qr && qr.trim() != '') {
+                        try {
+                            // Clear elemen terlebih dahulu jika ada
+                            var qrElement = document.getElementById("qr");
+                            if (qrElement) {
+                                qrElement.innerHTML = '';
+                                var qrcode = new QRCode(qrElement, {
+                                    text: qr,
+                                    width: 200,
+                                    height: 200,
+                                    colorDark: "#000000",
+                                    colorLight: "#ffffff",
+                                    correctLevel: QRCode.CorrectLevel.H
+                                });
+                                $('#expired').text('Masa Berlaku : ' + (datas.expired || ''));
+                                $('#informasi-pembayaran-row').removeClass('hidden');
+                                $('#qr-container').removeClass('hidden');
+                                console.log('QR Code generated successfully');
+                            } else {
+                                console.error('Element #qr tidak ditemukan');
+                            }
+                        } catch (e) {
+                            console.error('Error generating QR code:', e);
+                        }
+                    } else {
+                        $('#qr-container').addClass('hidden');
+                        console.log('QRIS string kosong');
+                    }
+                }, 100);
 
                 if (memberperiod) {
                     $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
@@ -83,7 +114,6 @@
             $('#info').text(pesan);
             $('#posname').text(posname);
             $('#qris-merchant').text(posname);
-            $('#qris-issuer').text(posname);
             $('#posip').text(posip);
             $('#memberstatus').text(memberstatus);
             $('#lpr').text(lpr);
@@ -94,8 +124,12 @@
             $('#intime').text(intime);
             $('#outtime').text(outtime);
             $('#duration').text(duration);
-            $('#image').attr('src', image);
-            $('#imagein').attr('src', imagein);
+            
+            // Handle image display - tampilkan image jika tidak ada QR
+            if (!qr || qr.trim() == '') {
+                $('#image').show();
+                $('#imagein').attr('src', imagein);
+            }
             if (action == 1) {
                 var t = setInterval(function() {
                     hasResponse = hasResponse ? !hasResponse : hasResponse;
