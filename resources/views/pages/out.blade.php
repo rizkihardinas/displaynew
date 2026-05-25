@@ -29,169 +29,100 @@
 
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event-out', function(data) {
-            try {
-                hasResponse = true;
+            hasResponse = true;
 
-                var datas = data.data;
-                var action = datas.action;
-                
-                console.log('=== PUSHER EVENT RECEIVED ===');
-                console.log('Action:', action);
-                
-                // Delay semua operations sampai DOM benar-benar siap
-                requestAnimationFrame(function() {
-                    setTimeout(function() {
-                        console.log('DOM ready, starting processing...');
-                        
-                        if (action == 3 || action == 4) {
-                            console.log('Injecting out component');
-                            var html = `@include('components.out')`;
-                            var wrapperEl = document.getElementById('wrapper');
-                            if (wrapperEl) {
-                                wrapperEl.innerHTML = html;
-                                console.log('Out component injected');
-                            }
-                        }
-                        
-                        var local_ip = data.local_ip;
-                        var job = datas.job;
-                        var posname = datas.posname;
-                        var posip = datas.posip;
-                        var image = datas.image;
-                        var imagein = datas.imagein;
-                        if (lpr == '') {
-                            lpr = datas.lpr
-                            model = datas.model;
-                            datecapture = datas.datecapture;
-                            memberstatus = datas.memberstatus;
-                        }
-                        var memberperiod = datas.memberperiod;
-                        var nota = datas.nota;
-                        var plateno = datas.plateno;
-                        var total = datas.total;
-                        var vehicletype = datas.vehicletype;
-                        var inpos = datas.inpos;
-                        var intime = datas.intime;
-                        var outtime = datas.outtime;
-                        var duration = datas.duration;
-                        var pesan = datas.pesan;
-                        var qr = datas.qris;
-                        
-                        console.log('Received QRIS:', qr ? qr.substring(0, 30) + '...' : 'NONE');
-                        console.log('QRCode library available:', typeof QRCode !== 'undefined');
-                        
-                        // Delay QR generation lebih lama lagi
-                        if (action == 3) {
-                            console.log('Action 3 - preparing QR...');
-                            setTimeout(function() {
-                                console.log('Starting QR generation (2s delay)');
-                                
-                                var qrContainer = document.getElementById('qr-container');
-                                var qrElement = document.getElementById("qr");
-                                
-                                console.log('QR Container found:', qrContainer !== null);
-                                console.log('QR Element found:', qrElement !== null);
-                                
-                                if (qr && qr.trim() != '' && qrElement && qrContainer) {
-                                    if (typeof QRCode !== 'undefined') {
-                                        try {
-                                            qrElement.innerHTML = '';
-                                            var qrcode = new QRCode(qrElement, {
-                                                text: qr,
-                                                width: 200,
-                                                height: 200,
-                                                colorDark: "#000000",
-                                                colorLight: "#ffffff",
-                                                correctLevel: QRCode.CorrectLevel.H
-                                            });
-                                            qrContainer.style.display = 'flex';
-                                            console.log('✓ QR Code generated and shown');
-                                        } catch (e) {
-                                            console.error('QRCode generation error:', e.message);
-                                        }
-                                    } else {
-                                        console.error('QRCode library not available');
-                                    }
-                                } else {
-                                    if (qrContainer) {
-                                        qrContainer.style.display = 'none';
-                                    }
-                                    console.log('QRIS empty or elements not found');
-                                }
-                            }, 2000);
-                        }
-                        
-                        // Set image dengan delay
-                        setTimeout(function() {
-                            console.log('Setting images...');
-                            setimage(image, 'image');
-                            setimage(imagein, 'imagein');
-                            
-                            try {
-                                $('#info').text(pesan);
-                                $('#posname').text(posname);
-                                $('#qris-merchant').text(posname);
-                                $('#posip').text(posip);
-                                $('#memberstatus').text(memberstatus);
-                                $('#lpr').text(lpr);
-                                $('#datecapture').text(datecapture);
-                                $('#nota').text(nota);
-                                $('#total').text(formatRupiah(total));
-                                $('#vehicletype').text(vehicletype);
-                                $('#intime').text(intime);
-                                $('#outtime').text(outtime);
-                                $('#duration').text(duration);
-                                console.log('DOM elements updated');
-                            } catch (e) {
-                                console.warn('DOM update error:', e);
-                            }
-                            
-                            if (!qr || qr.trim() == '') {
-                                var imgElement = document.getElementById('image');
-                                if (imgElement) imgElement.style.display = 'block';
-                                console.log('Showing image (no QR)');
-                            } else {
-                                var imgElement = document.getElementById('image');
-                                if (imgElement) imgElement.style.display = 'none';
-                                console.log('Hiding image (QR present)');
-                            }
-                        }, 1500);
-                        
-                        if (action == 1) {
-                            console.log('Action 1 - resetting');
-                            var t = setInterval(function() {
-                                hasResponse = hasResponse ? !hasResponse : hasResponse;
-                                clearInterval(t);
-                            }, 15000);
-                        }
-                        
-                        if (action == 4) {
-                            console.log('Action 4 - goodbye message');
-                            var balance = datas.balance;
-                            try {
-                                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                            } catch (e) {
-                                console.warn('Balance update error:', e);
-                            }
-                            var t = setInterval(function() {
-                                var html = `@include('components.in')`;
-                                var wrapperEl = document.getElementById('wrapper');
-                                if (wrapperEl) {
-                                    wrapperEl.innerHTML = html;
-                                }
-                                lpr = '';
-                                model = '';
-                                datecapture = '';
-                                memberstatus = '';
-                                clearInterval(t);
-                            }, 15000);
-                        }
-                        
-                    }, 100);
-                });
+            var datas = data.data;
+            var action = datas.action;
+            if (action == 3 || action == 4) {
+                var html = `@include('components.out')`;
+                $('#wrapper').html(html);
+            }
+            var local_ip = data.local_ip;
+            var job = datas.job;
+            var posname = datas.posname;
+            var posip = datas.posip;
+            var image = datas.image;
+            var imagein = datas.imagein;
+            if (lpr == '') {
+                lpr = datas.lpr
+                model = datas.model;
+                datecapture = datas.datecapture;
+                memberstatus = datas.memberstatus;
+            }
+            var memberperiod = datas.memberperiod;
+            var nota = datas.nota;
+            var plateno = datas.plateno;
+            var total = datas.total;
+            var vehicletype = datas.vehicletype;
+            var inpos = datas.inpos;
+            var intime = datas.intime;
+            var outtime = datas.outtime;
+            var duration = datas.duration;
+            var pesan = datas.pesan;
+            var qr = datas.qris;
+            var done = false;
+            if (action == 3) {
+                var i = 0;
 
-            } catch (e) {
-                console.error('Fatal error:', e.message);
+                if (memberperiod) {
+                    $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
+                }
+                var time_out = setInterval(function() {
+                    // clear_out();
+                    var html = `@include('components.in')`;
+                    $('#wrapper').html(html);
+                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                    clearInterval(time_out);
+
+                }, 15000); // 1 menit
+
+            }
+
+            setimage(image, 'image');
+            setimage(imagein, 'imagein');
+            $('#info').text(pesan);
+            $('#posname').text(posname);
+            $('#qris-merchant').text(posname);
+            $('#qris-issuer').text(posname);
+            $('#posip').text(posip);
+            $('#memberstatus').text(memberstatus);
+            $('#lpr').text(lpr);
+            $('#datecapture').text(datecapture);
+            $('#nota').text(nota);
+            $('#total').text(formatRupiah(total));
+            $('#vehicletype').text(vehicletype);
+            $('#intime').text(intime);
+            $('#outtime').text(outtime);
+            $('#duration').text(duration);
+            $('#image').attr('src', image);
+            $('#imagein').attr('src', imagein);
+            if (action == 1) {
+                var t = setInterval(function() {
+                    hasResponse = hasResponse ? !hasResponse : hasResponse;
+                    action = 0;
+                    clearInterval(t);
+                }, 15000);
+
+            }
+            if (action == 4) {
+                var balance = datas.balance;
+                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                var t = setInterval(function() {
+                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+                    $('#memberstatus').text('-');
+                    $('#lpr').text('-');
+                    $('#datecapture').text('-');
+                    $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+                    var html = `@include('components.in')`;
+                    $('#wrapper').html(html);
+                    lpr = '';
+                    model = '';
+                    datecapture = '';
+                    memberstatus = '';
+                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                    clearInterval(t);
+                }, 15000); // 30 detik
+
             }
 
         });

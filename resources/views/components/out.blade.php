@@ -1,10 +1,10 @@
 <div class="flex flex-col">
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <span class=" text-xl text-white text-center align-center font-bold" id="statusOut">QR Payment</span>
-        <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center relative h-[400px]">
-            <!-- Image atau QR Container (saling ganti) -->
-            <img class="w-full h-full object-contain absolute" alt="" id="image" style="display: none;">
-            <div class="w-full h-full flex flex-col items-center justify-center bg-white p-4" id="qr-container" style="display: none;">
+        <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
+            {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
+            <img class="w-full h-[300px] object-contain" alt="" id="image">
+            <div class="w-full flex flex-col items-center justify-center bg-white p-4" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
                     {{-- Header: QRIS + GPN logo --}}
