@@ -144,6 +144,7 @@
                     $('#image').addClass('hidden');
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
+                    console.log(qr);
                     var qrEl = document.getElementById('qr');
                     
                     if (qrEl && qr) {
