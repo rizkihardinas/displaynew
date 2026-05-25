@@ -59,35 +59,35 @@ class IndexController extends Controller
         }
         try {
             $data = $this->decrypt($request->data, $parameter);
-            $data = json_decode($data);
-            $data->local_ip = $this->removeIp($request->ip());
-            $data->posip = $this->removeIp($data->posip);
+            $datas = json_decode($data);
+            $datas->local_ip = $this->removeIp($request->ip());
+            $datas->posip = $this->removeIp($datas->posip);
 
-            $data->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $data->datecapture)->format('d/m/Y H:i:s');
+            $datas->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $datas->datecapture)->format('d/m/Y H:i:s');
             if (isset($data->memberperiod) && !empty($data->memberperiod)) {
-                $data->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $data->memberperiod)->format('d/m/Y H:i:s');
+                $datas->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $datas->memberperiod)->format('d/m/Y H:i:s');
             }
 
             switch ($action) {
                 case 1:
-                    $data->action = 1;
-                    if ($data->job == 'in' || $data->job == 'IN') {
-                        $data->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
+                    $datas->action = 1;
+                    if ($datas->job == 'in' || $datas->job == 'IN') {
+                        $datas->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent(json_encode($data)));
                     } else {
-                        $data->pesan = 'Silahkan scan tiket atau tap kartu anda';
-                        event(new OutEvent(json_encode($data)));
+                        $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
+                        event(new OutEvent(json_encode($datas)));
                     }
 
                     break;
                 case 2:
-                    $data->action = 2;
-                    $data->pesan = 'Terima kasih, silahkan masuk.';
+                    $datas->action = 2;
+                    $datas->pesan = 'Terima kasih, silahkan masuk.';
                     sleep($setting->sleep);
-                    event(new InEvent(json_encode($data)));
+                    event(new InEvent(json_encode($datas)));
                     break;
                 case 3:
-                    $data->action = 3;
+                    $datas->action = 3;
 
                     // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
                     $cacheTicketKey = 'ticket_' . $request->locationID;
@@ -96,21 +96,21 @@ class IndexController extends Controller
                     $savedTicket = cache()->get($cacheTicketKey);
 
                     // Jika tiket berganti, update tiket di cache dan hapus qris lama
-                    if (empty($savedTicket) || $savedTicket != $data->nota) {
-                        cache()->put($cacheTicketKey, $data->nota, now()->addMinutes(60));
+                    if (empty($savedTicket) || $savedTicket != $datas->nota) {
+                        cache()->put($cacheTicketKey, $datas->nota, now()->addMinutes(60));
                         cache()->forget($cacheQrisKey);
                     }
 
                     // Jika qris ada di request ini dan tidak kosong, simpan ke cache
-                    if (isset($data->qris) && $data->qris != '') {
-                        cache()->put($cacheQrisKey, $data->qris, now()->addMinutes(60));
+                    if (isset($datas->qris) && $datas->qris != '') {
+                        cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(60));
                     }
                     // Jika tidak ada di request, tapi di cache masih ada qris (berarti tiketnya sama), ambil dari cache
                     elseif (cache()->has($cacheQrisKey)) {
-                        $data->qris = cache()->get($cacheQrisKey);
+                        $datas->qris = cache()->get($cacheQrisKey);
                     }
 
-                    if (isset($data->qris)) {
+                    if (isset($datas->qris)) {
                         $payment = 'QRIS';
                         $expired = now()->addMinutes(10)->format('d/m/Y H:i:s');
                     } else {
@@ -118,14 +118,14 @@ class IndexController extends Controller
                         $expired = '';
                     }
 
-                    $data->pesan = 'Silahkan melakukan pembayaran dengan ' . $payment;
-                    $data->expired = $expired;
-                    event(new OutEvent(json_encode($data)));
+                    $datas->pesan = 'Silahkan melakukan pembayaran dengan ' . $payment;
+                    $datas->expired = $expired;
+                    event(new OutEvent(json_encode($datas)));
                     break;
                 case 4:
-                    $data->action = 4;
-                    $data->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
-                    event(new OutEvent(json_encode($data)));
+                    $datas->action = 4;
+                    $datas->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
+                    event(new OutEvent(json_encode($datas)));
 
                 default:
                     $response = [
@@ -144,7 +144,7 @@ class IndexController extends Controller
                 'locationID' => $request->locationID,
                 'daterequest' => $request->daterequest,
                 'action' => $request->action,
-                'data' => $data
+                'data' => $datas
             ];
             return response()->json($response);
         } catch (\Throwable $th) {
