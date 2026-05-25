@@ -150,7 +150,9 @@
                     if (qrEl && qr) {
                         qrEl.innerHTML = ''; // Clear
                         // Reuse instance untuk performa ~3x lebih cepat
-                        if (!qrcodeInstance) {
+                        if (qrEl && qr) {
+                            qrEl.innerHTML = '';
+
                             qrcodeInstance = new QRCode(qrEl, {
                                 text: qr,
                                 width: 150,
@@ -160,9 +162,6 @@
                                 correctLevel: QRCode.CorrectLevel.M,
                                 useSVG: false
                             });
-                        } else {
-                            qrcodeInstance.clear();
-                            qrcodeInstance.makeCode(qr);
                         }
                     }
                     var i = 0;
