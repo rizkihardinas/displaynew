@@ -60,18 +60,34 @@
             var duration = datas.duration;
             var pesan = datas.pesan;
             var qr = datas.qris;
-            console.log('Received data:', qr);
+            console.log('Received QRIS:', qr);
+            console.log('QRCode library available:', typeof QRCode !== 'undefined');
             var done = false;
             if (action == 3) {
                 var i = 0;
                 // Gunakan setTimeout untuk memastikan DOM sudah siap sebelum membuat QR Code
                 setTimeout(function() {
+                    console.log('=== Starting QR Code Generation ===');
+                    console.log('QRIS value:', qr);
+                    console.log('QRIS length:', qr ? qr.length : 0);
+                    console.log('QRIS is empty:', !qr || qr.trim() == '');
+                    
                     if (qr && qr.trim() != '') {
                         try {
+                            // Check if QRCode library is available
+                            if (typeof QRCode === 'undefined') {
+                                console.error('QRCode library not loaded!');
+                                return;
+                            }
+                            
                             // Clear elemen terlebih dahulu jika ada
                             var qrElement = document.getElementById("qr");
+                            console.log('QR Element found:', qrElement !== null);
+                            
                             if (qrElement) {
                                 qrElement.innerHTML = '';
+                                console.log('Creating QRCode with text:', qr.substring(0, 50) + '...');
+                                
                                 var qrcode = new QRCode(qrElement, {
                                     text: qr,
                                     width: 200,
@@ -80,21 +96,25 @@
                                     colorLight: "#ffffff",
                                     correctLevel: QRCode.CorrectLevel.H
                                 });
+                                
                                 $('#expired').text('Masa Berlaku : ' + (datas.expired || ''));
                                 $('#informasi-pembayaran-row').removeClass('hidden');
                                 $('#qr-container').removeClass('hidden');
-                                console.log('QR Code generated successfully');
+                                console.log('✓ QR Code generated successfully');
+                                console.log('✓ qr-container class:', $('#qr-container').attr('class'));
                             } else {
-                                console.error('Element #qr tidak ditemukan');
+                                console.error('❌ Element #qr tidak ditemukan');
+                                console.log('Available elements:', document.querySelectorAll('[id]').length);
                             }
                         } catch (e) {
-                            console.error('Error generating QR code:', e);
+                            console.error('❌ Error generating QR code:', e.message);
+                            console.error('Stack:', e.stack);
                         }
                     } else {
                         $('#qr-container').addClass('hidden');
-                        console.log('QRIS string kosong');
+                        console.log('⚠ QRIS string kosong atau tidak ada');
                     }
-                }, 100);
+                }, 300);
 
                 if (memberperiod) {
                     $('#informasi-pembayaran').text('masa aktif member : ' + memberperiod);
@@ -129,7 +149,11 @@
             // Handle image display - tampilkan image jika tidak ada QR
             if (!qr || qr.trim() == '') {
                 $('#image').show();
-                $('#imagein').attr('src', imagein);
+                $('#qr-container').addClass('hidden');
+                console.log('Showing image (no QR)');
+            } else {
+                $('#image').hide();
+                console.log('Hiding image (QR present)');
             }
             if (action == 1) {
                 var t = setInterval(function() {
