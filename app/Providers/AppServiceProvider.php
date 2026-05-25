@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use App\Models\Security;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton('setting', function () {
+            return Setting::first();
+        });
+
+        $this->app->singleton('security', function () {
+            return Security::first();
+        });
     }
 
     /**
@@ -27,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $setting = Setting::first();
+        $setting = app('setting');
         Config::set('ffmpeg.host', $setting->ffmpeg_host);
         Config::set('ffmpeg.port', $setting->ffmpeg_port);
         Config::set('ffmpeg.username', $setting->ffmpeg_username);
