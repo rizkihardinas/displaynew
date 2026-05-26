@@ -64,7 +64,7 @@ class IndexController extends Controller
         }
         $upac['hasEnc'] = true;
         $upac['path'] = $filePath;
-        $upac['path'] = $this->convertToBase64($filePath);
+        // $upac['path'] = $this->convertToBase64($filePath);
         // $upac['path'] = $this->convertToBase64($value->path);
         $upac['type'] = $value->type;
 
