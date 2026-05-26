@@ -44,7 +44,7 @@
                     var local_ip = datas.local_ip;
                     var posname = datas.posname;
 
-                    var image = datas.image.replace(/\\\\/g, '\\');
+                    var image = datas.image ? datas.image.replace(/\\\\/g, '\\') : '';
                     var job = datas.job;
                     var action = datas.action;
                     var posip = datas.posip;
@@ -58,10 +58,10 @@
 
                     }
 
-                    datecapture = datas.datecapture.replace('\\', '').replace('\\', '');
+                    datecapture = datas.datecapture ? datas.datecapture.replace('\\', '').replace('\\', '') : '';
                     if (datas.memberstatus) {
-                        memberstatus = datas.memberstatus + ' - ' + datas.memberperiod.replace('\\', '').replace('\\',
-                            '');
+                        memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod ? datas.memberperiod.replace('\\', '').replace('\\',
+                            '') : '');
                     }
                     var time_out = setInterval(function() {
                         clear();
@@ -69,11 +69,11 @@
                         clearInterval(time_out);
                     }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
                     if (datas.memberperiod) {
-                        var memberperiod = datas.memberperiod.replace('\\', '').replace('\\', '');
+                        var memberperiod = datas.memberperiod ? datas.memberperiod.replace('\\', '').replace('\\', '') : '';
                     }
 
                     var pesan = datas.pesan;
-                    setimage(image, 'imagein');
+                    if (image) { setimage(image, 'imagein'); }
                     $('#posname').text(posname);
                     $('#posip').text(posip);
                     if (typeof datas.memberstatus !== "undefined") {
@@ -120,22 +120,22 @@
                 var job = datas.job;
                 var posname = datas.posname;
                 var posip = datas.posip;
-                var image = datas.image.replace(/\\\\/g, '\\');
-                var imagein = datas.imagein.replace(/\\\\/g, '\\');
+                var image = datas.image ? datas.image.replace(/\\\\/g, '\\') : '';
+                var imagein = datas.imagein ? datas.imagein.replace(/\\\\\\\\/g, '\\\\') : '';
                 if (lpr == '') {
                     lpr = datas.lpr
                     model = datas.model;
-                    datecapture = datas.datecapture.replace('\\', '').replace('\\', '');
-                    memberstatus = datas.memberstatus;
+                    datecapture = datas.datecapture ? datas.datecapture.replace('\\\\', '').replace('\\\\', '') : '';
+                    memberstatus = datas.memberstatus || '';
                 }
-                var memberperiod = datas.memberperiod.replace('\\', '').replace('\\', '');
+                var memberperiod = datas.memberperiod ? datas.memberperiod.replace('\\', '').replace('\\', '') : '';
                 var nota = datas.nota;
                 var plateno = datas.plateno;
                 var total = datas.total;
                 var vehicletype = datas.vehicletype;
                 var inpos = datas.inpos;
-                var intime = datas.intime.replace('\\', '').replace('\\', '');
-                var outtime = datas.outtime.replace('\\', '').replace('\\', '');
+                var intime = datas.intime ? datas.intime.replace('\\\\', '').replace('\\\\', '') : '';
+                var outtime = datas.outtime ? datas.outtime.replace('\\\\', '').replace('\\\\', '') : '';
                 var duration = datas.duration;
                 var pesan = datas.pesan;
                 var done = false;
@@ -181,8 +181,8 @@
                     }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
 
                 }
-                setimage(imagein, 'image');
-                setimage(image, 'imagein');
+                if (imagein) { setimage(imagein, 'image'); }
+                if (image) { setimage(image, 'imagein'); }
                 $('#info').text(pesan);
                 $('#posname').text(posname);
                 $('#posip').text(posip);
@@ -216,7 +216,7 @@
                     $('#standby').removeClass('hidden');
 
                     var balance = datas.balance;
-                    setimage(image, 'imagein');
+                    if (image) { setimage(image, 'imagein'); }
                     $('#statusOut').text('IN');
                     $('#image').removeClass('hidden');
                     $('#informasi-pembayaran-row').removeClass('hidden');
