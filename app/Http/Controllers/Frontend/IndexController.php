@@ -64,6 +64,7 @@ class IndexController extends Controller
         }
         $upac['hasEnc'] = true;
         $upac['path'] = $filePath;
+        $upac['ip'] = $ip;
         $upac['is_windows'] = env('IS_WINDOWS');
         // $upac['path'] = $this->convertToBase64($filePath);
         // $upac['path'] = $this->convertToBase64($value->path);
