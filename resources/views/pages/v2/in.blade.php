@@ -36,15 +36,15 @@
             .listen('.my-event', (e) => {
                 blink();
                 var jsonString = e.message;
-                var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
+                
                 try {
-                    var jsonObject = JSON.parse(escapedJsonString);
-                    hasResponse = true;
+                    var jsonObject = JSON.parse(jsonString);
                     var datas = jsonObject;
+                    console.log(datas);
                     var local_ip = datas.local_ip;
                     var posname = datas.posname;
 
-                    var image = datas.image ? datas.image.replace(/\\\\/g, '\\') : '';
+                    var image = datas.image || '';
                     var job = datas.job;
                     var action = datas.action;
                     var posip = datas.posip;
@@ -58,10 +58,10 @@
 
                     }
 
-                    datecapture = datas.datecapture ? datas.datecapture.replace('\\', '').replace('\\', '') : '';
+                    datecapture = datas.datecapture || '';
                     if (datas.memberstatus) {
-                        memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod ? datas.memberperiod.replace('\\', '').replace('\\',
-                            '') : '');
+                        memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod || '');
+
                     }
                     var time_out = setInterval(function() {
                         clear();
@@ -69,7 +69,7 @@
                         clearInterval(time_out);
                     }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
                     if (datas.memberperiod) {
-                        var memberperiod = datas.memberperiod ? datas.memberperiod.replace('\\', '').replace('\\', '') : '';
+                        var memberperiod = datas.memberperiod || '';
                     }
 
                     var pesan = datas.pesan;
@@ -83,6 +83,7 @@
                     }
                     $('#lpr').text(lpr);
                     $('#datecapture').text(datecapture);
+                    console.log('pesan : ' + pesan);
                     $('#info').text(pesan);
                     var r = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
@@ -101,9 +102,9 @@
 
                 blink();
                 var jsonString = e.message;
-                var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
-                var jsonObject = JSON.parse(escapedJsonString);
-
+                var jsonString = e.message;
+                
+                var jsonObject = JSON.parse(jsonString);
                 hasResponse = true;
 
                 var datas = jsonObject;
@@ -120,27 +121,27 @@
                 var job = datas.job;
                 var posname = datas.posname;
                 var posip = datas.posip;
-                var image = datas.image ? datas.image.replace(/\\\\/g, '\\') : '';
-                var imagein = datas.imagein ? datas.imagein.replace(/\\\\\\\\/g, '\\\\') : '';
+                var image = datas.image || '';
+                var imagein = datas.imagein || '';
                 if (lpr == '') {
                     lpr = datas.lpr
                     model = datas.model;
-                    datecapture = datas.datecapture ? datas.datecapture.replace('\\\\', '').replace('\\\\', '') : '';
+                    datecapture = datas.datecapture || '';
                     memberstatus = datas.memberstatus || '';
                 }
-                var memberperiod = datas.memberperiod ? datas.memberperiod.replace('\\', '').replace('\\', '') : '';
+                var memberperiod = datas.memberperiod || '';
                 var nota = datas.nota;
                 var plateno = datas.plateno;
                 var total = datas.total;
                 var vehicletype = datas.vehicletype;
                 var inpos = datas.inpos;
-                var intime = datas.intime ? datas.intime.replace('\\\\', '').replace('\\\\', '') : '';
-                var outtime = datas.outtime ? datas.outtime.replace('\\\\', '').replace('\\\\', '') : '';
+                var intime = datas.intime || '';
+                var outtime = datas.outtime || '';
                 var duration = datas.duration;
                 var pesan = datas.pesan;
                 var done = false;
                 if (action == 3) {
-                    $('#statusOut').text('QR Payment');
+                    $('#statusOut').text('');
                     $('#image').addClass('hidden');
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
@@ -165,7 +166,7 @@
                             fetch('/api/log-frontend', {
                                 method: 'POST',
                                 headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({message: 'QRCode displayed at ' + new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'}) + ' | nota: ' + nota})
+                                body: JSON.stringify({message:  (function(){ var d = new Date(); var pad = function(n,l){ return String(n).padStart(l||2,'0'); }; return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + pad(d.getMilliseconds(),3); })() + ' | nota: ' + nota})
                             });
                         }
                     }

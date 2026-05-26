@@ -4,18 +4,13 @@
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-[300px] object-contain" alt="" id="image">
-            <div class="w-full flex flex-col items-center justify-center bg-white p-4" id="qr-container">
+            <div class="w-full flex flex-col items-center justify-center bg-white" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
                     {{-- Header: QRIS + GPN logo --}}
                     <div class="flex items-center justify-between px-3 pt-3 pb-2 border-b border-gray-200">
                         <img src="{{ asset('assets/qris.png') }}" alt="QRIS" class="h-8 w-auto">
                         <img src="{{ asset('assets/gpn.svg') }}" alt="GPN" class="h-8 w-auto">
-                    </div>
-                    {{-- Merchant Name --}}
-                    <div class="text-center py-2 px-3">
-                        <span id="qris-merchant"
-                            class="text-sm font-bold tracking-widest uppercase text-gray-800">BYTEDEVICE</span>
                     </div>
                     {{-- QR Code --}}
                     <div class="flex justify-center px-4 pb-2">
@@ -35,9 +30,7 @@
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
                 <td class="px-1">:</td>
                 <td id="nota" class="font-normal">-</td>
-            </tr>
-            <tr>
-                <td class="pr-2 py-0.5">Jenis Kendaraan</td>
+                 <td class="pr-2 py-0.5">Kendaraan</td>
                 <td class="px-1">:</td>
                 <td id="vehicletype" class="font-normal">-</td>
             </tr>
@@ -45,8 +38,6 @@
                 <td class="pr-2 py-0.5">Jam masuk</td>
                 <td class="px-1">:</td>
                 <td id="intime" class="font-normal">-</td>
-            </tr>
-            <tr>
                 <td class="pr-2 py-0.5">Jam keluar</td>
                 <td class="px-1">:</td>
                 <td id="outtime" class="font-normal">-</td>
@@ -63,7 +54,7 @@
             <tr>
                 <td class="text-left" width="150">Total</td>
                 <td>:</td>
-                <td class="text-right text-4xl" id="total">0</td>
+                <td class="text-right text-6xl" id="total">0</td>
             </tr>
             <tr id="informasi-pembayaran-row" class="hidden">
                 <td class="text-left" width="150" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>

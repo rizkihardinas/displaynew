@@ -21,7 +21,9 @@ class IndexController extends Controller
     use CryptAES;
     function hit_display(Request $request)
     {
-        Log::info('[Backend] ' . now()->format('Y-m-d H:i:s'));
+        $time = Carbon::now();
+        Log::info('[Backend] '. $request->nota . '  | ' . $time->format('Y-m-d H:i:s.u'));
+         $action = $request->action;
         $action = $request->action;
         $setting = app('setting');
 
@@ -75,7 +77,7 @@ class IndexController extends Controller
                     $datas->action = 1;
                     if ($datas->job == 'in' || $datas->job == 'IN') {
                         $datas->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
-                        event(new InEvent(json_encode($data)));
+                        event(new InEvent(json_encode($datas)));
                     } else {
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
@@ -139,7 +141,7 @@ class IndexController extends Controller
                         $expired = '';
                     }
 
-                    $datas->pesan = 'Silahkan melakukan pembayaran dengan ' . $payment;
+                    $datas->pesan = 'Silahkan melakukan pembayaran ';
                     $datas->expired = $expired;
                     event(new OutEvent(json_encode($datas)));
                     break;
@@ -175,6 +177,7 @@ class IndexController extends Controller
                 'locationID' => $request->locationID,
                 'daterequest' => $request->daterequest,
                 'action' => $request->action,
+                'responsetime' => now()->diffInMilliseconds($time   ),
                 'data' => $datas
             ];
             return response()->json($response);

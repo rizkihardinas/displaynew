@@ -1,4 +1,4 @@
-<div class="px-2 py-1 h-full flex flex-col">
+<div class="px-2 py-1 h-full flex flex-col bg-[{{ config('uno.style.primary') }}]">
     {{-- <span class="bg-[{{ config('uno.style.primary') }}] my-1 text-2xl text-white px-1 font-bold hidden" id="labelin">OUT</span> --}}
     <div class="flex-grow bg-[{{ config('uno.style.primary') }}] flex items-center justify-center">
         @if (env('USE_LIVESTREAM'))
@@ -7,7 +7,7 @@
             Your browser does not support the video tag. --}}
             </video>
         @else
-            @if (!is_null($datas_operator))
+            @if (!is_null($datas_operator) && count($datas_operator) > 0)
                 <div class="relative z-0 h-full w-full overflow-hidden rounded-lg flex flex-col bg-green-400"
                     data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
                     @foreach ($datas_operator as $key => $item)
