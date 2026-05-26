@@ -33,10 +33,10 @@ class IndexController extends Controller
         $kode_lokasi =  $security->location;
         $isOk = true;
         $message = '';
-        if (is_null($request->password) || $request->password == '') {
-            $isOk = false;
-            $message = 'Password kosong';
-        }
+        // if (is_null($request->password) || $request->password == '') {
+        //     $isOk = false;
+        //     $message = 'Password kosong';
+        // }
         // $password_req = $this->decrypt($request->password, $parameter);
         // if ($password_req == false) {
         //     $isOk = false;
