@@ -18,12 +18,14 @@ class IndexController extends Controller
 {
     function in()
     {
-        $promotions = Cache::rememberForever('promotions_no_operator', function () {
-            return Promotion::whereNull('is_operator')->get();
-        });
-        $promotion_operators = Cache::rememberForever('promotions_with_operator', function () {
-            return Promotion::whereNotNull('is_operator')->get();
-        });
+        // $promotions = Cache::rememberForever('promotions_no_operator', function () {
+        //     return Promotion::whereNull('is_operator')->get();
+        // });
+        // $promotion_operators = Cache::rememberForever('promotions_with_operator', function () {
+        //     return Promotion::whereNotNull('is_operator')->get();
+        // });
+        $promotions = Promotion::whereNull('is_operator')->get();
+        $promotion_operators = Promotion::whereNotNull('is_operator')->get();
         $setting = app('setting');
         $promotion_text = $setting->text_promotion;
         $interval_standby = $setting->duration;
@@ -41,6 +43,7 @@ class IndexController extends Controller
             $upac = $this->extractByOs($setting, $value);
             $datas_operator[] = $upac;
         }
+        dd($datas,$datas_operator);
         $vehicle = isset($request->v) ? $request->v : Cache::rememberForever('rate_default', function () {
             return Rate::where('is_default', 1)->first();
         })->vehicle;
@@ -62,6 +65,7 @@ class IndexController extends Controller
             $filePath = str_replace('\\', '/', $filePath);
         }
         $upac['hasEnc'] = true;
+        $upac['pathBersih'] = $filePath;
         $upac['path'] = $this->convertToBase64($filePath);
         // $upac['path'] = $this->convertToBase64($value->path);
         $upac['type'] = $value->type;
