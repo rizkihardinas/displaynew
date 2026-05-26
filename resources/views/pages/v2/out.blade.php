@@ -68,8 +68,8 @@
                         var qr = datas.qris;
                         var qrcode = new QRCode(document.getElementById("qr"), {
                             text: qr,
-                            width: 400,
-                            height: 400,
+                            width: 960,
+                            height: 960,
                             colorDark: "#000000",
                             colorLight: "#ffffff",
                             correctLevel: QRCode.CorrectLevel.H
