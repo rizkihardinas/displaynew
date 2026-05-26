@@ -1,4 +1,4 @@
-{{-- <div class="px-2 py-1 h-full flex flex-col {{ config('uno.style.primary') }}" > --}}
+<div class="px-2 py-1 h-full flex flex-col {{ config('uno.style.primary') }}" > --}}
     {{-- <span class="bg-[{{ config('uno.style.primary') }}] my-1 text-2xl text-white px-1 font-bold hidden" id="labelin">OUT</span> --}}
     {{-- <div class="flex-grow  flex items-center justify-center"> --}}
         
@@ -54,7 +54,7 @@
     </div>
     
 </div> --}}
-<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}">
+{{-- <div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}"> --}}
     @foreach ($datas as $key => $item)
     <div class="{{$key <> 0 ? 'hidden' : ''}} duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0" data-carousel-item="">
         @if ($item['type'] == 'image')
