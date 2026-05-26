@@ -110,7 +110,7 @@
                 var action = datas.action;
                 $('#promosi_operator').addClass('hidden');
                 $('#imagein').removeClass('hidden');
-                if (action == 3 || action == 4) {
+                if (action == 3) {
                     $('#standby').addClass('hidden');
                     $('#page-out').removeClass('hidden');
                 }
@@ -209,11 +209,16 @@
 
                 }
                 if (action == 4) {
+                    var qrEl = document.getElementById('qr');
+                    if (qrEl) { qrEl.innerHTML = ''; }
+                    $('#qr-container').addClass('hidden');
+                    $('#page-out').addClass('hidden');
+                    $('#standby').removeClass('hidden');
+
                     var balance = datas.balance;
                     setimage(image, 'imagein');
                     $('#statusOut').text('IN');
                     $('#image').removeClass('hidden');
-                    $('#qr-container').addClass('hidden');
                     $('#informasi-pembayaran-row').removeClass('hidden');
                     if (balance) {
                         $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
