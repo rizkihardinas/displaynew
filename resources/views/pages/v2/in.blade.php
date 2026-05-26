@@ -5,7 +5,7 @@
 
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full' : '' }}">
-        <div class="rounded-md p-4">
+        <div class="rounded-md">
             <div class="flex flex-col bg-gray-300 text-white">
                 @include('components.lpr')
             </div>
@@ -36,7 +36,7 @@
             .listen('.my-event', (e) => {
                 blink();
                 var jsonString = e.message;
-                
+                $('#wrapper_data').removeClass('hidden');
                 try {
                     var jsonObject = JSON.parse(jsonString);
                     var datas = jsonObject;
@@ -65,6 +65,7 @@
                     }
                     var time_out = setInterval(function() {
                         clear();
+                        $('#wrapper_data').addClass('hidden');
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
                     }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit

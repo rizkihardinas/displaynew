@@ -8,7 +8,7 @@
         <div class="w-full h-full">
             @include('components.lpr')
         </div>
-        {{-- <div id="wrapper" class="{{ $landscape ? 'h-[590px]' : 'h-[930px]' }} "> --}}
+    {{-- <div id="wrapper" class="{{ $landscape ? 'h-[590px]' : 'h-[930px]' }} "> --}}
         <div id="wrapper" class="full">
             <div id="standby" class="w-full h-full">
                 @include('components.in')
@@ -62,6 +62,7 @@
                     }
                     var time_out = setInterval(function() {
                         clear();
+                        $('#wrapper_data')
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
                     }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
