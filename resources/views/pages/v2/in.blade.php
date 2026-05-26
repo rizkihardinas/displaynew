@@ -107,7 +107,7 @@
 
             })
             .listen('.my-event-out', (e) => {
-
+                $('#wrapper_data').removeClass('hidden');
                 blink();
                 var jsonString = e.message;
                 var jsonString = e.message;
@@ -153,7 +153,6 @@
                     $('#image').addClass('hidden');
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
-                    console.log(qr);
                     var qrEl = document.getElementById('qr');
                     
                     if (qrEl && qr) {
@@ -183,8 +182,7 @@
 
                     var time_out = setInterval(function() {
                         clear_out();
-
-
+                        $('#promosi_operator').removeClass('hidden');
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
                     }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
@@ -209,6 +207,8 @@
                 $('#video').addClass('hidden');
                 $('#imagein').removeClass('hidden');
                 $('#labelin').removeClass('hidden');
+
+                
                 if (action == 1) {
                     var t = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
@@ -253,7 +253,7 @@
             $('#memberstatus').text('\t');
             $('#lpr').text('\t');
             $('#datecapture').text('\t');
-
+            $('#wrapper_data').addClass('hidden');
             $('#promosi_operator').removeClass('hidden');
             $('#imagein').addClass('hidden');
             $('#imagein').removeAttr('src');
