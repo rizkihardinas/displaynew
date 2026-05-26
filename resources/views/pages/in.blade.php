@@ -5,7 +5,7 @@
 
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 flex-grow mt-2 mb-24 flex-grow' : '' }}">
-        <div class="flex flex-col bg-gray-300 text-white">
+        <div class="w-full h-full">
             @include('components.lpr')
         </div>
         {{-- <div id="wrapper" class="{{ $landscape ? 'h-[590px]' : 'h-[930px]' }} "> --}}
