@@ -36,9 +36,9 @@
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="datecapture">&nbsp;</span>
     </div>
-    <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
+    {{-- <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="memberstatus">&nbsp;</span>
-    </div>
+    </div> --}}
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center text-black" id="wrapper-info">
         <span class="text-3xl font-bold" id="info">&nbsp;</span>
     </div>
