@@ -43,7 +43,6 @@ class IndexController extends Controller
             $upac = $this->extractByOs($setting, $value);
             $datas_operator[] = $upac;
         }
-        dd($datas,$datas_operator);
         $vehicle = isset($request->v) ? $request->v : Cache::rememberForever('rate_default', function () {
             return Rate::where('is_default', 1)->first();
         })->vehicle;
@@ -65,7 +64,6 @@ class IndexController extends Controller
             $filePath = str_replace('\\', '/', $filePath);
         }
         $upac['hasEnc'] = true;
-        $upac['pathBersih'] = $filePath;
         $upac['path'] = $this->convertToBase64($filePath);
         // $upac['path'] = $this->convertToBase64($value->path);
         $upac['type'] = $value->type;
