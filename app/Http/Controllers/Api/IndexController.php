@@ -37,11 +37,11 @@ class IndexController extends Controller
             $isOk = false;
             $message = 'Password kosong';
         }
-        $password_req = $this->decrypt($request->password, $parameter);
-        if ($password_req == false) {
-            $isOk = false;
-            $message = 'Decrypting password gagal';
-        }
+        // $password_req = $this->decrypt($request->password, $parameter);
+        // if ($password_req == false) {
+        //     $isOk = false;
+        //     $message = 'Decrypting password gagal';
+        // }
         if (($username != $request->userId || $password != str_replace('"', '', $password_req)) == false) {
             $isOk = false;
             $message = 'username atau password tidak sama';
