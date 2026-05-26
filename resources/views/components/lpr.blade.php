@@ -27,7 +27,7 @@
 </div>
 <div id="wrapper_data" class="hidden">
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
-        <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"
+        <img class=" w-full h-64 object-contain hidden" alt="" id="imagein"
             src="{{ asset('Logo_Operator.jpg') }}">
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
