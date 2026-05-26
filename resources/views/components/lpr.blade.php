@@ -55,7 +55,7 @@
     
 </div> --}}
 @foreach ($datas_operator as $key =>$item)
-    {{ $item['pathBersih'] }}
+    {{ $item['hasEnc'] }}
 @endforeach
 
 
