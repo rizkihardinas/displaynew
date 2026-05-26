@@ -1,44 +1,52 @@
 {{-- <div class="px-2 py-1 h-full flex flex-col"> --}}
-@if (!is_null($datas_operator) && count($datas_operator) > 0)
+<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400"
+        data-carousel="slide"
+        data-carousel-interval="{{ $setting->duration * 1000 }}">
 
-    <div id="promosi_operator" class="w-full h-screen overflow-hidden bg-black">
+        @foreach ($datas_operator as $key => $item)
 
-        {{-- WRAPPER --}}
-        <div class="flex w-full h-full gap-2">
+            <div class="{{ $key <> 0 ? 'hidden' : '' }}
+                duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0"
+                data-carousel-item="">
 
-            @foreach ($datas_operator as $key => $item)
-                {{-- ITEM --}}
-                <div class="flex-1 h-full overflow-hidden rounded-xl bg-black">
+                @if ($item['type'] == 'image')
 
-                    @if ($item['type'] == 'image')
-                        @if ($item['hasEnc'])
-                            <img src="data:image/png;base64,{{ $item['path'] }}" alt="promosi"
-                                class="w-full h-full object-cover">
-                        @else
-                            <img src="{{ $item['path'] }}" alt="promosi" class="w-full h-full object-cover">
-                        @endif
+                    @if ($item['hasEnc'])
+
+                        <img
+                            class="object-fill margin-0 w-full h-full"
+                            src="data:image/png;base64,{{ $item['path'] }}"
+                            alt="...">
+
                     @else
-                        @if (env('USE_LIVESTREAM'))
-                            <video id="video-{{ $key }}" autoplay muted loop playsinline
-                                class="w-full h-full object-cover">
-                            </video>
-                        @else
-                            <video autoplay muted loop playsinline class="w-full h-full object-cover">
 
-                                <source src="data:video/mp4;base64,{{ $item['path'] }}" type="video/mp4">
+                        <img
+                            class="object-fill margin-0 w-full h-full"
+                            src="{{ $item['path'] }}"
+                            alt="...">
 
-                            </video>
-                        @endif
                     @endif
 
-                </div>
-            @endforeach
+                @else
 
-        </div>
+                    <video
+                        src="data:video/mp4;base64,{{ $item['path'] }}"
+                        loop
+                        autoplay
+                        muted
+                        playsinline
+                        class="object-fill w-full h-full"
+                        id="video">
+
+                    </video>
+
+                @endif
+
+            </div>
+
+        @endforeach
 
     </div>
-
-@endif
 <div id="wrapper_data" class="hidden">
     <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
         <img class=" w-full h-96 object-contain hidden" alt="" id="imagein"

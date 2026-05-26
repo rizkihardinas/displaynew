@@ -4,23 +4,31 @@
         $landscape = true;
 
     @endphp
-    <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full' : '' }}">
-        <div class="rounded-md">
-            <div class="flex flex-col bg-gray-300 text-white">
-                @include('components.lpr')
-            </div>
-        </div>
-        <div id="wrapper" class="full">
-            <div id="standby" class="w-full h-full">
-                @include('components.in')
-            </div>
-            <div id="page-out" class="hidden w-full h-full">
-                @include('components.out')
-            </div>
+    <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full overflow-hidden' : '' }}">
 
+    <div class="rounded-md h-full overflow-hidden">
+
+    <div class="flex flex-col bg-gray-300 text-white h-full overflow-hidden">
+
+        @include('components.lpr')
+
+    </div>
+
+</div>
+
+    <div id="wrapper" class="h-full overflow-hidden">
+
+        <div id="standby" class="w-full h-full">
+            @include('components.in')
+        </div>
+
+        <div id="page-out" class="hidden w-full h-full">
+            @include('components.out')
         </div>
 
     </div>
+
+</div>
     </div>
 @endsection
 @push('scripts')
@@ -40,7 +48,6 @@
                 try {
                     var jsonObject = JSON.parse(jsonString);
                     var datas = jsonObject;
-                    console.log(datas);
                     var local_ip = datas.local_ip;
                     var posname = datas.posname;
 
