@@ -54,7 +54,7 @@
     </div>
     
 </div> --}}
-{{ json_encode($datas) }}
+{{ json_encode($datas_operator) }}
 
 
 @push('scripts')
