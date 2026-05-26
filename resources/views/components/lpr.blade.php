@@ -54,7 +54,7 @@
     </div>
     
 </div> --}}
-test
+{{ json_encode($datas) }}
 
 
 @push('scripts')
