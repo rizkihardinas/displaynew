@@ -155,8 +155,8 @@
 
                             qrcodeInstance = new QRCode(qrEl, {
                                 text: qr,
-                                width: 150,
-                                height: 150,
+                                width: 300,
+                                height: 300,
                                 colorDark: '#000000',
                                 colorLight: '#ffffff',
                                 correctLevel: QRCode.CorrectLevel.M,
@@ -210,6 +210,7 @@
                 }
                 if (action == 4) {
                     var balance = datas.balance;
+                    setimage(image, 'imagein');
                     $('#statusOut').text('IN');
                     $('#image').removeClass('hidden');
                     $('#qr-container').addClass('hidden');
@@ -220,7 +221,7 @@
                         $('#informasi-pembayaran-row').addClass('hidden');
                         $('#informasi-pembayaran').addClass('hidden');
                     }
-                    var t = setInterval(function() {
+                    setInterval(function() {
                         lpr = '';
                         model = '';
                         datecapture = '';

@@ -70,7 +70,6 @@ class IndexController extends Controller
             if (isset($data->memberperiod) && !empty($data->memberperiod)) {
                 $datas->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $datas->memberperiod)->format('d/m/Y H:i:s');
             }
-
             switch ($action) {
                 case 1:
                     $datas->action = 1;
@@ -130,7 +129,7 @@ class IndexController extends Controller
                     $datas->action = 4;
                     $datas->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
                     event(new OutEvent(json_encode($datas)));
-
+                    break;
                 default:
                     $response = [
                         'userID' => $request->userID,

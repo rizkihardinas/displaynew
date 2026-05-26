@@ -10,6 +10,7 @@ use App\Models\Security;
 use App\Models\Setting as ModelsSetting;
 use App\Models\Rate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,9 +18,13 @@ class IndexController extends Controller
 {
     function in()
     {
-        $promotions = Promotion::whereNull('is_operator')->get();
-        $promotion_operators = Promotion::whereNotNull('is_operator')->get();
-        $setting = ModelsSetting::first();
+        $promotions = Cache::rememberForever('promotions_no_operator', function () {
+            return Promotion::whereNull('is_operator')->get();
+        });
+        $promotion_operators = Cache::rememberForever('promotions_with_operator', function () {
+            return Promotion::whereNotNull('is_operator')->get();
+        });
+        $setting = app('setting');
         $promotion_text = $setting->text_promotion;
         $interval_standby = $setting->duration;
         $datas = [];
@@ -36,8 +41,12 @@ class IndexController extends Controller
             $upac = $this->extractByOs($setting, $value);
             $datas_operator[] = $upac;
         }
-        $vehicle = isset($request->v) ? $request->v : Rate::where('is_default', 1)->first()->vehicle;
-        $rate = Rate::where('vehicle', $vehicle)->first();
+        $vehicle = isset($request->v) ? $request->v : Cache::rememberForever('rate_default', function () {
+            return Rate::where('is_default', 1)->first();
+        })->vehicle;
+        $rate = Cache::rememberForever('rate_vehicle_' . $vehicle, function () use ($vehicle) {
+            return Rate::where('vehicle', $vehicle)->first();
+        });
         $ip = getHostByName(getHostName());
         return view('pages.v2.in', compact('datas', 'ip', 'setting', 'rate', 'datas_operator'));
     }
@@ -73,7 +82,7 @@ class IndexController extends Controller
     function ip_extract($uncPath)
     {
 
-        if (preg_match('/\\\\\\\\([\d\.]+)\\\\/', $uncPath, $matches)) {
+        if (preg_match('/\\\\\\\\([\\d\\.]+)\\\\/', $uncPath, $matches)) {
             $ipAddress = $matches[1];
             return $ipAddress;
         } else {
