@@ -184,7 +184,7 @@ class IndexController extends Controller
                 'locationID' => $request->locationID,
                 'daterequest' => $request->daterequest,
                 'action' => $request->action,
-                'data' => ['message' => $th->getMessage()]
+                'data' => ['message' => $th->getMessage(), 'file' => $th->getFile(), 'line' => $th->getLine()]
             ];
             return response()->json($response);
             //throw $th;
