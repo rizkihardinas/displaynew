@@ -1,6 +1,6 @@
 <div class="px-2 py-1 h-full flex flex-col {{ config('uno.style.primary') }}" >
     {{-- <span class="bg-[{{ config('uno.style.primary') }}] my-1 text-2xl text-white px-1 font-bold hidden" id="labelin">OUT</span> --}}
-    <div class="flex-grow bg-[{{ config('uno.style.primary') }}] flex items-center justify-center">
+    <div class="flex-grow relative flex items-center justify-center">
         @if (env('USE_LIVESTREAM'))
             <video id="video" autoplay controls data-url="" class="w-full h-auto">
                 {{-- <source src="{{ asset('stream/stream.m3u8') }}" type="application/x-mpegURL">
@@ -8,7 +8,7 @@
             </video>
         @else
             @if (!is_null($datas_operator) && count($datas_operator) > 0)
-                <div class="relative z-0 h-full w-full overflow-hidden rounded-lg flex flex-col bg-green-400"
+                <div class="absolute inset-0 z-0 overflow-hidden rounded-lg flex flex-col bg-green-400"
                     data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
                     @foreach ($datas_operator as $key => $item)
                         <div class="{{ $key != 0 ? 'hidden' : '' }} duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0"
