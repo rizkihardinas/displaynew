@@ -72,7 +72,7 @@
 
     <!-- CONTENTS -->
     <div class="flex-1 overflow-auto">
-        <div class="p-4 h-full">
+        <div class="px-4 py-2 h-full">
             @yield('contents')
         </div>
     </div>
