@@ -18,14 +18,14 @@ class IndexController extends Controller
 {
     function in()
     {
-        // $promotions = Cache::rememberForever('promotions_no_operator', function () {
-        //     return Promotion::whereNull('is_operator')->get();
-        // });
-        // $promotion_operators = Cache::rememberForever('promotions_with_operator', function () {
-        //     return Promotion::whereNotNull('is_operator')->get();
-        // });
-        $promotions = Promotion::whereNull('is_operator')->get();
-        $promotion_operators = Promotion::whereNotNull('is_operator')->get();
+        $promotions = Cache::rememberForever('promotions_no_operator', function () {
+            return Promotion::whereNull('is_operator')->get();
+        });
+        $promotion_operators = Cache::rememberForever('promotions_with_operator', function () {
+            return Promotion::whereNotNull('is_operator')->get();
+        });
+        // $promotions = Promotion::whereNull('is_operator')->get();
+        // $promotion_operators = Promotion::whereNotNull('is_operator')->get();
         $setting = app('setting');
         $promotion_text = $setting->text_promotion;
         $interval_standby = $setting->duration;
