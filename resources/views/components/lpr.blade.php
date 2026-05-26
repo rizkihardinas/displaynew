@@ -1,6 +1,6 @@
 {{-- <div class="px-2 py-1 h-full flex flex-col"> --}}
 <div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide"
-    data-carousel-interval="{{ $setting->duration * 1000 }}">
+    data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
 
     @foreach ($datas_operator as $key => $item)
         <div class="{{ $key != 0 ? 'hidden' : '' }}
@@ -27,7 +27,7 @@
 </div>
 <div id="wrapper_data" class="hidden">
     <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
-        <img class=" w-full h-64 object-contain hidden" alt="" id="imagein"
+        <img class=" w-full h-full object-contain hidden" alt="" id="imagein"
             src="{{ asset('Logo_Operator.jpg') }}">
     </div>
     <div class="flex-none {{ config('uno.style.primary') }} py-1 mt-1 text-center">
