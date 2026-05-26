@@ -126,6 +126,7 @@ class IndexController extends Controller
                     event(new OutEvent(json_encode($datas)));
                     break;
                 case 4:
+                    $datas->qris = "";
                     $datas->action = 4;
                     $datas->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
                     event(new OutEvent(json_encode($datas)));

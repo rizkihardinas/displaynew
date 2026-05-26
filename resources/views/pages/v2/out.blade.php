@@ -68,8 +68,8 @@
                         var qr = datas.qris;
                         var qrcode = new QRCode(document.getElementById("qr"), {
                             text: qr,
-                            width: 128,
-                            height: 128,
+                            width: 400,
+                            height: 400,
                             colorDark: "#000000",
                             colorLight: "#ffffff",
                             correctLevel: QRCode.CorrectLevel.H
@@ -88,90 +88,90 @@
                                     clearInterval(time_out);
                                 }, 15000); // 1 menit
 
-                            }
-                            setimage(image, 'image'); setimage(imagein, 'imagein'); $('#info').text(pesan); $(
-                                '#posname').text(posname); $('#posip').text(posip); $('#memberstatus').text(
-                                memberstatus); $('#lpr').text(lpr); $('#datecapture').text(datecapture); $('#nota')
-                            .text(nota); $('#total').text(formatRupiah(total)); $('#vehicletype').text(vehicletype); $(
-                                '#intime').text(intime); $('#outtime').text(outtime); $('#duration').text(duration); $(
-                                '#image').attr('src', image); $('#imagein').attr('src', imagein);
-                            if (action == 1) {
-                                var t = setInterval(function() {
-                                    hasResponse = hasResponse ? !hasResponse : hasResponse;
-                                    action = 0;
-                                    clearInterval(t);
-                                }, 15000);
+                    }
+                    setimage(image, 'image'); setimage(imagein, 'imagein'); $('#info').text(pesan); $(
+                        '#posname').text(posname); $('#posip').text(posip); $('#memberstatus').text(
+                        memberstatus); $('#lpr').text(lpr); $('#datecapture').text(datecapture); $('#nota')
+                    .text(nota); $('#total').text(formatRupiah(total)); $('#vehicletype').text(vehicletype); $(
+                        '#intime').text(intime); $('#outtime').text(outtime); $('#duration').text(duration); $(
+                        '#image').attr('src', image); $('#imagein').attr('src', imagein);
+                    if (action == 1) {
+                        var t = setInterval(function() {
+                            hasResponse = hasResponse ? !hasResponse : hasResponse;
+                            action = 0;
+                            clearInterval(t);
+                        }, 15000);
 
-                            }
-                            if (action == 4) {
-                                var balance = datas.balance;
-                                $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
-                                var t = setInterval(function() {
-                                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-                                    $('#memberstatus').text('-');
-                                    $('#lpr').text('-');
-                                    $('#datecapture').text('-');
-                                    $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
-                                    var html = `@include('components.in')`;
-                                    $('#wrapper').html(html);
-                                    lpr = '';
-                                    model = '';
-                                    datecapture = '';
-                                    memberstatus = '';
-                                    $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                                    clearInterval(t);
-                                }, 15000); // 30 detik
+                    }
+                    if (action == 4) {
+                        var balance = datas.balance;
+                        $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                        setInterval(function() {
+                            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+                            $('#memberstatus').text('-');
+                            $('#lpr').text('-');
+                            $('#datecapture').text('-');
+                            $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+                            var html = `@include('components.in')`;
+                            $('#wrapper').html(html);
+                            lpr = '';
+                            model = '';
+                            datecapture = '';
+                            memberstatus = '';
+                            $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                            clearInterval(t);
+                        }, 15000); // 30 detik
 
-                            }
-
-                        });
-
-                    function clear() {
-                        $('#memberstatus').text('-');
-                        $('#lpr').text('-');
-                        $('#datecapture').text('-');
-                        $('#image').removeAttr('src');
-
-                        $('#image').attr('src', 'https://placehold.co/400x200')
-                        $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
-                        lpr = '';
-                        model = '';
-                        datecapture = '';
-                        memberstatus = '';
                     }
 
-                    function clear_out() {
-                        $('#memberstatus').text('-');
-                        $('#lpr').text('-');
-                        $('#datecapture').text('-');
-                        $('#nota').text('-');
-                        $('#total').text('-');
-                        $('#vehicletype').text('-');
-                        $('#intime').text('-');
-                        $('#outtime').text('-');
-                        $('#duration').text('-');
-                        $('#informasi-pembayaran').text(' ');
-                        $('#image').removeAttr('src');
-                        $('#imagein').removeAttr('src');
-                        $('#image').attr('src', 'https://placehold.co/400x200');
-                        $('#imagein').attr('src', 'https://placehold.co/400x200');
-                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                        lpr = '';
-                        model = '';
-                        datecapture = '';
-                        memberstatus = '';
-                        // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
-                    }
+            });
 
-                    function formatRupiah(amount) {
-                        const formatter = new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0
-                        });
-                        return formattedAmount = formatter.format(amount);
-                    }
+    function clear() {
+        $('#memberstatus').text('-');
+        $('#lpr').text('-');
+        $('#datecapture').text('-');
+        $('#image').removeAttr('src');
+
+        $('#image').attr('src', 'https://placehold.co/400x200')
+        $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+        lpr = '';
+        model = '';
+        datecapture = '';
+        memberstatus = '';
+    }
+
+    function clear_out() {
+        $('#memberstatus').text('-');
+        $('#lpr').text('-');
+        $('#datecapture').text('-');
+        $('#nota').text('-');
+        $('#total').text('-');
+        $('#vehicletype').text('-');
+        $('#intime').text('-');
+        $('#outtime').text('-');
+        $('#duration').text('-');
+        $('#informasi-pembayaran').text(' ');
+        $('#image').removeAttr('src');
+        $('#imagein').removeAttr('src');
+        $('#image').attr('src', 'https://placehold.co/400x200');
+        $('#imagein').attr('src', 'https://placehold.co/400x200');
+        $('#info').text('Silahkan scan tiket atau tap kartu anda');
+        lpr = '';
+        model = '';
+        datecapture = '';
+        memberstatus = '';
+        // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+    }
+
+    function formatRupiah(amount) {
+        const formatter = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+        return formattedAmount = formatter.format(amount);
+    }
                     // Set the video source
                     // setVideo('\\\\192.168.9.223\\Share\\promosi.mp4');
     </script>
