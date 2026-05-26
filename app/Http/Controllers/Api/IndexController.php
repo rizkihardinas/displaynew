@@ -125,6 +125,11 @@ class IndexController extends Controller
                     event(new OutEvent(json_encode($datas)));
                     break;
                 case 4:
+                    $cacheTicketKey = 'ticket_' . $request->locationID;
+                    $cacheQrisKey   = 'qris_' . $request->locationID;
+                    cache()->forget($cacheTicketKey);
+                    cache()->forget($cacheQrisKey);
+
                     $datas->qris = "";
                     $datas->action = 4;
                     $datas->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';
@@ -151,7 +156,6 @@ class IndexController extends Controller
             ];
             return response()->json($response);
         } catch (\Throwable $th) {
-            dd($th);
             $response = [
                 'userID' => $request->userID,
                 'locationID' => $request->locationID,
