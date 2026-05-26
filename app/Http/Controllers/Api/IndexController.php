@@ -97,10 +97,15 @@ class IndexController extends Controller
 
                     $savedTicket = cache()->get($cacheTicketKey);
 
-                    // Jika tiket berganti, update tiket di cache dan hapus qris lama
+                    $cacheImageKey    = 'image_' . $request->locationID;
+                    $cacheImageinKey  = 'imagein_' . $request->locationID;
+
+                    // Jika tiket berganti, update tiket di cache dan hapus cache lama
                     if (empty($savedTicket) || $savedTicket != $datas->nota) {
                         cache()->put($cacheTicketKey, $datas->nota, now()->addMinutes(60));
                         cache()->forget($cacheQrisKey);
+                        cache()->forget($cacheImageKey);
+                        cache()->forget($cacheImageinKey);
                     }
 
                     // Jika qris ada di request ini dan tidak kosong, simpan ke cache
@@ -110,6 +115,20 @@ class IndexController extends Controller
                     // Jika tidak ada di request, tapi di cache masih ada qris (berarti tiketnya sama), ambil dari cache
                     elseif (cache()->has($cacheQrisKey)) {
                         $datas->qris = cache()->get($cacheQrisKey);
+                    }
+
+                    // Simpan image ke cache jika ada
+                    if (isset($datas->image) && $datas->image != '') {
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageKey)) {
+                        $datas->image = cache()->get($cacheImageKey);
+                    }
+
+                    // Simpan imagein ke cache jika ada
+                    if (isset($datas->imagein) && $datas->imagein != '') {
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageinKey)) {
+                        $datas->imagein = cache()->get($cacheImageinKey);
                     }
 
                     if (isset($datas->qris)) {
@@ -125,10 +144,14 @@ class IndexController extends Controller
                     event(new OutEvent(json_encode($datas)));
                     break;
                 case 4:
-                    $cacheTicketKey = 'ticket_' . $request->locationID;
-                    $cacheQrisKey   = 'qris_' . $request->locationID;
+                    $cacheTicketKey   = 'ticket_' . $request->locationID;
+                    $cacheQrisKey     = 'qris_' . $request->locationID;
+                    $cacheImageKey    = 'image_' . $request->locationID;
+                    $cacheImageinKey  = 'imagein_' . $request->locationID;
                     cache()->forget($cacheTicketKey);
                     cache()->forget($cacheQrisKey);
+                    cache()->forget($cacheImageKey);
+                    cache()->forget($cacheImageinKey);
 
                     $datas->qris = "";
                     $datas->action = 4;
