@@ -54,7 +54,9 @@
     </div>
     
 </div> --}}
-{{ json_encode($datas_operator) }}
+@foreach ($datas_operator as $key =>$item)
+    {{ $item['pathBersih'] }}
+@endforeach
 
 
 @push('scripts')
