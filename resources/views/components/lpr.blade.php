@@ -1,7 +1,7 @@
 {{-- <div class="px-2 py-1 h-full flex flex-col"> --}}
 @if (!is_null($datas_operator) && count($datas_operator) > 0)
-    <div class="absolute inset-0 z-0 overflow-hidden rounded-lg flex flex-col" data-carousel="slide"
-        data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
+    <div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
+
         @foreach ($datas_operator as $key => $item)
             <div class="{{ $key != 0 ? 'hidden' : '' }} duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0"
                 data-carousel-item="">
