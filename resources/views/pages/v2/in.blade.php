@@ -154,7 +154,7 @@
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
                     var qrEl = document.getElementById('qr');
-                    
+                    $('#wrapper_data').removeClass('hidden');
                     if (qrEl && qr) {
                         qrEl.innerHTML = ''; // Clear
                         // Reuse instance untuk performa ~3x lebih cepat
@@ -223,7 +223,7 @@
                     $('#qr-container').addClass('hidden');
                     $('#page-out').addClass('hidden');
                     $('#standby').removeClass('hidden');
-
+                    $('#wrapper_data').removeClass('hidden');
                     var balance = datas.balance;
                     if (image) { setimage(image, 'imagein'); }
                     $('#statusOut').text('IN');
@@ -274,6 +274,7 @@
             $('#datecapture').text('\u00A0');
             $('#nota').text('');
             $('#total').text('');
+            $('#wrapper_data').addClass('hidden');
             $('#vehicletype').text('');
             $('#intime').text('');
             $('#outtime').text('');
