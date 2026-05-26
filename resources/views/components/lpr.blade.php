@@ -1,4 +1,4 @@
-<div class="px-2 py-1 h-full flex flex-col bg-[{{ config('uno.style.primary') }}]">
+<div class="px-2 py-1 h-full flex flex-col {{ config('uno.style.primary') }}" >
     {{-- <span class="bg-[{{ config('uno.style.primary') }}] my-1 text-2xl text-white px-1 font-bold hidden" id="labelin">OUT</span> --}}
     <div class="flex-grow bg-[{{ config('uno.style.primary') }}] flex items-center justify-center">
         @if (env('USE_LIVESTREAM'))
