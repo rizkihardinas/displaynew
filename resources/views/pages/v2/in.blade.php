@@ -8,7 +8,7 @@
 
     <div class="rounded-md h-full overflow-hidden">
 
-    <div class="flex flex-col bg-gray-300 text-white h-full overflow-hidden">
+    <div class="flex flex-col {{ config('uno.style.secondary') }} text-white h-full overflow-hidden">
 
         @include('components.lpr')
 
