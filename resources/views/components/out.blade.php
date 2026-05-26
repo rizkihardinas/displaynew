@@ -44,7 +44,7 @@
             </tr>
         </table>
     </div>
-    <div class="{{ config('uno.style.secondary') }} p-4 font-bold  text-xl">
+    <div class="{{ config('uno.style.primary') }} p-4 font-bold  text-xl">
         <table class="w-full">
             <tr>
                 <td class="text-left" width="150">Lama Parkir</td>
