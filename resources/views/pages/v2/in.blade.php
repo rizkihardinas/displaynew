@@ -155,9 +155,8 @@
                     var qr = datas.qris;
                     var qrEl = document.getElementById('qr');
                     $('#wrapper_data').removeClass('hidden');
-                    if (qrEl && qr) {
-                        qrEl.innerHTML = ''; // Clear
-                        // Reuse instance untuk performa ~3x lebih cepat
+                    // requestAnimationFrame agar browser paint layout dulu, baru render QR
+                    requestAnimationFrame(function() {
                         if (qrEl && qr) {
                             qrEl.innerHTML = '';
 
@@ -176,7 +175,7 @@
                                 body: JSON.stringify({message:  (function(){ var d = new Date(); var pad = function(n,l){ return String(n).padStart(l||2,'0'); }; return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + pad(d.getMilliseconds(),3); })() + ' | nota: ' + nota})
                             });
                         }
-                    }
+                    });
                     var i = 0;
                     $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
 
