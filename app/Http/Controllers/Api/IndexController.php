@@ -23,7 +23,7 @@ class IndexController extends Controller
     {
         $time = Carbon::now();
         Log::info('[Backend] '. $request->nota . '  | ' . $time->format('Y-m-d H:i:s.u'));
-         $action = $request->action;
+        $action = $request->action;
         $action = $request->action;
         $setting = app('setting');
 
@@ -87,7 +87,6 @@ class IndexController extends Controller
                 case 2:
                     $datas->action = 2;
                     $datas->pesan = 'Terima kasih, silahkan masuk.';
-                    sleep($setting->sleep);
                     event(new InEvent(json_encode($datas)));
                     break;
                 case 3:
