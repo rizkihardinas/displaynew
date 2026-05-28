@@ -74,7 +74,23 @@ class IndexController extends Controller
             }
             switch ($action) {
                 case 1:
+                    $cacheImageKey    = 'image_' . $request->locationID;
+                    $cacheImageinKey  = 'imagein_' . $request->locationID;
                     $datas->action = 1;
+                     if (isset($datas->image) && $datas->image != '') {
+                        $datas->image = $this->uncToUrl($datas->image);
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageKey)) {
+                        $datas->image = cache()->get($cacheImageKey);
+                    }
+
+                    // Simpan imagein ke cache jika ada
+                    if (isset($datas->imagein) && $datas->imagein != '') {
+                        $datas->imagein = $this->uncToUrl($datas->imagein);
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageinKey)) {
+                        $datas->imagein = cache()->get($cacheImageinKey);
+                    }
                     if ($datas->job == 'in' || $datas->job == 'IN') {
                         $datas->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent(json_encode($datas)));
@@ -85,7 +101,23 @@ class IndexController extends Controller
 
                     break;
                 case 2:
+                    $cacheImageKey    = 'image_' . $request->locationID;
+                    $cacheImageinKey  = 'imagein_' . $request->locationID;
                     $datas->action = 2;
+                     if (isset($datas->image) && $datas->image != '') {
+                        $datas->image = $this->uncToUrl($datas->image);
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageKey)) {
+                        $datas->image = cache()->get($cacheImageKey);
+                    }
+
+                    // Simpan imagein ke cache jika ada
+                    if (isset($datas->imagein) && $datas->imagein != '') {
+                        $datas->imagein = $this->uncToUrl($datas->imagein);
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageinKey)) {
+                        $datas->imagein = cache()->get($cacheImageinKey);
+                    }
                     $datas->pesan = 'Terima kasih, silahkan masuk.';
                     event(new InEvent(json_encode($datas)));
                     break;
