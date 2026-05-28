@@ -182,6 +182,21 @@ class IndexController extends Controller
                     $cacheQrisKey     = 'qris_' . $request->locationID;
                     $cacheImageKey    = 'image_' . $request->locationID;
                     $cacheImageinKey  = 'imagein_' . $request->locationID;
+
+                    if (isset($datas->image) && $datas->image != '') {
+                        $datas->image = $this->uncToUrl($datas->image);
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageKey)) {
+                        $datas->image = cache()->get($cacheImageKey);
+                    }
+
+                    // Simpan imagein ke cache jika ada
+                    if (isset($datas->imagein) && $datas->imagein != '') {
+                        $datas->imagein = $this->uncToUrl($datas->imagein);
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheImageinKey)) {
+                        $datas->imagein = cache()->get($cacheImageinKey);
+                    }
                     cache()->forget($cacheTicketKey);
                     cache()->forget($cacheQrisKey);
                     cache()->forget($cacheImageKey);
