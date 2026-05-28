@@ -2,7 +2,7 @@
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
-            <img class="w-full h-full h-[600px]" alt="" id="image">
+            <img class="w-full h-full object-contain" alt="" id="image">
             <div class="w-full flex flex-col items-center justify-center bg-white" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
@@ -29,10 +29,7 @@
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
                 <td class="px-1">:</td>
                 <td id="nota">-</td>
-                 
-            </tr>
-            <tr>
-                <td class="pr-2 py-0.5">Kendaraan</td>
+                 <td class="pr-2 py-0.5">Kendaraan</td>
                 <td class="px-1">:</td>
                 <td id="vehicletype">-</td>
             </tr>
@@ -40,9 +37,6 @@
                 <td class="pr-2 py-0.5">Jam masuk</td>
                 <td class="px-1">:</td>
                 <td id="intime">-</td>
-            </tr>
-            <tr>
-                
                 <td class="pr-2 py-0.5">Jam keluar</td>
                 <td class="px-1">:</td>
                 <td id="outtime">-</td>
@@ -59,7 +53,7 @@
             <tr>
                 <td class="text-left" width="150">Total</td>
                 <td>:</td>
-                <td class="text-right text-8xl" id="total">0</td>
+                <td class="text-right text-6xl" id="total">0</td>
             </tr>
             <tr id="informasi-pembayaran-row" class="hidden">
                 <td class="text-left" width="150" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>

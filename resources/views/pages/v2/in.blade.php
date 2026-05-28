@@ -6,27 +6,24 @@
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full overflow-hidden' : '' }}">
 
-    <div class="rounded-md h-full overflow-hidden">
-
     <div class="flex flex-col {{ config('uno.style.secondary') }} text-white h-full overflow-hidden">
 
-        @include('components.lpr')
+            @include('components.lpr')
 
-    </div>
+        </div>
+        <div id="wrapper" class="h-full overflow-hidden">
 
-</div>
+            <div id="standby" class="w-full h-full">
+                @include('components.in')
+            </div>
 
-    <div id="wrapper" class="h-full overflow-hidden">
+            <div id="page-out" class="hidden w-full h-full">
+                @include('components.out')
+            </div>
 
-        <div id="standby" class="w-full h-full">
-            @include('components.in')
         </div>
 
-        <div id="page-out" class="hidden w-full h-full">
-            @include('components.out')
-        </div>
-
-    </div>
+    
 
 </div>
     </div>
@@ -40,11 +37,21 @@
         var memberstatus = '';
         var hasResponse = false;
         var qrcodeInstance = null; // Reuse QR instance untuk performa cepat
+        function showWrapperData() {
+            var wh = document.getElementById('wrapper');
+            if (wh) {
+                $('#wrapper_data').css('height', wh.offsetHeight + 'px');
+            }
+            showWrapperData();
+        }
+        function hideWrapperData() {
+            $('#wrapper_data').addClass('hidden').css('height', '');
+        }
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
                 blink();
                 var jsonString = e.message;
-                $('#wrapper_data').removeClass('hidden');
+                showWrapperData();
                 try {
                     var jsonObject = JSON.parse(jsonString);
                     var datas = jsonObject;
@@ -72,7 +79,7 @@
                     }
                     var time_out = setInterval(function() {
                         clear();
-                        $('#wrapper_data').addClass('hidden');
+                        hideWrapperData();
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
                         clearInterval(time_out);
                     }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
@@ -107,7 +114,7 @@
 
             })
             .listen('.my-event-out', (e) => {
-                $('#wrapper_data').removeClass('hidden');
+                showWrapperData();
                 blink();
                 var jsonString = e.message;
                 var jsonString = e.message;
@@ -154,7 +161,7 @@
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
                     var qrEl = document.getElementById('qr');
-                    $('#wrapper_data').removeClass('hidden');
+                    showWrapperData();
                     // requestAnimationFrame agar browser paint layout dulu, baru render QR
                     requestAnimationFrame(function() {
                         if (qrEl && qr) {
@@ -192,6 +199,11 @@
                 $('#info').text(pesan);
                 $('#posname').text(posname);
                 $('#posip').text(posip);
+                if(memberperiod == '') {
+                    $('#memberstatus').text('Non Member');
+                } else {
+                    $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
+                }
                 $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 $('#plate').text(plateno);
                 $('#lpr').text(lpr);
@@ -224,7 +236,7 @@
                     $('#qr-container').addClass('hidden');
                     $('#page-out').removeClass('hidden');
                     $('#standby').addClass('hidden');
-                    $('#wrapper_data').removeClass('hidden');
+                    showWrapperData();
                     var balance = datas.balance;
                     if (image) { setimage(image, 'imagein'); }
                     $('#image').removeClass('hidden');
@@ -253,7 +265,7 @@
             $('#memberstatus').text('\t');
             $('#lpr').text('\t');
             $('#datecapture').text('\t');
-            $('#wrapper_data').addClass('hidden');
+            hideWrapperData();
             $('#promosi_operator').removeClass('hidden');
             $('#imagein').addClass('hidden');
             $('#imagein').removeAttr('src');
@@ -274,7 +286,7 @@
             $('#datecapture').text('\u00A0');
             $('#nota').text('');
             $('#total').text('');
-            $('#wrapper_data').addClass('hidden');
+            hideWrapperData();
             $('#vehicletype').text('');
             $('#intime').text('');
             $('#outtime').text('');
