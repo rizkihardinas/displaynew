@@ -25,7 +25,7 @@
 
 
     <div class="flex {{ config('uno.style.primary') }}">
-        <table class="text-black text-sm p-2 font-bold w-full">
+        <table class="text-black text-lg p-2 font-bold w-full">
             <tr>
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
                 <td class="px-1">:</td>
@@ -54,7 +54,7 @@
             <tr>
                 <td class="text-left" width="150">Total</td>
                 <td>:</td>
-                <td class="text-right text-8xl" id="total">0</td>
+                <td class="text-right text-6xl" id="total">0</td>
             </tr>
             <tr id="informasi-pembayaran-row" class="hidden">
                 <td class="text-left" width="150" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>
