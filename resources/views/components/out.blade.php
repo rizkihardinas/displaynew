@@ -3,7 +3,7 @@
         <span class=" text-xl text-white text-center align-center font-bold" id="statusOut">QR Payment</span>
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
-            <img class="w-full h-[300px] object-contain" alt="" id="image">
+            <img class="w-full h-[400px] object-contain" alt="" id="image">
             <div class="w-full flex flex-col items-center justify-center bg-white" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">

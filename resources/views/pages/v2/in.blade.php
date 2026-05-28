@@ -227,7 +227,6 @@
                     $('#wrapper_data').removeClass('hidden');
                     var balance = datas.balance;
                     if (image) { setimage(image, 'imagein'); }
-                    $('#statusOut').text('IN');
                     $('#image').removeClass('hidden');
                     $('#informasi-pembayaran-row').removeClass('hidden');
                     if (balance) {
