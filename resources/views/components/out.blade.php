@@ -5,7 +5,7 @@
             <img class="w-full h-full object-contain" alt="" id="image">
             <div class="w-full flex flex-col items-center justify-center bg-white" id="qr-container">
                 {{-- QRIS Template --}}
-                <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
+                <div class="w-full max-w-xs py-12 bg-white rounded shadow-md overflow-hidden border border-gray-200">
                     {{-- Header: QRIS + GPN logo --}}
                     <div class="flex items-center justify-between px-3 pt-3 pb-2 border-b border-gray-200">
                         <img src="{{ asset('assets/qris.png') }}" alt="QRIS" class="h-8 w-auto">
