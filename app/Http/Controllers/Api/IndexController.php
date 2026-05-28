@@ -126,6 +126,7 @@ class IndexController extends Controller
                     // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
                     $cacheTicketKey = 'ticket_' . $request->locationID;
                     $cacheQrisKey   = 'qris_' . $request->locationID;
+                    $cacheTotalKey   = 'total_' . $request->locationID;
 
                     $savedTicket = cache()->get($cacheTicketKey);
 
@@ -156,6 +157,11 @@ class IndexController extends Controller
                     } elseif (cache()->has($cacheImageKey)) {
                         $datas->image = cache()->get($cacheImageKey);
                     }
+                    if (isset($datas->total) && $datas->total != '') {
+                        cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheTotalKey)) {
+                        $datas->total = cache()->get($cacheTotalKey);
+                    }
 
                     // Simpan imagein ke cache jika ada
                     if (isset($datas->imagein) && $datas->imagein != '') {
@@ -182,7 +188,12 @@ class IndexController extends Controller
                     $cacheQrisKey     = 'qris_' . $request->locationID;
                     $cacheImageKey    = 'image_' . $request->locationID;
                     $cacheImageinKey  = 'imagein_' . $request->locationID;
-
+                    $cacheTotalKey    = 'total_' . $request->locationID;
+                    if (isset($datas->total) && $datas->total != '') {
+                        cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheTotalKey)) {
+                        $datas->total = cache()->get($cacheTotalKey);
+                    }
                     if (isset($datas->image) && $datas->image != '') {
                         $datas->image = $this->uncToUrl($datas->image);
                         cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
