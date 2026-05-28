@@ -1,4 +1,4 @@
-<div class="flex flex-col">
+<div class="flex flex-col hidden" id="page-out">
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}

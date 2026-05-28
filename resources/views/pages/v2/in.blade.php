@@ -6,26 +6,13 @@
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full overflow-hidden' : '' }}">
 
-    <div class="relative rounded-md h-full overflow-hidden">
-        <div class="flex flex-col {{ config('uno.style.secondary') }} text-white h-full overflow-hidden">
-            @include('components.lpr')
-        </div>
-    </div>
-        <div id="wrapper" class="h-full overflow-hidden">
-
-            <div id="standby" class="w-full h-full">
-                @include('components.in')
-            </div>
-
-            <div id="page-out" class="hidden w-full h-full">
-                @include('components.out')
-            </div>
-
-        </div>
+    @include('components.lpr')
+    @include('components.in')
+    @include('components.out')
+        
 
     
 
-</div>
     </div>
 @endsection
 @push('scripts')
@@ -324,6 +311,20 @@
             }, 2000);
         }
         // Set the video source
-        // setVideo('\\\\192.168.9.223\\Share\\promosi.mp4');
+                // setVideo('\\\\192.168.9.223\\Share\\promosi.mp4');
+        function syncLprWrapperHeight() {
+            var wrapper = document.getElementById('wrapper');
+            var lpr = document.getElementById('lpr_wrapper');
+            if (wrapper && lpr) {
+                lpr.style.height = wrapper.offsetHeight + 'px';
+            }
+        }
+        $(window).on('resize load', function() {
+            setTimeout(syncLprWrapperHeight, 100);
+        });
+        // Panggil setelah document ready
+        $(document).ready(function() {
+            syncLprWrapperHeight();
+        });
     </script>
 @endpush

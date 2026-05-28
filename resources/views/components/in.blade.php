@@ -1,4 +1,4 @@
-<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}">
+<div id="standby" class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}">
     @foreach ($datas as $key => $item)
         <div class="{{$key <> 0 ? 'hidd en' : ''}} duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0" data-carousel-item="">
             @if ($item['type'] == 'image')
