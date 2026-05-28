@@ -195,7 +195,17 @@ class IndexController extends Controller
                         $payment = 'E-Payment Card';
                         $expired = '';
                     }
+                    if (isset($datas->intime) && $datas->intime != '') {
+                        cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheIntimeKey)) {
+                        $datas->intime = cache()->get($cacheIntimeKey);
+                    }
 
+                    if (isset($datas->outtime) && $datas->outtime != '') {
+                        cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheOuttimeKey)) {
+                        $datas->outtime = cache()->get($cacheOuttimeKey);
+                    }
                     $datas->pesan = 'Silahkan melakukan pembayaran ';
                     $datas->expired = $expired;
                     event(new OutEvent(json_encode($datas)));
