@@ -6,11 +6,11 @@
     @endphp
     <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full overflow-hidden' : '' }}">
 
-    <div class="flex flex-col {{ config('uno.style.secondary') }} text-white h-full overflow-hidden">
-
+    <div class="relative rounded-md h-full overflow-hidden">
+        <div class="flex flex-col {{ config('uno.style.secondary') }} text-white h-full overflow-hidden">
             @include('components.lpr')
-
         </div>
+    </div>
         <div id="wrapper" class="h-full overflow-hidden">
 
             <div id="standby" class="w-full h-full">
@@ -38,14 +38,10 @@
         var hasResponse = false;
         var qrcodeInstance = null; // Reuse QR instance untuk performa cepat
         function showWrapperData() {
-            var wh = document.getElementById('wrapper');
-            if (wh) {
-                $('#wrapper_data').css('height', wh.offsetHeight + 'px');
-            }
-            showWrapperData();
+            $('#wrapper_data').removeClass('hidden');
         }
         function hideWrapperData() {
-            $('#wrapper_data').addClass('hidden').css('height', '');
+            $('#wrapper_data').addClass('hidden');
         }
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
