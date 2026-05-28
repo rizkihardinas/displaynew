@@ -42,10 +42,10 @@
                 <td id="vehicletype">-</td>
             </tr>
             <tr>
-                <td class="pr-2 py-0.5">Jam masuk</td>
+                <td class="pr-2 py-0.5">IN</td>
                 <td class="px-1">:</td>
                 <td id="intime">-</td>
-                <td class="pr-2 py-0.5">Jam keluar</td>
+                <td class="pr-2 py-0.5">OUT</td>
                 <td class="px-1">:</td>
                 <td id="outtime">-</td>
             </tr>
