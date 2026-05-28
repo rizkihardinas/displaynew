@@ -59,7 +59,7 @@
             <tr>
                 <td class="text-left" width="150">Total</td>
                 <td>:</td>
-                <td class="text-right text-6xl" id="total">0</td>
+                <td class="text-right text-8xl" id="total">0</td>
             </tr>
             <tr id="informasi-pembayaran-row" class="hidden">
                 <td class="text-left" width="150" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>
