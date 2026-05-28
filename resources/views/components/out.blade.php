@@ -1,6 +1,5 @@
 <div class="flex flex-col">
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
-        <span class=" text-xl text-white text-center align-center font-bold" id="statusOut">QR Payment</span>
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-[500px] object-contain" alt="" id="image">

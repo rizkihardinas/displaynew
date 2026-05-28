@@ -149,7 +149,7 @@
                 var pesan = datas.pesan;
                 var done = false;
                 if (action == 3) {
-                    $('#statusOut').text('');
+                    
                     $('#image').addClass('hidden');
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
