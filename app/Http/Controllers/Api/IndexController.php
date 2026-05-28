@@ -132,6 +132,8 @@ class IndexController extends Controller
 
                     $cacheImageKey    = 'image_' . $request->locationID;
                     $cacheImageinKey  = 'imagein_' . $request->locationID;
+                    $cacheIntimeKey   = 'intime_' . $request->locationID;
+                    $cacheOuttimeKey  = 'outtime_' . $request->locationID;
 
                     // Jika tiket berganti, update tiket di cache dan hapus cache lama
                     if (empty($savedTicket) || $savedTicket != $datas->nota) {
@@ -139,6 +141,8 @@ class IndexController extends Controller
                         cache()->forget($cacheQrisKey);
                         cache()->forget($cacheImageKey);
                         cache()->forget($cacheImageinKey);
+                        cache()->forget($cacheIntimeKey);
+                        cache()->forget($cacheOuttimeKey);
                     }
 
                     // Jika qris ada di request ini dan tidak kosong, simpan ke cache
@@ -189,6 +193,8 @@ class IndexController extends Controller
                     $cacheImageKey    = 'image_' . $request->locationID;
                     $cacheImageinKey  = 'imagein_' . $request->locationID;
                     $cacheTotalKey    = 'total_' . $request->locationID;
+                    $cacheIntimeKey   = 'intime_' . $request->locationID;
+                    $cacheOuttimeKey  = 'outtime_' . $request->locationID;
                     if (isset($datas->total) && $datas->total != '') {
                         cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
                     } elseif (cache()->has($cacheTotalKey)) {
@@ -208,10 +214,26 @@ class IndexController extends Controller
                     } elseif (cache()->has($cacheImageinKey)) {
                         $datas->imagein = cache()->get($cacheImageinKey);
                     }
+
+                    if (isset($datas->intime) && $datas->intime != '') {
+                        cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheIntimeKey)) {
+                        $datas->intime = cache()->get($cacheIntimeKey);
+                    }
+
+                    if (isset($datas->outtime) && $datas->outtime != '') {
+                        cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheOuttimeKey)) {
+                        $datas->outtime = cache()->get($cacheOuttimeKey);
+                    }
+
                     cache()->forget($cacheTicketKey);
                     cache()->forget($cacheQrisKey);
                     cache()->forget($cacheImageKey);
                     cache()->forget($cacheImageinKey);
+                    cache()->forget($cacheIntimeKey);
+                    cache()->forget($cacheOuttimeKey);
+                    cache()->forget($cacheTotalKey);
 
                     $datas->qris = "";
                     $datas->action = 4;
