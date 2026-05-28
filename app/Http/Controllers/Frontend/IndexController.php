@@ -32,14 +32,11 @@ class IndexController extends Controller
 
 
         foreach ($promotions as $key => $value) {
-            $upac = $this->extractByOs($setting, $value);
-            $datas[] = $upac;
+            $datas[] = $value->path;
         }
 
         foreach ($promotion_operators as $key => $value) {
-            $upac = [];
-            $upac = $this->extractByOs($setting, $value);
-            $datas_operator[] = $upac;
+            $datas_operator[] = $value->path;
         }
         $vehicle = isset($request->v) ? $request->v : Cache::rememberForever('rate_default', function () {
             return Rate::where('is_default', 1)->first();
