@@ -2,7 +2,7 @@
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
-            <img class="w-full h-full object-contain" alt="" id="image">
+            <img class="w-full h-full h-[600px]" alt="" id="image">
             <div class="w-full flex flex-col items-center justify-center bg-white" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white rounded shadow-md overflow-hidden border border-gray-200">
