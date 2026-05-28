@@ -187,7 +187,7 @@
                     }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
 
                 }
-                if (imagein) { setimage(imagein, 'image'); }
+                
                 if (image) { setimage(image, 'imagein'); }
                 $('#info').text(pesan);
                 $('#posname').text(posname);
@@ -217,6 +217,7 @@
 
                 }
                 if (action == 4) {
+                    if (imagein) { setimage(imagein, 'image'); }
                     var qrEl = document.getElementById('qr');
                     if (qrEl) { qrEl.innerHTML = ''; }
                     $('#qr-container').addClass('hidden');
