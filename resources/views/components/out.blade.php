@@ -2,7 +2,7 @@
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
-            <div class="h-full flex items-stretch justify-center">
+            <div class="w-full flex flex-col items-center justify-center bg-white">
         
                 <img 
                     class="w-full h-full object-cover"
