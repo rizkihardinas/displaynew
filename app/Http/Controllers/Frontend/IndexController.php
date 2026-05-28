@@ -32,11 +32,14 @@ class IndexController extends Controller
 
 
         foreach ($promotions as $key => $value) {
-            $datas[] = $value->path;
+            $upac = $this->extractByOs($setting,$value);
+            $datas[] = $upac;
         }
 
         foreach ($promotion_operators as $key => $value) {
-            $datas_operator[] = $value->path;
+            $upac = [];
+            $upac = $this->extractByOs($setting,$value);
+            $datas_operator[] = $upac;
         }
         $vehicle = isset($request->v) ? $request->v : Cache::rememberForever('rate_default', function () {
             return Rate::where('is_default', 1)->first();
@@ -50,16 +53,16 @@ class IndexController extends Controller
 
     function extractByOs(ModelsSetting $setting, $value)
     {
-        $ip = $this->ip_extract($value->path);
+        // $ip = $this->ip_extract($value->path);
 
-        if (env('IS_WINDOWS') === true) {
-            $filePath = str_replace('\\\\', '\\', $value->path);
-        } else {
-            $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $value->path);
-            $filePath = str_replace('\\', '/', $filePath);
-        }
-        $upac['hasEnc'] = true;
-        $upac['path'] = $this->convertToBase64($filePath);
+        // // if (env('IS_WINDOWS') === true) {
+        // //     $filePath = str_replace('\\\\', '\\', $value->path);
+        // // } else {
+        // //     $filePath = str_replace('\\\\' . $ip . '\\image', 'file:///' . $setting->path, $value->path);
+        // //     $filePath = str_replace('\\', '/', $filePath);
+        // // }
+        $upac['hasEnc'] = false;
+        $upac['path'] = asset('images/' . $value->path);
         // $upac['path'] = $this->convertToBase64($value->path);
         $upac['type'] = $value->type;
 
