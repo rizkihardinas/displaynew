@@ -91,7 +91,6 @@ class IndexController extends Controller
                     break;
                 case 3:
                     $datas->action = 3;
-
                     // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
                     $cacheTicketKey = 'ticket_' . $request->locationID;
                     $cacheQrisKey   = 'qris_' . $request->locationID;
@@ -120,6 +119,7 @@ class IndexController extends Controller
 
                     // Simpan image ke cache jika ada
                     if (isset($datas->image) && $datas->image != '') {
+                        $datas->image = $this->uncToUrl($datas->image);
                         cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
                     } elseif (cache()->has($cacheImageKey)) {
                         $datas->image = cache()->get($cacheImageKey);
@@ -127,6 +127,7 @@ class IndexController extends Controller
 
                     // Simpan imagein ke cache jika ada
                     if (isset($datas->imagein) && $datas->imagein != '') {
+                        $datas->imagein = $this->uncToUrl($datas->imagein);
                         cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
                     } elseif (cache()->has($cacheImageinKey)) {
                         $datas->imagein = cache()->get($cacheImageinKey);
@@ -200,6 +201,12 @@ class IndexController extends Controller
         $replacement = '\\\\\\\\'; // 4 backslashes karena setiap \\ harus di-escape dalam string
         $newPath = preg_replace($pattern, $replacement, $path);
         return $newPath;
+    }
+    function uncToUrl($uncPath)
+    {
+        $path = preg_replace('/^\\\\\\\\[\d\.]+\\\\image\\\\/', '', $uncPath);
+        $path = str_replace('\\', '/', $path);
+        return url('public/' . $path);
     }
     function generateImage(Request $request)
     {

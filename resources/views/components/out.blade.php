@@ -24,7 +24,7 @@
     </div>
 
 
-    <div class="flex {{ config('uno.style.primary') }}">
+    <div class="flex {{ config('uno.style.primary') }} p-2">
         <table class="text-black text-lg p-2 font-bold w-full">
             <tr>
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
@@ -44,7 +44,7 @@
             </tr>
         </table>
     </div>
-    <div class="{{ config('uno.style.primary') }} p-4 font-bold  text-xl">
+    <div class="{{ config('uno.style.primary') }} p-2 font-bold  text-xl">
         <table class="w-full">
             <tr>
                 <td class="text-left" width="150">Lama Parkir</td>
