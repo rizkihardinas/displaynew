@@ -95,6 +95,12 @@ class IndexController extends Controller
                         $datas->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent(json_encode($datas)));
                     } else {
+                        $cacheLprKey   = 'lpr_' . $request->locationID;
+                        if (isset($datas->lpr) && $datas->lpr != '') {
+                            cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
+                        } elseif (cache()->has($cacheLprKey)) {
+                            $datas->lpr = cache()->get($cacheLprKey);
+                        }
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
                     }
@@ -127,7 +133,7 @@ class IndexController extends Controller
                     $cacheTicketKey = 'ticket_' . $request->locationID;
                     $cacheQrisKey   = 'qris_' . $request->locationID;
                     $cacheTotalKey   = 'total_' . $request->locationID;
-
+                    $cacheLprKey   = 'lpr_' . $request->locationID;
                     $savedTicket = cache()->get($cacheTicketKey);
 
                     $cacheImageKey    = 'image_' . $request->locationID;
@@ -166,6 +172,13 @@ class IndexController extends Controller
                     } elseif (cache()->has($cacheTotalKey)) {
                         $datas->total = cache()->get($cacheTotalKey);
                     }
+                    if (isset($datas->lpr) && $datas->lpr != '') {
+                        cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheLprKey)) {
+                        $datas->lpr = cache()->get($cacheLprKey);
+                    }
+                    
+
 
                     // Simpan imagein ke cache jika ada
                     if (isset($datas->imagein) && $datas->imagein != '') {
@@ -195,10 +208,16 @@ class IndexController extends Controller
                     $cacheTotalKey    = 'total_' . $request->locationID;
                     $cacheIntimeKey   = 'intime_' . $request->locationID;
                     $cacheOuttimeKey  = 'outtime_' . $request->locationID;
+                    $cacheLprKey      = 'lpr_' . $request->locationID;
                     if (isset($datas->total) && $datas->total != '') {
                         cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
                     } elseif (cache()->has($cacheTotalKey)) {
                         $datas->total = cache()->get($cacheTotalKey);
+                    }
+                    if (isset($datas->lpr) && $datas->lpr != '') {
+                        cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
+                    } elseif (cache()->has($cacheLprKey)) {
+                        $datas->lpr = cache()->get($cacheLprKey);
                     }
                     if (isset($datas->image) && $datas->image != '') {
                         $datas->image = $this->uncToUrl($datas->image);
@@ -234,6 +253,7 @@ class IndexController extends Controller
                     cache()->forget($cacheIntimeKey);
                     cache()->forget($cacheOuttimeKey);
                     cache()->forget($cacheTotalKey);
+                    cache()->forget($cacheLprKey);
 
                     $datas->qris = "";
                     $datas->action = 4;
