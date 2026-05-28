@@ -172,7 +172,7 @@
                     var i = 0;
                     $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
 
-                    var t = setInterval(function() {
+                    globalTimeout = setInterval(function() {
                         clear_out();
                         $('#promosi_operator').removeClass('hidden');
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
@@ -207,10 +207,10 @@
 
                 
                 if (action == 1) {
-                    var t = setInterval(function() {
+                    globalTimeout = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
-                        clearInterval(t);
+                        clearInterval(globalTimeout);
                     }, {{ config('uno.timeout_out') * 1000 }});
 
                 }
@@ -232,13 +232,13 @@
                         $('#informasi-pembayaran-row').addClass('hidden');
                         $('#informasi-pembayaran').addClass('hidden');
                     }
-                    setInterval(function() {
+                    globalTimeout = setInterval(function() {
                         lpr = '';
                         model = '';
                         datecapture = '';
                         memberstatus = '';
                         clear_out();
-                        clearInterval(t);
+                        clearInterval(globalTimeout);
 
                     }, {{ config('uno.timeout_out') * 1000 }}); // 30 detik
 
