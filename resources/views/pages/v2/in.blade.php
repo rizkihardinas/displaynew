@@ -222,8 +222,8 @@
                     var qrEl = document.getElementById('qr');
                     if (qrEl) { qrEl.innerHTML = ''; }
                     $('#qr-container').addClass('hidden');
-                    $('#page-out').addClass('hidden');
-                    $('#standby').removeClass('hidden');
+                    $('#page-out').removeClass('hidden');
+                    $('#standby').addClass('hidden');
                     $('#wrapper_data').removeClass('hidden');
                     var balance = datas.balance;
                     if (image) { setimage(image, 'imagein'); }
