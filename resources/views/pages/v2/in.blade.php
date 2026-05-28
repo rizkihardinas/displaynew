@@ -24,6 +24,7 @@
         var memberstatus = '';
         var hasResponse = false;
         var qrcodeInstance = null; // Reuse QR instance untuk performa cepat
+        var globalTimeout = null;
         function showWrapperData() {
             $('#wrapper_data').removeClass('hidden');
         }
@@ -32,6 +33,7 @@
         }
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
+                if (globalTimeout) { clearInterval(globalTimeout); }
                 blink();
                 var jsonString = e.message;
                 showWrapperData();
@@ -60,11 +62,11 @@
                         memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod || '');
 
                     }
-                    var time_out = setInterval(function() {
+                    globalTimeout = setInterval(function() {
                         clear();
                         hideWrapperData();
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                        clearInterval(time_out);
+                        clearInterval(globalTimeout);
                     }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
                     if (datas.memberperiod) {
                         var memberperiod = datas.memberperiod || '';
@@ -97,6 +99,7 @@
 
             })
             .listen('.my-event-out', (e) => {
+                if (globalTimeout) { clearInterval(globalTimeout); }
                 showWrapperData();
                 blink();
                 var jsonString = e.message;
@@ -169,11 +172,11 @@
                     var i = 0;
                     $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
 
-                    var time_out = setInterval(function() {
+                    var t = setInterval(function() {
                         clear_out();
                         $('#promosi_operator').removeClass('hidden');
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                        clearInterval(time_out);
+                        clearInterval(globalTimeout);
                     }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
 
                 }
