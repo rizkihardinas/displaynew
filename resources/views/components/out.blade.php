@@ -1,4 +1,4 @@
-<div class="flex flex-col">
+<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col {{ config('uno.style.primary') }}">
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
@@ -31,7 +31,7 @@
     </div>
 
 
-    <div class="flex {{ config('uno.style.primary') }} p-2">
+    <div class="flex {{ config('uno.style.primary') }} p-4">
         <table class="text-black text-lg p-2 font-bold w-full">
             <tr>
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
