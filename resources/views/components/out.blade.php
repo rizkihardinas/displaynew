@@ -31,7 +31,7 @@
     </div>
 
 
-    <div class="flex {{ config('uno.style.primary') }} p-4">
+    <div class="flex {{ config('uno.style.primary') }} px-4 py-1">
         <table class="text-black text-lg p-2 font-bold w-full">
             <tr>
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
