@@ -194,6 +194,7 @@
                 $('#posip').text(posip);
                 $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 $('#plate').text(plateno);
+                $('#lpr').text(lpr);
                 $('#datecapture').text(datecapture);
                 $('#nota').text(nota);
                 $('#total').text(formatRupiah(total));
