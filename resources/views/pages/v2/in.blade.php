@@ -22,7 +22,7 @@
             @include('components.in')
         </div>
 
-        <div id="page-out" class="hidden w-full h-full">
+        <div id="page-out" class="hidden flex flex-col h-full">
             @include('components.out')
         </div>
 
