@@ -25,7 +25,7 @@
         @endforeach
 
     </div>
-<div id="wrapper_data" class=" text-white hidden inset-0 z-10 flex flex-col {{ config('uno.style.secondary') }}">
+<div id="wrapper_data" class=" {{ config('uno.style.text_secondary') }} hidden inset-0 z-10 flex flex-col {{ config('uno.style.secondary') }}">
     <div class="flex-none {{ config('uno.style.secondary') }} py-1text-center">
         <img class=" w-full h-full object-contain hidden" alt="" id="imagein"
             src="{{ asset('Logo_Operator.jpg') }}">
