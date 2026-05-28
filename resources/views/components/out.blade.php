@@ -24,7 +24,7 @@
 
 
     <div class="flex {{ config('uno.style.primary') }} p-2">
-        <table class="text-black text-lg p-2 font-bold w-full">
+        <table class="text-black text-2xl p-2 font-bold w-full">
             <tr>
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
                 <td class="px-1">:</td>
