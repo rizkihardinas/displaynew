@@ -1,4 +1,4 @@
-<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col {{ config('uno.style.primary') }}">
+<div class="flex flex-col">
     <div class="{{ config('uno.style.primary') }} border-4 border-black p-2">
         <div class="{{ config('uno.style.primary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
@@ -31,7 +31,7 @@
     </div>
 
 
-    <div class="flex {{ config('uno.style.primary') }} px-4 py-1">
+    <div class="flex {{ config('uno.style.primary') }} p-2">
         <table class="text-black text-lg p-2 font-bold w-full">
             <tr>
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
@@ -42,10 +42,10 @@
                 <td id="vehicletype">-</td>
             </tr>
             <tr>
-                <td class="pr-2 py-0.5">IN</td>
+                <td class="pr-2 py-0.5">Jam masuk</td>
                 <td class="px-1">:</td>
                 <td id="intime">-</td>
-                <td class="pr-2 py-0.5">OUT</td>
+                <td class="pr-2 py-0.5">Jam keluar</td>
                 <td class="px-1">:</td>
                 <td id="outtime">-</td>
             </tr>
