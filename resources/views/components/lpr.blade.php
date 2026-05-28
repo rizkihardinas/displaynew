@@ -31,7 +31,7 @@
             src="{{ asset('Logo_Operator.jpg') }}">
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1text-center">
-        <span class="text-3xl" id="lpr">&nbsp;</span>
+        <span class="text-4xl" id="lpr">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="datecapture">&nbsp;</span>
