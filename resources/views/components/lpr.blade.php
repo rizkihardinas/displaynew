@@ -31,13 +31,13 @@
             src="{{ asset('Logo_Operator.jpg') }}">
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-2 text-center ">
-        <span class="text-6xl font-bold" id="lpr">&nbsp;</span>
+        <span class="text-8xl font-bold" id="lpr">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="memberstatus">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} px-2 py-1 mt-1 text-center text-black" id="wrapper-info">
-        <span class="text-3xl font-bold" id="info">&nbsp;</span>
+        <span class="text-6xl font-bold" id="info">&nbsp;</span>
     </div>
 </div>
 {{-- 
