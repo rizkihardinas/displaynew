@@ -65,7 +65,7 @@
         <div>
             <img src="{{ asset('Logo_Operator.jpg') }}" class="w-32 h-full" alt="">
         </div>
-        <div class="text-right text-xl font-bold text-black">
+        <div class="text-right text-3xl font-bold text-black">
             <div id="time"></div>
         </div>
     </div>
@@ -141,21 +141,22 @@
         setInterval(updateTime, 1000);
 
         function setimage(img, attr) {
-            axios({
-                    url: '{{ route('video.to.base64') }}',
-                    method: 'GET',
-                    params: {
-                        i: img
-                    },
-                })
-                .then(function(response) {
-                    const base64 = response.data.base64;
-                    $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
-                })
-                .catch(function(error) {
-                    $('#' + attr).attr('src', '{{ asset('public/not-found.jpg') }}');
-                    console.error('Error memuat video / image:', error);
-                });
+            $('#' + attr).attr('src', img);
+            // axios({
+            //         url: '{{ route('video.to.base64') }}',
+            //         method: 'GET',
+            //         params: {
+            //             i: img
+            //         },
+            //     })
+            //     .then(function(response) {
+            //         const base64 = response.data.base64;
+            //         $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
+            //     })
+            //     .catch(function(error) {
+            //         $('#' + attr).attr('src', '{{ asset('public/not-found.jpg') }}');
+            //         console.error('Error memuat video / image:', error);
+            //     });
         }
     </script>
 
