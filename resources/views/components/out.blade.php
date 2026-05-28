@@ -29,7 +29,10 @@
                 <td class="pr-2 py-0.5">No Nota/No Plat In</td>
                 <td class="px-1">:</td>
                 <td id="nota">-</td>
-                 <td class="pr-2 py-0.5">Kendaraan</td>
+                 
+            </tr>
+            <tr>
+                <td class="pr-2 py-0.5">Kendaraan</td>
                 <td class="px-1">:</td>
                 <td id="vehicletype">-</td>
             </tr>
@@ -37,6 +40,9 @@
                 <td class="pr-2 py-0.5">Jam masuk</td>
                 <td class="px-1">:</td>
                 <td id="intime">-</td>
+            </tr>
+            <tr>
+                
                 <td class="pr-2 py-0.5">Jam keluar</td>
                 <td class="px-1">:</td>
                 <td id="outtime">-</td>
