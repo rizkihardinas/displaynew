@@ -206,7 +206,7 @@ class IndexController extends Controller
     {
         $path = preg_replace('/^\\\\\\\\[\d\.]+\\\\image\\\\/', '', $uncPath);
         $path = str_replace('\\', '/', $path);
-        return url('public/' . $path);
+        return url('public/images/' . $path);
     }
     function generateImage(Request $request)
     {
