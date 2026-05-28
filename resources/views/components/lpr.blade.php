@@ -30,8 +30,8 @@
         <img class=" w-full h-full object-contain hidden" alt="" id="imagein"
             src="{{ asset('Logo_Operator.jpg') }}">
     </div>
-    <div class="flex-none {{ config('uno.style.secondary') }} py-1 text-center ">
-        <span class="text-4xl font-bold" id="lpr">&nbsp;</span>
+    <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-2 text-center ">
+        <span class="text-6xl font-bold" id="lpr">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
         <span class="text-xl" id="datecapture">&nbsp;</span>
