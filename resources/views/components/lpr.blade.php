@@ -34,7 +34,7 @@
         <span class="text-8xl font-bold" id="lpr">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
-        <span class="text-xl" id="memberstatus">&nbsp;</span>
+        <span class="text-4xl" id="memberstatus">&nbsp;</span>
     </div>
     <div class="flex-none {{ config('uno.style.secondary') }} px-4 py-1 mt-1 text-center text-black" id="wrapper-info">
         <span class="text-6xl font-bold" id="info">&nbsp;</span>

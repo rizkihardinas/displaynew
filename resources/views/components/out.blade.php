@@ -26,18 +26,18 @@
     <div class="flex {{ config('uno.style.primary') }} p-2">
         <table class="text-black text-2xl p-2 font-bold w-full">
             <tr>
-                <td class="pr-2 py-0.5">No Nota/No Plat In</td>
+                <td class="pr-2 py-0.5">No Nota</td>
                 <td class="px-1">:</td>
                 <td id="nota">-</td>
-                 <td class="pr-2 py-0.5">Kendaraan</td>
+                <td class="pr-2 py-0.5">Kendaraan</td>
                 <td class="px-1">:</td>
                 <td id="vehicletype">-</td>
             </tr>
             <tr>
-                <td class="pr-2 py-0.5">Jam masuk</td>
+                <td class="pr-2 py-0.5">In</td>
                 <td class="px-1">:</td>
                 <td id="intime">-</td>
-                <td class="pr-2 py-0.5">Jam keluar</td>
+                <td class="pr-2 py-0.5">Out</td>
                 <td class="px-1">:</td>
                 <td id="outtime">-</td>
             </tr>

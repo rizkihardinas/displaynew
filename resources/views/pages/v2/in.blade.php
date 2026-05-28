@@ -187,7 +187,6 @@
                 } else {
                     $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 }
-                $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 $('#plate').text(plateno);
                 $('#lpr').text(lpr);
                 $('#datecapture').text(datecapture);
