@@ -81,7 +81,7 @@
                     }
 
                     $('#lpr').text(lpr);
-                    $('#datecapture').text(datecapture);
+                    // $('#datecapture').text(datecapture);
                     $('#info').text(pesan);
                     var r = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
@@ -154,7 +154,7 @@
                 $('#posip').text(posip);
                 $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
                 $('#plate').text(plateno);
-                $('#datecapture').text(datecapture);
+                // $('#datecapture').text(datecapture);
                 $('#nota').text('Nota : ' + nota);
                 $('#total').text(formatRupiah(total));
                 $('#vehicletype').text('Jenis Kendaraan : ' + vehicletype);
@@ -200,7 +200,7 @@
         function clear() {
             $('#memberstatus').text('\t');
             $('#lpr').text('\t');
-            $('#datecapture').text('\t');
+            // $('#datecapture').text('\t');
 
             $('#promosi_operator').removeClass('hidden');
             $('#imagein').addClass('hidden');
@@ -219,7 +219,7 @@
             $('#memberstatus').text('\u00A0');
             $('#lpr').text('\u00A0');
             $('#plate').text('\u00A0');
-            $('#datecapture').text('\u00A0');
+            // $('#datecapture').text('\u00A0');
             $('#nota').text('');
             $('#total').text('');
             $('#vehicletype').text('');
