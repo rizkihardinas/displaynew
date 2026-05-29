@@ -42,12 +42,11 @@
                     var datas = jsonObject;
                     var local_ip = datas.local_ip;
                     var posname = datas.posname;
-
                     var image = datas.image || '';
                     var job = datas.job;
                     var action = datas.action;
                     var posip = datas.posip;
-
+                    
                     $('#promosi_operator').addClass('hidden');
                     $('#imagein').removeClass('hidden');
                     if (lpr == '') {
@@ -58,7 +57,7 @@
                     }
                     
                     datecapture = datas.datecapture || '';
-                    if (datas.memberstatus) {
+                    if (datas.memberstatus != '') {
                         memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod || '');
 
                     }else{
@@ -78,14 +77,13 @@
                     if (image) { setimage(image, 'imagein'); }
                     $('#posname').text(posname);
                     $('#posip').text(posip);
-                    if (typeof datas.memberstatus !== "undefined") {
-                        $('#memberstatus').text(memberstatus);
-                    } else {
-                        $('#memberstatus').text('Non Member');
-                    }
+                    // if (typeof datas.memberstatus !== "undefined") {
+                    //     $('#memberstatus').text(memberstatus);
+                    // } else {
+                    //     $('#memberstatus').text('Non Member');
+                    // }
                     $('#lpr').text(lpr);
                     $('#datecapture').text(datecapture);
-                    console.log('pesan : ' + pesan);
                     $('#info').text(pesan);
                     var r = setInterval(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
@@ -93,7 +91,6 @@
                             clear();
                         }
                         clearInterval(r);
-                        console.log('beres in action ' + action + ' sec : ' + sec);
                     }, {{ config('uno.timeout_in') * 1000 }});
                 } catch (error) {
                     console.error("Error parsing JSON: ", error);
