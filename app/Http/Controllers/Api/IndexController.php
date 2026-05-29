@@ -140,6 +140,7 @@ class IndexController extends Controller
                     $cacheImageinKey  = 'imagein_' . $request->locationID;
                     $cacheIntimeKey   = 'intime_' . $request->locationID;
                     $cacheOuttimeKey  = 'outtime_' . $request->locationID;
+                    $cacheLprKey  = 'lpr_' . $request->locationID;
 
                     // Jika tiket berganti, update tiket di cache dan hapus cache lama
                     if (empty($savedTicket) || $savedTicket != $datas->nota) {
@@ -149,6 +150,7 @@ class IndexController extends Controller
                         cache()->forget($cacheImageinKey);
                         cache()->forget($cacheIntimeKey);
                         cache()->forget($cacheOuttimeKey);
+                        cache()->forget($cacheLprKey);
                     }
 
                     // Jika qris ada di request ini dan tidak kosong, simpan ke cache
