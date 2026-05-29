@@ -56,15 +56,13 @@
 
 
                     }
-                    if(memberperiod == '') {
-                        $('#memberstatus').text('Non Member');
-                    } else {
-                        $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
-                    }
+                    
                     datecapture = datas.datecapture || '';
                     if (datas.memberstatus) {
                         memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod || '');
 
+                    }else{
+                        $('#memberstatus').text('Non Member');
                     }
                     globalTimeout = setInterval(function() {
                         clear();
