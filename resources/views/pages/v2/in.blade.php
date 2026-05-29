@@ -81,7 +81,7 @@
                     if (typeof datas.memberstatus !== "undefined") {
                         $('#memberstatus').text(memberstatus);
                     } else {
-                        $('#memberstatus').text('');
+                        $('#memberstatus').text('Non Member');
                     }
                     $('#lpr').text(lpr);
                     $('#datecapture').text(datecapture);
