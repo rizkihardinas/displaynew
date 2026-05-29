@@ -33,7 +33,7 @@
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-2 text-center ">
         <span class="text-8xl font-bold" id="lpr">&nbsp;</span>
     </div>
-    <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-13 text-center">
+    <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-3 text-center">
         <span class="text-4xl" id="memberstatus">&nbsp;</span>
     </div>
     <div

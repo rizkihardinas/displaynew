@@ -17,7 +17,7 @@
                     </div>
                     {{-- Footer --}}
                 </div>
-                <span id="expired" class="text-red-500 font-bold my-6"></span>
+                <span id="expired" class="text-red-500 font-bold my-6 text-2xl"></span>
             </div>
         </div>
     </div>
