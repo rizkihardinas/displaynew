@@ -86,7 +86,7 @@
             </span>
         </div>
         <div class="text-center flex-grow mx-24">
-            <marquee class="text-2xl">{{ $setting->text_promotion ?? 'Promo text here' }}</marquee>
+            <marquee class="text-4xl">{{ $setting->text_promotion ?? 'Promo text here' }}</marquee>
         </div>
         <div class="text-right">
             <div class="text-2xl text-black font-bold"><span id="posname">&nbsp;</span></div>
