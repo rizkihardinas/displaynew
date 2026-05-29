@@ -36,9 +36,14 @@
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-1 text-center">
         <span class="text-4xl" id="memberstatus">&nbsp;</span>
     </div>
-    <div class="flex-none {{ config('uno.style.secondary') }} px-4 py-1 mt-1 justify text-center text-black" id="wrapper-info">
-        <span class="text-6xl font-bold" id="info">&nbsp;</span>
-    </div>
+    <div
+    class="flex-grow flex items-center justify-center px-4 py-1 mt-1 {{ config('uno.style.secondary') }} text-black"
+    id="wrapper-info"
+>
+    <span class="text-6xl font-bold text-center" id="info">
+        &nbsp;
+    </span>
+</div>
 </div>
 {{-- 
 {{-- </div> --}}
