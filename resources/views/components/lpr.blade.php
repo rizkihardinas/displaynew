@@ -40,7 +40,7 @@
     class="flex-grow flex items-center justify-center px-4 py-1 mt-1 {{ config('uno.style.secondary') }} text-black"
     id="wrapper-info"
 >
-    <span class="text-6xl font-bold text-center" id="info">
+    <span class="text-8xl font-bold text-center" id="info">
         &nbsp;
     </span>
 </div>
