@@ -1,4 +1,4 @@
-<div class="flex flex-col hidden {{ config('uno.style.secondary') }}" id="page-out">
+<div class="flex flex-col hidden h-screen {{ config('uno.style.secondary') }}" id="page-out">
     <div class=" border-4 border-black p-2">
         <div class="{{ config('uno.style.secondary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
@@ -43,28 +43,17 @@
             </tr>
         </table>
     </div>
-    <div class="{{ config('uno.style.secondary') }} p-2 font-bold  text-4xl {{ config('uno.style.text_secondary') }}">
+    <div class="flex flex-col flex-grow {{ config('uno.style.secondary') }} p-2 font-bold text-4xl {{ config('uno.style.text_secondary') }}">
         <table class="w-full">
             <tr>
                 <td class="text-left" width="200">Lama Parkir</td>
                 <td>:</td>
                 <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
             </tr>
-            <tr class="mt-8">
-                <td class="text-left" width="200">Total</td>
-                <td>:</td>
-                <td class="text-right" style="font-size: 10rem;" id="total">0</td>
-            </tr>
-            {{-- <tr id="informasi-pembayaran-row" class="hidden">
-                <td class="text-left" width="200" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>
-                <td>:</td>
-                <td class="text-right text-4xl" id="informasi-pembayaran"></td>
-            </tr>
-            <tr id="informasi-member-row" class="hidden">
-                <td class="text-left" width="200" id="informasi-pembayaran-title">Masa Aktif Member</td>
-                <td>:</td>
-                <td class="text-right text-4xl" id="informasi-member"></td>
-            </tr> --}}
         </table>
+        <div class="mt-auto text-center flex flex-col items-center justify-center leading-none">
+            <span class="text-3xl mb-2">Total</span>
+            <span style="font-size: 8rem; line-height: 1;" id="total" class="font-extrabold block">0</span>
+        </div>
     </div>
 </div>
