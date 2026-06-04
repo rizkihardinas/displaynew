@@ -132,7 +132,7 @@
                 var memberperiod = datas.memberperiod || '';
                 var nota = datas.nota;
                 var plateno = datas.plateno;
-                var total = datas.total;
+                var total = isNaN(Number(datas.total)) ? 0 : Number(datas.total);
                 var vehicletype = datas.vehicletype;
                 var inpos = datas.inpos;
                 var intime = datas.intime || '';
