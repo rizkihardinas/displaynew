@@ -109,7 +109,6 @@ class IndexController extends Controller
                         elseif (cache()->has($cacheQrisKey)) {
                             $datas->qris = cache()->get($cacheQrisKey);
                         }
-                        dd($datas);
                         // Simpan image ke cache jika ada
                         if (isset($datas->image) && $datas->image != '') {
                             $datas->image = $this->uncToUrl($datas->image);
