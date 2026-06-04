@@ -1,4 +1,4 @@
-<div class="flex flex-col hidden h-screen {{ config('uno.style.secondary') }}" id="page-out">
+<div class="flex flex-col hidden {{ config('uno.style.secondary') }}" id="page-out">
     <div class=" border-4 border-black p-2">
         <div class="{{ config('uno.style.secondary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
@@ -51,9 +51,12 @@
                 <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
             </tr>
         </table>
-        <div class="mt-auto text-center flex flex-col items-center justify-center leading-none">
-            <span class="text-3xl mb-2">Total</span>
-            <span style="font-size: 8rem; line-height: 1;" id="total" class="font-extrabold block">0</span>
-        </div>
+        <table class="w-full">
+            <tr>
+                <td class="text-left" width="200">Total</td>
+                <td>:</td>
+                <td class="text-right text-9xl" id="total">0</td>
+            </tr>
+        </table>
     </div>
 </div>
