@@ -53,9 +53,9 @@
             <tr class="mt-8">
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
-                <td class="text-right" style="font-size: 12rem;" id="total">0</td>
+                <td class="text-right" style="font-size: 10rem;" id="total">0</td>
             </tr>
-            <tr id="informasi-pembayaran-row" class="hidden">
+            {{-- <tr id="informasi-pembayaran-row" class="hidden">
                 <td class="text-left" width="200" id="informasi-pembayaran-title">[Informasi Pembayaran]</td>
                 <td>:</td>
                 <td class="text-right text-4xl" id="informasi-pembayaran"></td>
@@ -64,7 +64,7 @@
                 <td class="text-left" width="200" id="informasi-pembayaran-title">Masa Aktif Member</td>
                 <td>:</td>
                 <td class="text-right text-4xl" id="informasi-member"></td>
-            </tr>
+            </tr> --}}
         </table>
     </div>
 </div>
