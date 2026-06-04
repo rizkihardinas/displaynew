@@ -43,16 +43,14 @@
             </tr>
         </table>
     </div>
-    <div class="flex flex-col flex-grow {{ config('uno.style.secondary') }} p-2 font-bold text-4xl {{ config('uno.style.text_secondary') }}">
-        <table class="w-full">
+    <div class="flex-grow {{ config('uno.style.secondary') }} p-2 font-bold  text-4xl {{ config('uno.style.text_secondary') }}">
+        <table class="w-full border-spacing-y-4">
             <tr>
                 <td class="text-left" width="200">Lama Parkir</td>
                 <td>:</td>
                 <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
             </tr>
-        </table>
-        <table class="w-full mt-auto">
-            <tr>
+            <tr class="mt-8">
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
                 <td class="text-right" style="font-size: 10rem;" id="total">0</td>
