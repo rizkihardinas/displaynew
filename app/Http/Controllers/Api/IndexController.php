@@ -96,10 +96,67 @@ class IndexController extends Controller
                         event(new InEvent(json_encode($datas)));
                     } else {
                         $cacheLprKey   = 'lpr_' . $request->locationID;
+                        $cacheTicketKey = 'ticket_' . $request->locationID;
+                        $cacheQrisKey   = 'qris_' . $request->locationID;
+                        $cacheTotalKey   = 'total_' . $request->locationID;
+                        $cacheImageKey    = 'image_' . $request->locationID;
+                        $cacheImageinKey  = 'imagein_' . $request->locationID;
+                        $cacheIntimeKey   = 'intime_' . $request->locationID;
+                        $cacheOuttimeKey  = 'outtime_' . $request->locationID;
+
+                        if (isset($datas->qris) && $datas->qris != '') {
+                            cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(60));
+                        }
+                        // Jika tidak ada di request, tapi di cache masih ada qris (berarti tiketnya sama), ambil dari cache
+                        elseif (cache()->has($cacheQrisKey)) {
+                            $datas->qris = cache()->get($cacheQrisKey);
+                        }
+
+                        // Simpan image ke cache jika ada
+                        if (isset($datas->image) && $datas->image != '') {
+                            $datas->image = $this->uncToUrl($datas->image);
+                            cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                        } elseif (cache()->has($cacheImageKey)) {
+                            $datas->image = cache()->get($cacheImageKey);
+                        }
+                        if (isset($datas->total) && $datas->total != '') {
+                            cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
+                        } elseif (cache()->has($cacheTotalKey)) {
+                            $datas->total = cache()->get($cacheTotalKey);
+                        }
                         if (isset($datas->lpr) && $datas->lpr != '') {
                             cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
                         } elseif (cache()->has($cacheLprKey)) {
                             $datas->lpr = cache()->get($cacheLprKey);
+                        }
+                        
+
+
+                        // Simpan imagein ke cache jika ada
+                        if (isset($datas->imagein) && $datas->imagein != '') {
+                            $datas->imagein = $this->uncToUrl($datas->imagein);
+                            cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                        } elseif (cache()->has($cacheImageinKey)) {
+                            $datas->imagein = cache()->get($cacheImageinKey);
+                        }
+
+                        if (isset($datas->qris)) {
+                            $payment = 'QRIS';
+                            $expired = now()->addMinutes(10)->format('d/m/Y H:i:s');
+                        } else {
+                            $payment = 'E-Payment Card';
+                            $expired = '';
+                        }
+                        if (isset($datas->intime) && $datas->intime != '') {
+                            cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(60));
+                        } elseif (cache()->has($cacheIntimeKey)) {
+                            $datas->intime = cache()->get($cacheIntimeKey);
+                        }
+
+                        if (isset($datas->outtime) && $datas->outtime != '') {
+                            cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(60));
+                        } elseif (cache()->has($cacheOuttimeKey)) {
+                            $datas->outtime = cache()->get($cacheOuttimeKey);
                         }
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
@@ -318,7 +375,7 @@ class IndexController extends Controller
     {
         $path = preg_replace('/^\\\\\\\\[\d\.]+\\\\image\\\\/', '', $uncPath);
         $path = str_replace('\\', '/', $path);
-        return url('public/images/' . $path);
+        return url('images/' . $path);
     }
     function generateImage(Request $request)
     {
