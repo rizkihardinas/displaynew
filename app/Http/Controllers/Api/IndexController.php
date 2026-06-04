@@ -72,6 +72,12 @@ class IndexController extends Controller
             if (isset($data->memberperiod) && !empty($data->memberperiod)) {
                 $datas->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $datas->memberperiod)->format('d/m/Y H:i:s');
             }
+            $cacheActionKey    = 'action_' . $request->locationID;
+            if ($datas->action > cache()->get($cacheActionKey)) {
+                cache()->put($cacheActionKey, $datas->action, now()->addMinutes(60));
+            } elseif (cache()->has($cacheActionKey)) {
+                $datas->action = cache()->get($cacheActionKey);
+            }
             switch ($action) {
                 case 1:
                     $cacheImageKey    = 'image_' . $request->locationID;
@@ -158,6 +164,8 @@ class IndexController extends Controller
                         } elseif (cache()->has($cacheOuttimeKey)) {
                             $datas->outtime = cache()->get($cacheOuttimeKey);
                         }
+                        $cacheVehicleDetectedKey = 'vehicle_detected_' . $request->locationID;
+                        cache()->put($cacheVehicleDetectedKey, true, now()->addMinutes(60));
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
                     }
@@ -185,6 +193,21 @@ class IndexController extends Controller
                     event(new InEvent(json_encode($datas)));
                     break;
                 case 3:
+                    $cacheVehicleDetectedKey = 'vehicle_detected_' . $request->locationID;
+                    if (!cache()->has($cacheVehicleDetectedKey)) {
+                        $response = [
+                            'userID' => $request->userID,
+                            'locationID' => $request->locationID,
+                            'daterequest' => $request->daterequest,
+                            'action' => $request->action,
+                            'responsetime' => now()->diffInMilliseconds($time),
+                            'data' => [
+                                'message' => 'Kendaraan belum terdeteksi',
+                                'pesan' => 'Kendaraan belum terdeteksi'
+                            ]
+                        ];
+                        return response()->json($response);
+                    }
                     $datas->action = 3;
                     // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
                     $cacheTicketKey = 'ticket_' . $request->locationID;
@@ -323,6 +346,9 @@ class IndexController extends Controller
                     cache()->forget($cacheOuttimeKey);
                     cache()->forget($cacheTotalKey);
                     cache()->forget($cacheLprKey);
+
+                    $cacheVehicleDetectedKey = 'vehicle_detected_' . $request->locationID;
+                    cache()->forget($cacheVehicleDetectedKey);
 
                     $datas->qris = "";
                     $datas->action = 4;
