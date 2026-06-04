@@ -3,7 +3,7 @@
         <div class="{{ config('uno.style.secondary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-full object-contain" alt="" id="image">
-            <div class="w-full flex flex-col items-center justify-center bg-white py-8" id="qr-container">
+            <div class="w-full flex flex-col items-center justify-center bg-white py-12" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white  overflow-hidden">
                     {{-- Header: QRIS + GPN logo --}}
