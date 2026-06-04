@@ -44,7 +44,7 @@
         </table>
     </div>
     <div class="flex-grow {{ config('uno.style.secondary') }} p-2 font-bold  text-4xl {{ config('uno.style.text_secondary') }}">
-        <table class="w-full">
+        <table class="w-full border-spacing-y-4">
             <tr>
                 <td class="text-left" width="200">Lama Parkir</td>
                 <td>:</td>
