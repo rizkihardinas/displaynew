@@ -55,7 +55,7 @@
             <tr>
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
-                <td class="text-right text-9xl" id="total">0</td>
+                <td class="text-right" style="font-size: 10rem" id="total">0</td>
             </tr>
         </table>
     </div>
