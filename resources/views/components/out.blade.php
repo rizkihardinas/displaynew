@@ -50,7 +50,7 @@
                 <td>:</td>
                 <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
             </tr>
-            <tr>
+            <tr class="mt-8">
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
                 <td class="text-right" style="font-size: 12rem;" id="total">0</td>
