@@ -83,6 +83,7 @@ class IndexController extends Controller
                     $datas->action = 1;
                     
                     if ($datas->job == 'in' || $datas->job == 'IN') {
+                        $datas->image = $this->uncToUrl($datas->image);
                         $datas->pesan = 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
                         event(new InEvent(json_encode($datas)));
                     } else {
