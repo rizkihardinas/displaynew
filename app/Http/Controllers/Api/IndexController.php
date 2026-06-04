@@ -72,12 +72,12 @@ class IndexController extends Controller
             if (isset($data->memberperiod) && !empty($data->memberperiod)) {
                 $datas->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $datas->memberperiod)->format('d/m/Y H:i:s');
             }
-            $cacheActionKey    = 'action_' . $request->locationID;
-            if ($datas->action > cache()->get($cacheActionKey)) {
-                cache()->put($cacheActionKey, $datas->action, now()->addMinutes(60));
-            } elseif (cache()->has($cacheActionKey)) {
-                $datas->action = cache()->get($cacheActionKey);
-            }
+            // $cacheActionKey    = 'action_' . $request->locationID;
+            // if ($datas->action > cache()->get($cacheActionKey)) {
+            //     cache()->put($cacheActionKey, $datas->action, now()->addMinutes(60));
+            // } elseif (cache()->has($cacheActionKey)) {
+            //     $datas->action = cache()->get($cacheActionKey);
+            // }
             switch ($action) {
                 case 1:
                     $cacheImageKey    = 'image_' . $request->locationID;
