@@ -109,7 +109,14 @@ class IndexController extends Controller
                         $cacheImageinKey  = 'imagein_' . $request->locationID;
                         $cacheIntimeKey   = 'intime_' . $request->locationID;
                         $cacheOuttimeKey  = 'outtime_' . $request->locationID;
-
+                        cache()->forget($cacheTicketKey);
+                        cache()->forget($cacheQrisKey);
+                        cache()->forget($cacheImageKey);
+                        cache()->forget($cacheImageinKey);
+                        cache()->forget($cacheIntimeKey);
+                        cache()->forget($cacheOuttimeKey);
+                        cache()->forget($cacheTotalKey);
+                        cache()->forget($cacheLprKey);
                         if (isset($datas->qris) && $datas->qris != '') {
                             cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(60));
                         }
