@@ -51,7 +51,7 @@
                 <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
             </tr>
         </table>
-        <table class="w-full">
+        <table class="w-full mt-4">
             <tr>
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
