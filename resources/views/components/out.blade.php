@@ -1,4 +1,4 @@
-<div class="flex flex-col hidden {{ config('uno.style.secondary') }}" id="page-out">
+<div class="flex flex-col hidden h-screen {{ config('uno.style.secondary') }}" id="page-out">
     <div class=" border-4 border-black p-2">
         <div class="{{ config('uno.style.secondary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
@@ -43,14 +43,16 @@
             </tr>
         </table>
     </div>
-    <div class="flex-grow {{ config('uno.style.secondary') }} p-2 font-bold  text-4xl {{ config('uno.style.text_secondary') }}">
-        <table class="w-full border-spacing-y-4">
+    <div class="flex flex-col flex-grow {{ config('uno.style.secondary') }} p-2 font-bold text-4xl {{ config('uno.style.text_secondary') }}">
+        <table class="w-full">
             <tr>
                 <td class="text-left" width="200">Lama Parkir</td>
                 <td>:</td>
                 <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
             </tr>
-            <tr class="mt-8">
+        </table>
+        <table class="w-full mt-auto">
+            <tr>
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
                 <td class="text-right" style="font-size: 10rem;" id="total">0</td>
