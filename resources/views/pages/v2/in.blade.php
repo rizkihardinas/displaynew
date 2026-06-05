@@ -4,15 +4,10 @@
         $landscape = true;
 
     @endphp
-    <div class="{{ $landscape ? 'grid grid-cols-2 gap-2 h-full overflow-hidden' : '' }}">
-
-    @include('components.lpr')
-    @include('components.in')
-    @include('components.out')
-        
-
-    
-
+    <div class="grid grid-cols-2 gap-2 h-full overflow-hidden">
+        @include('components.lpr')
+        @include('components.in')
+        @include('components.out')
     </div>
 @endsection
 @push('scripts')
