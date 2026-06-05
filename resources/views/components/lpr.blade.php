@@ -72,3 +72,34 @@
         </script>
     @endif
 @endpush
+
+@push('scripts')
+<script>
+    $(window).on('load', function() {
+        if (typeof FlowbiteInstances !== 'undefined') {
+            const carousel = FlowbiteInstances.getInstance('Carousel', 'promosi_operator');
+            if (carousel) {
+                carousel._options.interval = {{ $setting->duration * 1000 }};
+                carousel.pause();
+                carousel.cycle();
+
+                const el = carousel._el || carousel.el || document.getElementById('promosi_operator');
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.attributeName === 'class') {
+                            const isHidden = el.classList.contains('hidden');
+                            if (isHidden) {
+                                carousel.pause();
+                            } else {
+                                carousel.pause();
+                                carousel.cycle();
+                            }
+                        }
+                    });
+                });
+                observer.observe(el, { attributes: true });
+            }
+        }
+    });
+</script>
+@endpush
