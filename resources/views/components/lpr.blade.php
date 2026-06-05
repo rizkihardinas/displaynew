@@ -1,31 +1,27 @@
 {{-- <div class="px-2 py-1 h-full flex flex-col"> --}}
-<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col bg-green-400" data-carousel="slide"
-        data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
+<div class="relative z-0 h-full overflow-hidden rounded-lg flex flex-col {{ config('uno.style.primary') }}"
+    data-carousel="slide" data-carousel-interval="{{ $setting->duration * 1000 }}" id="promosi_operator">
 
-        @foreach ($datas_operator as $key => $item)
-            <div class="{{ $key != 0 ? 'hidden' : '' }}
+    @foreach ($datas_operator as $key => $item)
+        <div class="{{ $key != 0 ? 'hidden' : '' }}
                     duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0"
-                data-carousel-item="">
+            data-carousel-item="">
 
-                @if ($item['type'] == 'image')
-                    @if ($item['hasEnc'])
-                        <img class="object-fill margin-0 w-full h-full" src="data:image/png;base64,{{ $item['path'] }}"
-                            alt="...">
-                    @else
-                        <img class="object-fill margin-0 w-full h-full" src="{{ $item['path'] }}" alt="...">
-                    @endif
-                @else
-                    <video src="data:video/mp4;base64,{{ $item['path'] }}" loop autoplay muted playsinline
-                        class="object-fill w-full h-full" id="video">
+            @if ($item['type'] == 'image')
+                <img class="object-fill margin-0 w-full h-full" src="{{ $item['path'] }}">
+            @else
+                <video src="{{ $item['path'] }}" loop autoplay muted playsinline class="object-fill w-full h-full"
+                    id="video">
 
-                    </video>
-                @endif
+                </video>
+            @endif
 
-            </div>
-        @endforeach
+        </div>
+    @endforeach
 
-    </div>
-<div id="wrapper_data" class=" {{ config('uno.style.text_secondary') }} hidden inset-0 z-10 flex flex-col {{ config('uno.style.secondary') }}">
+</div>
+<div id="wrapper_data"
+    class=" {{ config('uno.style.text_secondary') }} hidden inset-0 z-10 flex flex-col {{ config('uno.style.secondary') }}">
     <div class="flex-none {{ config('uno.style.secondary') }} py-1text-center">
         <img class=" w-full h-full object-contain hidden" alt="" id="imagein"
             src="{{ asset('Logo_Operator.jpg') }}">
@@ -36,14 +32,12 @@
     <div class="flex-none {{ config('uno.style.secondary') }} py-1 mt-3 text-center">
         <span class="text-4xl" id="memberstatus">&nbsp;</span>
     </div>
-    <div
-    class="flex-grow flex items-center justify-center px-6 py-1 mt-1 {{ config('uno.style.secondary') }} text-black"
-    id="wrapper-info"
->
-    <span class="text-6xl font-bold text-center" id="info">
-        &nbsp;
-    </span>
-</div>
+    <div class="flex-grow flex items-center justify-center px-6 py-1 mt-1 {{ config('uno.style.secondary') }} text-black"
+        id="wrapper-info">
+        <span class="text-6xl font-bold text-center" id="info">
+            &nbsp;
+        </span>
+    </div>
 </div>
 {{-- 
 {{-- </div> --}}
@@ -74,32 +68,34 @@
 @endpush
 
 @push('scripts')
-<script>
-    $(window).on('load', function() {
-        if (typeof FlowbiteInstances !== 'undefined') {
-            const carousel = FlowbiteInstances.getInstance('Carousel', 'promosi_operator');
-            if (carousel) {
-                carousel._options.interval = {{ $setting->duration * 1000 }};
-                carousel.pause();
-                carousel.cycle();
+    <script>
+        $(window).on('load', function() {
+            if (typeof FlowbiteInstances !== 'undefined') {
+                const carousel = FlowbiteInstances.getInstance('Carousel', 'promosi_operator');
+                if (carousel) {
+                    carousel._options.interval = {{ $setting->duration * 1000 }};
+                    carousel.pause();
+                    carousel.cycle();
 
-                const el = carousel._el || carousel.el || document.getElementById('promosi_operator');
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.attributeName === 'class') {
-                            const isHidden = el.classList.contains('hidden');
-                            if (isHidden) {
-                                carousel.pause();
-                            } else {
-                                carousel.pause();
-                                carousel.cycle();
+                    const el = carousel._el || carousel.el || document.getElementById('promosi_operator');
+                    const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            if (mutation.attributeName === 'class') {
+                                const isHidden = el.classList.contains('hidden');
+                                if (isHidden) {
+                                    carousel.pause();
+                                } else {
+                                    carousel.pause();
+                                    carousel.cycle();
+                                }
                             }
-                        }
+                        });
                     });
-                });
-                observer.observe(el, { attributes: true });
+                    observer.observe(el, {
+                        attributes: true
+                    });
+                }
             }
-        }
-    });
-</script>
+        });
+    </script>
 @endpush
