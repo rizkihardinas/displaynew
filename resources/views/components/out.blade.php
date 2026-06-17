@@ -3,7 +3,7 @@
         <div class="{{ config('uno.style.secondary') }} flex-grow text-center flex items-center justify-center">
             {{-- <img class="w-full h-[130px] object-contain" alt="" id="image"> --}}
             <img class="w-full h-full object-contain" alt="" id="image">
-            <div class="w-full flex flex-col items-center justify-center bg-white py-12" id="qr-container">
+            <div class="w-full flex flex-col items-center justify-center bg-white py-6" id="qr-container">
                 {{-- QRIS Template --}}
                 <div class="w-full max-w-xs bg-white  overflow-hidden">
                     {{-- Header: QRIS + GPN logo --}}
@@ -24,9 +24,9 @@
 
 
     <div class="flex {{ config('uno.style.secondary') }} p-2">
-        <table class="{{ config('uno.style.text_secondary') }} text-2xl p-2 font-bold w-full">
+        <table class="{{ config('uno.style.text_secondary') }} {{ config('uno.size.font_detail_out') }} p-2 font-bold w-full">
             <tr>
-                <td class="pr-2 py-0.5">No Nota</td>
+                <td class="pr-2 py-0.5">Nota</td>
                 <td class="px-1">:</td>
                 <td id="nota">-</td>
                 <td class="pr-2 py-0.5">Kendaraan</td>
