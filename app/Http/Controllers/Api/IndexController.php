@@ -186,20 +186,20 @@ class IndexController extends Controller
                     break;
                 case 3:
                     $cacheVehicleDetectedKey = 'vehicle_detected_' . $request->locationID;
-                    if (!cache()->has($cacheVehicleDetectedKey)) {
-                        $response = [
-                            'userID' => $request->userID,
-                            'locationID' => $request->locationID,
-                            'daterequest' => $request->daterequest,
-                            'action' => $request->action,
-                            'responsetime' => now()->diffInMilliseconds($time),
-                            'data' => [
-                                'message' => 'Kendaraan belum terdeteksi',
-                                'pesan' => 'Kendaraan belum terdeteksi'
-                            ]
-                        ];
-                        return response()->json($response);
-                    }
+                    // if (!cache()->has($cacheVehicleDetectedKey)) {
+                    //     $response = [
+                    //         'userID' => $request->userID,
+                    //         'locationID' => $request->locationID,
+                    //         'daterequest' => $request->daterequest,
+                    //         'action' => $request->action,
+                    //         'responsetime' => now()->diffInMilliseconds($time),
+                    //         'data' => [
+                    //             'message' => 'Kendaraan belum terdeteksi',
+                    //             'pesan' => 'Kendaraan belum terdeteksi'
+                    //         ]
+                    //     ];
+                    //     return response()->json($response);
+                    // }
                     $datas->action = 3;
                     // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
                     $cacheTicketKey = 'ticket_' . $request->locationID;
@@ -393,7 +393,7 @@ class IndexController extends Controller
     {
         $path = preg_replace('/^\\\\\\\\[\d\.]+\\\\image\\\\/', '', $uncPath);
         $path = str_replace('\\', '/', $path);
-        return url('public/images/' . $path);
+        return url('images/' . $path);
     }
     function generateImage(Request $request)
     {
