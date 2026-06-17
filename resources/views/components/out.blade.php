@@ -48,7 +48,7 @@
             <tr>
                 <td class="text-left" width="200">Lama Parkir</td>
                 <td>:</td>
-                <td class="text-right text-6xl" id="duration">0 Jam 0 Menit</td>
+                <td class="text-right text-{{ config('uno.size.font_message') }}xl" id="duration">0 Jam 0 Menit</td>
             </tr>
         </table>
         <div class="h-12"></div>
@@ -56,7 +56,7 @@
             <tr>
                 <td class="text-left" width="200">Total</td>
                 <td>:</td>
-                <td class="text-right" style="font-size: 10rem" id="total">0</td>
+                <td class="text-right" style="font-size: {{ config('uno.size.font_total') }}rem" id="total">0</td>
             </tr>
         </table>
     </div>

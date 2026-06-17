@@ -57,6 +57,8 @@ class AppServiceProvider extends ServiceProvider
             Config::set('uno.style.text_secondary', $preferences->text_secondary_color);
             Config::set('uno.style.header', $preferences->header_color);
             Config::set('uno.style.footer', $preferences->footer_color);
+            Config::set('uno.size.font_message', $preferences->font_message);
+            Config::set('uno.size.font_total', $preferences->font_total);
         }
     }
 }
