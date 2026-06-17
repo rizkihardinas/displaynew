@@ -14,7 +14,9 @@ class AddSleepOnSettings extends Migration
     public function up()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->tinyInteger('sleep')->default(2);
+            if(!Schema::hasColumn('settings', 'sleep')) {
+                $table->integer('sleep')->default(2);
+            }
         });
     }
 
@@ -26,7 +28,7 @@ class AddSleepOnSettings extends Migration
     public function down()
     {
         Schema::table('settings', function (Blueprint $table) {
-            //
+            $table->dropColumn('sleep');
         });
     }
 }
