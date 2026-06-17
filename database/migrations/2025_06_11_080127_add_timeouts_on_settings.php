@@ -16,6 +16,8 @@ class AddTimeoutsOnSettings extends Migration
         Schema::table('settings', function (Blueprint $table) {
             if(!Schema::hasColumn('settings', 'timeout')) {
                 $table->integer('timeout')->nullable();
+            }else{
+                $table->tinyInteger('timeout')->nullable()->change();
             }
         });
     }

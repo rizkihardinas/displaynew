@@ -15,7 +15,9 @@ class AddSleepOnSettings extends Migration
     {
         Schema::table('settings', function (Blueprint $table) {
             if(!Schema::hasColumn('settings', 'sleep')) {
-                $table->integer('sleep')->default(2);
+                $table->tinyInteger('sleep')->default(2);
+            }else{
+                $table->tinyInteger('sleep')->default(2)->change();
             }
         });
     }
