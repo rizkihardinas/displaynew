@@ -74,7 +74,7 @@ class IndexController extends Controller
             }
             // $cacheActionKey    = 'action_' . $request->locationID;
             // if ($datas->action > cache()->get($cacheActionKey)) {
-            //     cache()->put($cacheActionKey, $datas->action, now()->addMinutes(60));
+            //     cache()->put($cacheActionKey, $datas->action, now()->addMinutes(2));
             // } elseif (cache()->has($cacheActionKey)) {
             //     $datas->action = cache()->get($cacheActionKey);
             // }
@@ -104,7 +104,7 @@ class IndexController extends Controller
                         cache()->forget($cacheTotalKey);
                         cache()->forget($cacheLprKey);
                         if (isset($datas->qris) && $datas->qris != '') {
-                            cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(60));
+                            cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(2));
                         }
                         // Jika tidak ada di request, tapi di cache masih ada qris (berarti tiketnya sama), ambil dari cache
                         elseif (cache()->has($cacheQrisKey)) {
@@ -113,17 +113,17 @@ class IndexController extends Controller
                         // Simpan image ke cache jika ada
                         if (isset($datas->image) && $datas->image != '') {
                             $datas->image = $this->uncToUrl($datas->image);
-                            cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                            cache()->put($cacheImageKey, $datas->image, now()->addMinutes(2));
                         } elseif (cache()->has($cacheImageKey)) {
                             $datas->image = cache()->get($cacheImageKey);
                         }
                         if (isset($datas->total) && $datas->total != '') {
-                            cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
+                            cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(2));
                         } elseif (cache()->has($cacheTotalKey)) {
                             $datas->total = cache()->get($cacheTotalKey);
                         }
                         if (isset($datas->lpr) && $datas->lpr != '') {
-                            cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
+                            cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(2));
                         } elseif (cache()->has($cacheLprKey)) {
                             $datas->lpr = cache()->get($cacheLprKey);
                         }
@@ -133,7 +133,7 @@ class IndexController extends Controller
                         // Simpan imagein ke cache jika ada
                         if (isset($datas->imagein) && $datas->imagein != '') {
                             $datas->imagein = $this->uncToUrl($datas->imagein);
-                            cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                            cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(2));
                         } elseif (cache()->has($cacheImageinKey)) {
                             $datas->imagein = cache()->get($cacheImageinKey);
                         }
@@ -146,18 +146,18 @@ class IndexController extends Controller
                             $expired = '';
                         }
                         if (isset($datas->intime) && $datas->intime != '') {
-                            cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(60));
+                            cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(2));
                         } elseif (cache()->has($cacheIntimeKey)) {
                             $datas->intime = cache()->get($cacheIntimeKey);
                         }
 
                         if (isset($datas->outtime) && $datas->outtime != '') {
-                            cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(60));
+                            cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(2));
                         } elseif (cache()->has($cacheOuttimeKey)) {
                             $datas->outtime = cache()->get($cacheOuttimeKey);
                         }
                         $cacheVehicleDetectedKey = 'vehicle_detected_' . $request->locationID;
-                        cache()->put($cacheVehicleDetectedKey, true, now()->addMinutes(60));
+                        cache()->put($cacheVehicleDetectedKey, true, now()->addMinutes(2));
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
                     }
@@ -169,7 +169,7 @@ class IndexController extends Controller
                     $datas->action = 2;
                      if (isset($datas->image) && $datas->image != '') {
                         $datas->image = $this->uncToUrl($datas->image);
-                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(2));
                     } elseif (cache()->has($cacheImageKey)) {
                         $datas->image = cache()->get($cacheImageKey);
                     }
@@ -177,7 +177,7 @@ class IndexController extends Controller
                     // Simpan imagein ke cache jika ada
                     if (isset($datas->imagein) && $datas->imagein != '') {
                         $datas->imagein = $this->uncToUrl($datas->imagein);
-                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(2));
                     } elseif (cache()->has($cacheImageinKey)) {
                         $datas->imagein = cache()->get($cacheImageinKey);
                     }
@@ -186,20 +186,20 @@ class IndexController extends Controller
                     break;
                 case 3:
                     $cacheVehicleDetectedKey = 'vehicle_detected_' . $request->locationID;
-                    // if (!cache()->has($cacheVehicleDetectedKey)) {
-                    //     $response = [
-                    //         'userID' => $request->userID,
-                    //         'locationID' => $request->locationID,
-                    //         'daterequest' => $request->daterequest,
-                    //         'action' => $request->action,
-                    //         'responsetime' => now()->diffInMilliseconds($time),
-                    //         'data' => [
-                    //             'message' => 'Kendaraan belum terdeteksi',
-                    //             'pesan' => 'Kendaraan belum terdeteksi'
-                    //         ]
-                    //     ];
-                    //     return response()->json($response);
-                    // }
+                    if (!cache()->has($cacheVehicleDetectedKey)) {
+                        $response = [
+                            'userID' => $request->userID,
+                            'locationID' => $request->locationID,
+                            'daterequest' => $request->daterequest,
+                            'action' => $request->action,
+                            'responsetime' => now()->diffInMilliseconds($time),
+                            'data' => [
+                                'message' => 'Kendaraan belum terdeteksi',
+                                'pesan' => 'Kendaraan belum terdeteksi'
+                            ]
+                        ];
+                        return response()->json($response);
+                    }
                     $datas->action = 3;
                     // Menggunakan locationID pada key cache agar tiap lokasi display bisa punya QRIS tersendiri
                     $cacheTicketKey = 'ticket_' . $request->locationID;
@@ -216,7 +216,7 @@ class IndexController extends Controller
 
                     // Jika tiket berganti, update tiket di cache dan hapus cache lama
                     if (empty($savedTicket) || $savedTicket != $datas->nota) {
-                        cache()->put($cacheTicketKey, $datas->nota, now()->addMinutes(60));
+                        cache()->put($cacheTicketKey, $datas->nota, now()->addMinutes(2));
                         cache()->forget($cacheQrisKey);
                         cache()->forget($cacheImageKey);
                         cache()->forget($cacheImageinKey);
@@ -227,7 +227,7 @@ class IndexController extends Controller
 
                     // Jika qris ada di request ini dan tidak kosong, simpan ke cache
                     if (isset($datas->qris) && $datas->qris != '') {
-                        cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(60));
+                        cache()->put($cacheQrisKey, $datas->qris, now()->addMinutes(2));
                     }
                     // Jika tidak ada di request, tapi di cache masih ada qris (berarti tiketnya sama), ambil dari cache
                     elseif (cache()->has($cacheQrisKey)) {
@@ -237,17 +237,17 @@ class IndexController extends Controller
                     // Simpan image ke cache jika ada
                     if (isset($datas->image) && $datas->image != '') {
                         $datas->image = $this->uncToUrl($datas->image);
-                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(2));
                     } elseif (cache()->has($cacheImageKey)) {
                         $datas->image = cache()->get($cacheImageKey);
                     }
                     if (isset($datas->total) && $datas->total != '') {
-                        cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
+                        cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(2));
                     } elseif (cache()->has($cacheTotalKey)) {
                         $datas->total = cache()->get($cacheTotalKey);
                     }
                     if (isset($datas->lpr) && $datas->lpr != '') {
-                        cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
+                        cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(2));
                     } elseif (cache()->has($cacheLprKey)) {
                         $datas->lpr = cache()->get($cacheLprKey);
                     }
@@ -257,7 +257,7 @@ class IndexController extends Controller
                     // Simpan imagein ke cache jika ada
                     if (isset($datas->imagein) && $datas->imagein != '') {
                         $datas->imagein = $this->uncToUrl($datas->imagein);
-                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(2));
                     } elseif (cache()->has($cacheImageinKey)) {
                         $datas->imagein = cache()->get($cacheImageinKey);
                     }
@@ -270,13 +270,13 @@ class IndexController extends Controller
                         $expired = '';
                     }
                     if (isset($datas->intime) && $datas->intime != '') {
-                        cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(60));
+                        cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(2));
                     } elseif (cache()->has($cacheIntimeKey)) {
                         $datas->intime = cache()->get($cacheIntimeKey);
                     }
 
                     if (isset($datas->outtime) && $datas->outtime != '') {
-                        cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(60));
+                        cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(2));
                     } elseif (cache()->has($cacheOuttimeKey)) {
                         $datas->outtime = cache()->get($cacheOuttimeKey);
                     }
@@ -294,18 +294,18 @@ class IndexController extends Controller
                     $cacheOuttimeKey  = 'outtime_' . $request->locationID;
                     $cacheLprKey      = 'lpr_' . $request->locationID;
                     if (isset($datas->total) && $datas->total != '') {
-                        cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(60));
+                        cache()->put($cacheTotalKey, $datas->total, now()->addMinutes(2));
                     } elseif (cache()->has($cacheTotalKey)) {
                         $datas->total = cache()->get($cacheTotalKey);
                     }
                     if (isset($datas->lpr) && $datas->lpr != '') {
-                        cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(60));
+                        cache()->put($cacheLprKey, $datas->lpr, now()->addMinutes(2));
                     } elseif (cache()->has($cacheLprKey)) {
                         $datas->lpr = cache()->get($cacheLprKey);
                     }
                     if (isset($datas->image) && $datas->image != '') {
                         $datas->image = $this->uncToUrl($datas->image);
-                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(60));
+                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(2));
                     } elseif (cache()->has($cacheImageKey)) {
                         $datas->image = cache()->get($cacheImageKey);
                     }
@@ -313,19 +313,19 @@ class IndexController extends Controller
                     // Simpan imagein ke cache jika ada
                     if (isset($datas->imagein) && $datas->imagein != '') {
                         $datas->imagein = $this->uncToUrl($datas->imagein);
-                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(60));
+                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(2));
                     } elseif (cache()->has($cacheImageinKey)) {
                         $datas->imagein = cache()->get($cacheImageinKey);
                     }
 
                     if (isset($datas->intime) && $datas->intime != '') {
-                        cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(60));
+                        cache()->put($cacheIntimeKey, $datas->intime, now()->addMinutes(2));
                     } elseif (cache()->has($cacheIntimeKey)) {
                         $datas->intime = cache()->get($cacheIntimeKey);
                     }
 
                     if (isset($datas->outtime) && $datas->outtime != '') {
-                        cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(60));
+                        cache()->put($cacheOuttimeKey, $datas->outtime, now()->addMinutes(2));
                     } elseif (cache()->has($cacheOuttimeKey)) {
                         $datas->outtime = cache()->get($cacheOuttimeKey);
                     }
@@ -393,7 +393,7 @@ class IndexController extends Controller
     {
         $path = preg_replace('/^\\\\\\\\[\d\.]+\\\\image\\\\/', '', $uncPath);
         $path = str_replace('\\', '/', $path);
-        return url('images/' . $path);
+        return url('public/images/' . $path);
     }
     function generateImage(Request $request)
     {
