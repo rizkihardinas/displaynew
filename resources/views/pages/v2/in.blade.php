@@ -159,24 +159,21 @@
                                 colorDark: '#000000',
                                 colorLight: '#ffffff',
                                 correctLevel: QRCode.CorrectLevel.M,
-                                useSVG: false
+                                useSVG: true
                             });
-                            fetch('/api/log-frontend', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({message:  (function(){ var d = new Date(); var pad = function(n,l){ return String(n).padStart(l||2,'0'); }; return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' + pad(d.getMilliseconds(),3); })() + ' | nota: ' + nota})
-                            });
+                            
                         }
-                    });
-                    var i = 0;
-                    $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
+                        var i = 0;
+                        $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
 
-                    globalTimeout = setInterval(function() {
-                        clear_out();
-                        $('#promosi_operator').removeClass('hidden');
-                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                        clearInterval(globalTimeout);
-                    }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
+                        globalTimeout = setInterval(function() {
+                            clear_out();
+                            $('#promosi_operator').removeClass('hidden');
+                            $('#info').text('Silahkan scan tiket atau tap kartu anda');
+                            clearInterval(globalTimeout);
+                        }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
+                    });
+                    
 
                 }
                 

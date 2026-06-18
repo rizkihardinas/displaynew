@@ -142,21 +142,6 @@
 
         function setimage(img, attr) {
             $('#' + attr).attr('src', img);
-            // axios({
-            //         url: '{{ route('video.to.base64') }}',
-            //         method: 'GET',
-            //         params: {
-            //             i: img
-            //         },
-            //     })
-            //     .then(function(response) {
-            //         const base64 = response.data.base64;
-            //         $('#' + attr).attr('src', 'data:image/png;base64,' + base64);
-            //     })
-            //     .catch(function(error) {
-            //         $('#' + attr).attr('src', '{{ asset('public/not-found.jpg') }}');
-            //         console.error('Error memuat video / image:', error);
-            //     });
         }
     </script>
 

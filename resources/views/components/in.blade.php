@@ -2,7 +2,7 @@
     @foreach ($datas as $key => $item)
         <div class="{{$key <> 0 ? 'hidden' : ''}} duration-2000 ease-in-out absolute inset-0 transition-transform transform z-20 translate-x-0" data-carousel-item="">
             @if ($item['type'] == 'image')
-                <img class="object-fill margin-0 w-full h-full" src="{{ $item['path'] }}" alt="...">
+                <img loading="lazy" class="object-fill margin-0 w-full h-full" src="{{ $item['path'] }}" alt="...">
             @else
                 <video src="{{ $item['path'] }}" loop autoplay muted playsinline class="w-full h-full object-fill block" id="video"></video>
 

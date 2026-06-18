@@ -8,7 +8,7 @@
             data-carousel-item="">
 
             @if ($item['type'] == 'image')
-                <img class="object-fill margin-0 w-full h-full" src="{{ $item['path'] }}">
+                <img loading="lazy" class="object-fill margin-0 w-full h-full" src="{{ $item['path'] }}">
             @else
                 <video src="{{ $item['path'] }}" loop autoplay muted playsinline class="object-fill w-full h-full"
                     id="video">
