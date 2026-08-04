@@ -47,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         Config::set('app.ip_server', $setting->ip);
         Config::set('uno.timeout_in', $setting->timeout_in);
         Config::set('uno.timeout_out', $setting->timeout_out);
+        Config::set('uno.delay_in', $setting->delay_in);
 
         if (Schema::hasTable('preferences') && DB::table('preferences')->count() > 0) {
             $preferences = \App\Models\Preference::first();

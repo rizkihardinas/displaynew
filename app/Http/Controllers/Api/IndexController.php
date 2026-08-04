@@ -164,6 +164,7 @@ class IndexController extends Controller
 
                     break;
                 case 2:
+                    sleep(config('uno.delay_in',0));
                     $cacheImageKey    = 'image_' . $request->locationID;
                     $cacheImageinKey  = 'imagein_' . $request->locationID;
                     $datas->action = 2;
