@@ -236,7 +236,7 @@
                         clear_out();
                         clearInterval(globalTimeout);
 
-                    }, {{ config('uno.timeout_out') * 1000 }}); // 30 detik
+                    }, {{ config('uno.timeout_out_in') * 1000 }}); // 30 detik
 
                 }
 
