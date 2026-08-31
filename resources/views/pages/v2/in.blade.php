@@ -102,7 +102,6 @@
                 showWrapperData();
                 blink();
                 var jsonString = e.message;
-                var jsonString = e.message;
                 
                 var jsonObject = JSON.parse(jsonString);
                 hasResponse = true;
@@ -111,11 +110,6 @@
                 var action = datas.action;
                 $('#promosi_operator').addClass('hidden');
                 $('#imagein').removeClass('hidden');
-                if (action == 3) {
-                    $('#standby').addClass('hidden');
-                    $('#page-out').removeClass('hidden');
-                }
-                // Render QR setelah elemen visible (hindari render saat hidden)
 
                 var local_ip = datas.local_ip;
                 var job = datas.job;
@@ -123,25 +117,61 @@
                 var posip = datas.posip;
                 var image = datas.image || '';
                 var imagein = datas.imagein || '';
-                if (lpr == '') {
-                    lpr = datas.lpr
-                    model = datas.model;
+
+                if (action == 1) {
+                    lpr = datas.lpr || '';
+                    model = datas.model || '';
+                    datecapture = datas.datecapture || '';
+                    memberstatus = datas.memberstatus || '';
+                } else if (lpr == '') {
+                    lpr = datas.lpr || '';
+                    model = datas.model || '';
                     datecapture = datas.datecapture || '';
                     memberstatus = datas.memberstatus || '';
                 }
+
                 var memberperiod = datas.memberperiod || '';
-                var nota = datas.nota;
-                var plateno = datas.plateno;
+                var nota = datas.nota || '';
+                var plateno = datas.plateno || '';
                 var total = isNaN(Number(datas.total)) ? 0 : Number(datas.total);
-                var vehicletype = datas.vehicletype;
-                var inpos = datas.inpos;
+                var vehicletype = datas.vehicletype || '';
+                var inpos = datas.inpos || '';
                 var intime = datas.intime || '';
                 var outtime = datas.outtime || '';
-                var duration = datas.duration;
-                var pesan = datas.pesan;
+                var duration = datas.duration || '';
+                var pesan = datas.pesan || '';
                 var done = false;
-                if (action == 3) {
+
+                if (action == 1) {
+                    $('#page-out').addClass('hidden');
+                    $('#standby').removeClass('hidden');
+                    $('#qr-container').addClass('hidden');
+                    $('#image').addClass('hidden');
+                    $('#informasi-pembayaran-row').addClass('hidden');
+                    $('#informasi-pembayaran').text('');
                     
+                    if (image) {
+                        setimage(image, 'imagein');
+                    } else {
+                        $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
+                    }
+                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+
+                    $('#nota').text('');
+                    $('#total').text('');
+                    $('#duration').text('');
+                    $('#intime').text('');
+                    $('#outtime').text('');
+                    $('#vehicletype').text('');
+
+                    globalTimeout = setInterval(function() {
+                        hasResponse = hasResponse ? !hasResponse : hasResponse;
+                        action = 0;
+                        clearInterval(globalTimeout);
+                    }, {{ config('uno.timeout_out') * 1000 }});
+                } else if (action == 3) {
+                    $('#standby').addClass('hidden');
+                    $('#page-out').removeClass('hidden');
                     $('#image').addClass('hidden');
                     $('#qr-container').removeClass('hidden');
                     var qr = datas.qris;
@@ -174,43 +204,8 @@
                         }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
                     });
                     
-
-                }
-                
-                if (image) { setimage(image, 'imagein'); }
-                $('#info').text(pesan);
-                $('#posname').text(posname);
-                $('#posip').text(posip);
-                if(memberperiod == '') {
-                    $('#memberstatus').text('Non Member');
-                } else {
-                    $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
-                }
-                $('#plate').text(plateno);
-                $('#lpr').text(lpr);
-                $('#datecapture').text(datecapture);
-                $('#nota').text(nota);
-                $('#total').text(formatRupiah(total));
-                $('#vehicletype').text(vehicletype);
-                $('#intime').text(intime);
-                $('#outtime').text(outtime);
-                $('#duration').text(duration);
-                // $('#image').attr('src', imagein);
-                // $('#imagein').attr('src', image);
-                $('#video').addClass('hidden');
-                $('#imagein').removeClass('hidden');
-                $('#labelin').removeClass('hidden');
-
-                
-                if (action == 1) {
-                    globalTimeout = setInterval(function() {
-                        hasResponse = hasResponse ? !hasResponse : hasResponse;
-                        action = 0;
-                        clearInterval(globalTimeout);
-                    }, {{ config('uno.timeout_out') * 1000 }});
-
-                }
-                if (action == 4) {
+                    if (image) { setimage(image, 'imagein'); }
+                } else if (action == 4) {
                     if (imagein) { setimage(imagein, 'image'); }
                     var qrEl = document.getElementById('qr');
                     if (qrEl) { qrEl.innerHTML = ''; }
@@ -237,8 +232,30 @@
                         clearInterval(globalTimeout);
 
                     }, {{ config('uno.timeout_out_in') * 1000 }}); // 30 detik
-
                 }
+
+                $('#info').text(pesan);
+                $('#posname').text(posname);
+                $('#posip').text(posip);
+                if(memberperiod == '') {
+                    $('#memberstatus').text('Non Member');
+                } else {
+                    $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
+                }
+                $('#plate').text(plateno);
+                $('#lpr').text(lpr);
+                $('#datecapture').text(datecapture);
+                if (action != 1) {
+                    $('#nota').text(nota);
+                    $('#total').text(formatRupiah(total));
+                    $('#vehicletype').text(vehicletype);
+                    $('#intime').text(intime);
+                    $('#outtime').text(outtime);
+                    $('#duration').text(duration);
+                }
+                $('#video').addClass('hidden');
+                $('#imagein').removeClass('hidden');
+                $('#labelin').removeClass('hidden');
 
             });
 
@@ -251,7 +268,7 @@
             $('#imagein').addClass('hidden');
             $('#imagein').removeAttr('src');
             $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-            $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
+            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
 
             lpr = '';
@@ -280,10 +297,8 @@
             $('#labelin').addClass('hidden');
             $('#imagein').addClass('hidden');
             $('#promosi_operator').removeClass('hidden');
-            // $('#image').removeAttr('src');
-            // $('#imagein').removeAttr('src');
-            // $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-            // $('#imagein').attr('src', `{{ asset('public/in.jpg') }}`);
+            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+            $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
             $('#info').text('Silahkan scan tiket atau tap kartu anda');
             lpr = '';
             model = '';
