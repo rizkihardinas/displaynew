@@ -87,20 +87,7 @@ class IndexController extends Controller
                         event(new InEvent(json_encode($datas)));
                     } else {
                         $locId = $request->locationID;
-                        $cacheKeys = [
-                            'ticket'  => 'ticket_' . $locId,
-                            'qris'    => 'qris_' . $locId,
-                            'total'   => 'total_' . $locId,
-                            'lpr'     => 'lpr_' . $locId,
-                            'image'   => 'image_' . $locId,
-                            'imagein' => 'imagein_' . $locId,
-                            'intime'  => 'intime_' . $locId,
-                            'outtime' => 'outtime_' . $locId,
-                        ];
-
-                        foreach ($cacheKeys as $key) {
-                            cache()->forget($key);
-                        }
+                        $stateKey = 'display_' . $locId;
 
                         if (!empty($datas->image)) {
                             $datas->image = $this->uncToUrl($datas->image);
@@ -117,19 +104,19 @@ class IndexController extends Controller
                             $expired = '';
                         }
 
-                        $cacheData = array_filter([
-                            $cacheKeys['qris']    => $datas->qris ?? null,
-                            $cacheKeys['image']   => $datas->image ?? null,
-                            $cacheKeys['total']   => $datas->total ?? null,
-                            $cacheKeys['lpr']     => $datas->lpr ?? null,
-                            $cacheKeys['imagein'] => $datas->imagein ?? null,
-                            $cacheKeys['intime']  => $datas->intime ?? null,
-                            $cacheKeys['outtime'] => $datas->outtime ?? null,
-                        ], fn($val) => !is_null($val) && $val !== '');
+                        $state = [
+                            'detected' => true,
+                            'ticket'   => null,
+                            'qris'     => $datas->qris ?? null,
+                            'image'    => $datas->image ?? null,
+                            'total'    => $datas->total ?? null,
+                            'lpr'      => $datas->lpr ?? null,
+                            'imagein'  => $datas->imagein ?? null,
+                            'intime'   => $datas->intime ?? null,
+                            'outtime'  => $datas->outtime ?? null,
+                        ];
 
-                        $cacheData['vehicle_detected_' . $locId] = true;
-
-                        cache()->putMany($cacheData, now()->addMinutes(2));
+                        cache()->put($stateKey, $state, now()->addMinutes(2));
 
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
@@ -141,34 +128,25 @@ class IndexController extends Controller
                     if ($delayIn > 0) {
                         sleep($delayIn);
                     }
-                    $cacheImageKey   = 'image_' . $request->locationID;
-                    $cacheImageinKey = 'imagein_' . $request->locationID;
-                    $datas->action   = 2;
+                    $datas->action = 2;
+                    $stateKey = 'display_' . $request->locationID;
+                    $state = cache()->get($stateKey, []);
 
-                    $cachePuts = [];
                     if (!empty($datas->image)) {
                         $datas->image = $this->uncToUrl($datas->image);
-                        $cachePuts[$cacheImageKey] = $datas->image;
-                    } else {
-                        $cachedImg = cache()->get($cacheImageKey);
-                        if ($cachedImg !== null) {
-                            $datas->image = $cachedImg;
-                        }
+                        $state['image'] = $datas->image;
+                    } elseif (!empty($state['image'])) {
+                        $datas->image = $state['image'];
                     }
 
                     if (!empty($datas->imagein)) {
                         $datas->imagein = $this->uncToUrl($datas->imagein);
-                        $cachePuts[$cacheImageinKey] = $datas->imagein;
-                    } else {
-                        $cachedImgIn = cache()->get($cacheImageinKey);
-                        if ($cachedImgIn !== null) {
-                            $datas->imagein = $cachedImgIn;
-                        }
+                        $state['imagein'] = $datas->imagein;
+                    } elseif (!empty($state['imagein'])) {
+                        $datas->imagein = $state['imagein'];
                     }
 
-                    if (!empty($cachePuts)) {
-                        cache()->putMany($cachePuts, now()->addMinutes(2));
-                    }
+                    cache()->put($stateKey, $state, now()->addMinutes(2));
 
                     $datas->pesan = 'Terima kasih, silahkan masuk.';
                     event(new InEvent(json_encode($datas)));
@@ -176,8 +154,10 @@ class IndexController extends Controller
 
                 case 3:
                     $locId = $request->locationID;
-                    $cacheVehicleDetectedKey = 'vehicle_detected_' . $locId;
-                    if (!cache()->has($cacheVehicleDetectedKey)) {
+                    $stateKey = 'display_' . $locId;
+                    $state = cache()->get($stateKey);
+
+                    if (!$state || empty($state['detected'])) {
                         $response = [
                             'userID'       => $request->userID,
                             'locationID'   => $request->locationID,
@@ -193,76 +173,30 @@ class IndexController extends Controller
                     }
                     $datas->action = 3;
 
-                    $cacheKeys = [
-                        'ticket'  => 'ticket_' . $locId,
-                        'qris'    => 'qris_' . $locId,
-                        'total'   => 'total_' . $locId,
-                        'lpr'     => 'lpr_' . $locId,
-                        'image'   => 'image_' . $locId,
-                        'imagein' => 'imagein_' . $locId,
-                        'intime'  => 'intime_' . $locId,
-                        'outtime' => 'outtime_' . $locId,
-                    ];
-
-                    $savedTicket = cache()->get($cacheKeys['ticket']);
-
-                    if (empty($savedTicket) || $savedTicket != $datas->nota) {
-                        cache()->put($cacheKeys['ticket'], $datas->nota, now()->addMinutes(2));
-                        cache()->forget($cacheKeys['qris']);
-                        cache()->forget($cacheKeys['total']);
-                        cache()->forget($cacheKeys['image']);
-                        cache()->forget($cacheKeys['imagein']);
-                        cache()->forget($cacheKeys['intime']);
-                        cache()->forget($cacheKeys['outtime']);
-                        cache()->forget($cacheKeys['lpr']);
+                    // Jika tiket berganti, reset field transaksi
+                    if (empty($state['ticket']) || $state['ticket'] != ($datas->nota ?? null)) {
+                        $state = [
+                            'detected' => true,
+                            'ticket'   => $datas->nota ?? null,
+                        ];
                     }
 
-                    $cachePuts = [];
-
-                    if (!empty($datas->qris)) {
-                        $cachePuts[$cacheKeys['qris']] = $datas->qris;
-                    } else {
-                        $cached = cache()->get($cacheKeys['qris']);
-                        if ($cached !== null) {
-                            $datas->qris = $cached;
+                    // Sinkronisasi data teks
+                    foreach (['qris', 'total', 'lpr', 'intime', 'outtime'] as $field) {
+                        if (!empty($datas->$field)) {
+                            $state[$field] = $datas->$field;
+                        } elseif (!empty($state[$field])) {
+                            $datas->$field = $state[$field];
                         }
                     }
 
-                    if (!empty($datas->image)) {
-                        $datas->image = $this->uncToUrl($datas->image);
-                        $cachePuts[$cacheKeys['image']] = $datas->image;
-                    } else {
-                        $cached = cache()->get($cacheKeys['image']);
-                        if ($cached !== null) {
-                            $datas->image = $cached;
-                        }
-                    }
-
-                    if (!empty($datas->total)) {
-                        $cachePuts[$cacheKeys['total']] = $datas->total;
-                    } else {
-                        $cached = cache()->get($cacheKeys['total']);
-                        if ($cached !== null) {
-                            $datas->total = $cached;
-                        }
-                    }
-
-                    if (!empty($datas->lpr)) {
-                        $cachePuts[$cacheKeys['lpr']] = $datas->lpr;
-                    } else {
-                        $cached = cache()->get($cacheKeys['lpr']);
-                        if ($cached !== null) {
-                            $datas->lpr = $cached;
-                        }
-                    }
-
-                    if (!empty($datas->imagein)) {
-                        $datas->imagein = $this->uncToUrl($datas->imagein);
-                        $cachePuts[$cacheKeys['imagein']] = $datas->imagein;
-                    } else {
-                        $cached = cache()->get($cacheKeys['imagein']);
-                        if ($cached !== null) {
-                            $datas->imagein = $cached;
+                    // Sinkronisasi gambar
+                    foreach (['image', 'imagein'] as $imgField) {
+                        if (!empty($datas->$imgField)) {
+                            $datas->$imgField = $this->uncToUrl($datas->$imgField);
+                            $state[$imgField] = $datas->$imgField;
+                        } elseif (!empty($state[$imgField])) {
+                            $datas->$imgField = $state[$imgField];
                         }
                     }
 
@@ -274,27 +208,7 @@ class IndexController extends Controller
                         $expired = '';
                     }
 
-                    if (!empty($datas->intime)) {
-                        $cachePuts[$cacheKeys['intime']] = $datas->intime;
-                    } else {
-                        $cached = cache()->get($cacheKeys['intime']);
-                        if ($cached !== null) {
-                            $datas->intime = $cached;
-                        }
-                    }
-
-                    if (!empty($datas->outtime)) {
-                        $cachePuts[$cacheKeys['outtime']] = $datas->outtime;
-                    } else {
-                        $cached = cache()->get($cacheKeys['outtime']);
-                        if ($cached !== null) {
-                            $datas->outtime = $cached;
-                        }
-                    }
-
-                    if (!empty($cachePuts)) {
-                        cache()->putMany($cachePuts, now()->addMinutes(2));
-                    }
+                    cache()->put($stateKey, $state, now()->addMinutes(2));
 
                     $datas->pesan = 'Silahkan melakukan pembayaran ';
                     $datas->expired = $expired;
@@ -303,66 +217,24 @@ class IndexController extends Controller
 
                 case 4:
                     $locId = $request->locationID;
-                    $cacheKeys = [
-                        'ticket'   => 'ticket_' . $locId,
-                        'qris'     => 'qris_' . $locId,
-                        'total'    => 'total_' . $locId,
-                        'lpr'      => 'lpr_' . $locId,
-                        'image'    => 'image_' . $locId,
-                        'imagein'  => 'imagein_' . $locId,
-                        'intime'   => 'intime_' . $locId,
-                        'outtime'  => 'outtime_' . $locId,
-                    ];
+                    $stateKey = 'display_' . $locId;
+                    $state = cache()->get($stateKey, []);
 
-                    if (empty($datas->total)) {
-                        $cached = cache()->get($cacheKeys['total']);
-                        if ($cached !== null) {
-                            $datas->total = $cached;
-                        }
-                    }
-                    if (empty($datas->lpr)) {
-                        $cached = cache()->get($cacheKeys['lpr']);
-                        if ($cached !== null) {
-                            $datas->lpr = $cached;
-                        }
-                    }
-                    if (!empty($datas->image)) {
-                        $datas->image = $this->uncToUrl($datas->image);
-                    } else {
-                        $cached = cache()->get($cacheKeys['image']);
-                        if ($cached !== null) {
-                            $datas->image = $cached;
+                    foreach (['total', 'lpr', 'intime', 'outtime'] as $field) {
+                        if (empty($datas->$field) && !empty($state[$field])) {
+                            $datas->$field = $state[$field];
                         }
                     }
 
-                    if (!empty($datas->imagein)) {
-                        $datas->imagein = $this->uncToUrl($datas->imagein);
-                    } else {
-                        $cached = cache()->get($cacheKeys['imagein']);
-                        if ($cached !== null) {
-                            $datas->imagein = $cached;
+                    foreach (['image', 'imagein'] as $imgField) {
+                        if (!empty($datas->$imgField)) {
+                            $datas->$imgField = $this->uncToUrl($datas->$imgField);
+                        } elseif (!empty($state[$imgField])) {
+                            $datas->$imgField = $state[$imgField];
                         }
                     }
 
-                    if (empty($datas->intime)) {
-                        $cached = cache()->get($cacheKeys['intime']);
-                        if ($cached !== null) {
-                            $datas->intime = $cached;
-                        }
-                    }
-
-                    if (empty($datas->outtime)) {
-                        $cached = cache()->get($cacheKeys['outtime']);
-                        if ($cached !== null) {
-                            $datas->outtime = $cached;
-                        }
-                    }
-
-                    foreach ($cacheKeys as $key) {
-                        cache()->forget($key);
-                    }
-
-                    cache()->forget('vehicle_detected_' . $locId);
+                    cache()->forget($stateKey);
 
                     $datas->qris = "";
                     $datas->action = 4;
