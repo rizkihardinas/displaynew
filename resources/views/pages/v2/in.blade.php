@@ -17,19 +17,71 @@
 @endsection
 @push('scripts')
     <script>
-        var sec = {{ (int)config('uno.timeout_in', 30) }} * 1000;
+        const LOGO_OPERATOR_URL = `{{ asset('public/Logo_Operator.jpg') }}`;
+        const OUT_IMG_URL = `{{ asset('public/out.jpg') }}`;
+        const TIMEOUT_IN = {{ (int)config('uno.timeout_in', 30) * 1000 }};
+        const TIMEOUT_OUT = {{ (int)config('uno.timeout_out', 30) * 1000 }};
+        const TIMEOUT_OUT_IN = {{ (int)config('uno.timeout_out_in', 30) * 1000 }};
+
         var model = '';
         var lpr = '';
         var datecapture = '';
         var memberstatus = '';
         var hasResponse = false;
-        var qrcodeInstance = null; // Reuse QR instance untuk performa cepat
+        var qrcodeInstance = null;
         var globalTimer = null;
+
+        // Cached DOM Elements
+        var DOM = {};
+        function initDOM() {
+            DOM = {
+                wrapperData: $('#wrapper_data'),
+                promosiOperator: $('#promosi_operator'),
+                imagein: $('#imagein'),
+                image: $('#image'),
+                memberstatus: $('#memberstatus'),
+                posname: $('#posname'),
+                posip: $('#posip'),
+                lpr: $('#lpr'),
+                datecapture: $('#datecapture'),
+                info: $('#info'),
+                plate: $('#plate'),
+                nota: $('#nota'),
+                total: $('#total'),
+                vehicletype: $('#vehicletype'),
+                intime: $('#intime'),
+                outtime: $('#outtime'),
+                duration: $('#duration'),
+                pageOut: $('#page-out'),
+                standby: $('#standby'),
+                qrContainer: $('#qr-container'),
+                qrEl: document.getElementById('qr'),
+                infoPembayaranRow: $('#informasi-pembayaran-row'),
+                infoPembayaran: $('#informasi-pembayaran'),
+                expired: $('#expired'),
+                video: $('#video'),
+                labelin: $('#labelin'),
+                wrapperInfo: $('#wrapper-info'),
+                wrapper: document.getElementById('wrapper'),
+                lprWrapper: document.getElementById('lpr_wrapper')
+            };
+        }
+
+        // Global single instance Rupiah formatter
+        const rupiahFormatter = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+
+        function formatRupiah(amount) {
+            return rupiahFormatter.format(amount || 0);
+        }
 
         function setDisplayTimeout(callback, delayMs) {
             if (globalTimer) {
                 clearTimeout(globalTimer);
-                globalTimer = null;
             }
             globalTimer = setTimeout(callback, delayMs);
         }
@@ -42,92 +94,105 @@
         }
 
         function showWrapperData() {
-            $('#wrapper_data').removeClass('hidden');
+            DOM.wrapperData.removeClass('hidden');
         }
+
         function hideWrapperData() {
-            $('#wrapper_data').addClass('hidden');
+            DOM.wrapperData.addClass('hidden');
         }
+
+        function blink() {
+            DOM.wrapperInfo.addClass('animate-blink');
+            setTimeout(function() {
+                DOM.wrapperInfo.removeClass('animate-blink');
+            }, 2000);
+        }
+
+        function syncLprWrapperHeight() {
+            if (DOM.wrapper && DOM.lprWrapper) {
+                DOM.lprWrapper.style.height = DOM.wrapper.offsetHeight + 'px';
+            }
+        }
+
+        $(document).ready(function() {
+            initDOM();
+            syncLprWrapperHeight();
+        });
+
+        $(window).on('resize', function() {
+            requestAnimationFrame(syncLprWrapperHeight);
+        });
+
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
                 clearDisplayTimeout();
                 blink();
-                var jsonString = e.message;
                 showWrapperData();
+
                 try {
-                    var jsonObject = JSON.parse(jsonString);
-                    var datas = jsonObject;
-                    var local_ip = datas.local_ip;
+                    var datas = typeof e.message === 'string' ? JSON.parse(e.message) : e.message;
                     var posname = datas.posname;
                     var image = datas.image || '';
-                    var job = datas.job;
-                    var action = datas.action;
                     var posip = datas.posip;
-                    
-                    $('#promosi_operator').addClass('hidden');
-                    $('#imagein').removeClass('hidden');
+
+                    DOM.promosiOperator.addClass('hidden');
+                    DOM.imagein.removeClass('hidden');
+
                     if (lpr == '') {
-                        lpr = datas.lpr
-                        model = datas.model;
-
-
+                        lpr = datas.lpr || '';
+                        model = datas.model || '';
                     }
-                    
+
                     datecapture = datas.datecapture || '';
-                    if (datas.memberstatus != '') {
+                    if (datas.memberstatus) {
                         memberstatus = datas.memberstatus + ' - ' + (datas.memberperiod || '');
-
-                    }else{
-                        $('#memberstatus').text('Non Member');
-                    }
-                    if (datas.memberperiod) {
-                        var memberperiod = datas.memberperiod || '';
+                        DOM.memberstatus.text(memberstatus);
+                    } else {
+                        DOM.memberstatus.text('Non Member');
                     }
 
-                    var pesan = datas.pesan;
+                    var pesan = datas.pesan || '';
                     if (image) { setimage(image, 'imagein'); }
-                    $('#posname').text(posname);
-                    $('#posip').text(posip);
-                    $('#lpr').text(lpr);
-                    $('#datecapture').text(datecapture);
-                    $('#info').text(pesan);
+
+                    DOM.posname.text(posname);
+                    DOM.posip.text(posip);
+                    DOM.lpr.text(lpr);
+                    DOM.datecapture.text(datecapture);
+                    DOM.info.text(pesan);
 
                     setDisplayTimeout(function() {
                         clear();
                         hideWrapperData();
-                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    }, {{ (int)config('uno.timeout_in', 30) * 1000 }});
+                        DOM.info.text('Silahkan scan tiket atau tap kartu anda');
+                    }, TIMEOUT_IN);
                 } catch (error) {
                     console.error("Error parsing JSON: ", error);
                 }
-
             })
             .listen('.my-event-out', (e) => {
                 clearDisplayTimeout();
                 showWrapperData();
                 blink();
-                var jsonString = e.message;
-                
-                var jsonObject = JSON.parse(jsonString);
+
+                var datas;
+                try {
+                    datas = typeof e.message === 'string' ? JSON.parse(e.message) : e.message;
+                } catch (err) {
+                    console.error("Error parsing out JSON:", err);
+                    return;
+                }
+
                 hasResponse = true;
-
-                var datas = jsonObject;
                 var action = datas.action;
-                $('#promosi_operator').addClass('hidden');
-                $('#imagein').removeClass('hidden');
+                DOM.promosiOperator.addClass('hidden');
+                DOM.imagein.removeClass('hidden');
 
-                var local_ip = datas.local_ip;
-                var job = datas.job;
                 var posname = datas.posname;
                 var posip = datas.posip;
                 var image = datas.image || '';
                 var imagein = datas.imagein || '';
 
-                if (action == 1) {
-                    lpr = datas.lpr || '';
-                    model = datas.model || '';
-                    datecapture = datas.datecapture || '';
-                    memberstatus = datas.memberstatus || '';
-                } else if (lpr == '') {
+                if (action == 1 || lpr == '') {
                     lpr = datas.lpr || '';
                     model = datas.model || '';
                     datecapture = datas.datecapture || '';
@@ -139,138 +204,144 @@
                 var plateno = datas.plateno || '';
                 var total = isNaN(Number(datas.total)) ? 0 : Number(datas.total);
                 var vehicletype = datas.vehicletype || '';
-                var inpos = datas.inpos || '';
                 var intime = datas.intime || '';
                 var outtime = datas.outtime || '';
                 var duration = datas.duration || '';
                 var pesan = datas.pesan || '';
-                var done = false;
 
                 if (action == 1) {
-                    $('#page-out').addClass('hidden');
-                    $('#standby').removeClass('hidden');
-                    $('#qr-container').addClass('hidden');
-                    $('#image').addClass('hidden');
-                    $('#informasi-pembayaran-row').addClass('hidden');
-                    $('#informasi-pembayaran').text('');
-                    
+                    DOM.pageOut.addClass('hidden');
+                    DOM.standby.removeClass('hidden');
+                    DOM.qrContainer.addClass('hidden');
+                    DOM.image.addClass('hidden');
+                    DOM.infoPembayaranRow.addClass('hidden');
+                    DOM.infoPembayaran.text('');
+
                     if (image) {
                         setimage(image, 'imagein');
                     } else {
-                        $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
+                        DOM.imagein.attr('src', LOGO_OPERATOR_URL);
                     }
-                    $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
+                    DOM.image.attr('src', OUT_IMG_URL);
 
-                    $('#nota').text('');
-                    $('#total').text('');
-                    $('#duration').text('');
-                    $('#intime').text('');
-                    $('#outtime').text('');
-                    $('#vehicletype').text('');
+                    DOM.nota.text('');
+                    DOM.total.text('');
+                    DOM.duration.text('');
+                    DOM.intime.text('');
+                    DOM.outtime.text('');
+                    DOM.vehicletype.text('');
 
                     setDisplayTimeout(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
-                    }, {{ (int)config('uno.timeout_out', 30) * 1000 }});
+                    }, TIMEOUT_OUT);
                 }
-                 else if (action == 3) {
-                    $('#standby').addClass('hidden');
-                    $('#page-out').removeClass('hidden');
-                    $('#image').addClass('hidden');
-                    $('#qr-container').removeClass('hidden');
-                    var qr = datas.qris;
-                    var qrEl = document.getElementById('qr');
+                else if (action == 3) {
+                    DOM.standby.addClass('hidden');
+                    DOM.pageOut.removeClass('hidden');
+                    DOM.image.addClass('hidden');
+                    DOM.qrContainer.removeClass('hidden');
                     showWrapperData();
-                    $('#expired').text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
 
-                    // requestAnimationFrame HANYA untuk render QR
-                    requestAnimationFrame(function() {
-                        if (qrEl && qr) {
-                            qrEl.innerHTML = '';
+                    var qr = datas.qris;
+                    DOM.expired.text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
 
-                            qrcodeInstance = new QRCode(qrEl, {
-                                text: qr,
-                                width: 200,
-                                height: 200,
-                                colorDark: '#000000',
-                                colorLight: '#ffffff',
-                                correctLevel: QRCode.CorrectLevel.M,
-                                useSVG: true
-                            });
-                        }
-                    });
-                    
+                    if (DOM.qrEl && qr) {
+                        requestAnimationFrame(function() {
+                            if (qrcodeInstance) {
+                                qrcodeInstance.makeCode(qr);
+                            } else {
+                                DOM.qrEl.innerHTML = '';
+                                qrcodeInstance = new QRCode(DOM.qrEl, {
+                                    text: qr,
+                                    width: 200,
+                                    height: 200,
+                                    colorDark: '#000000',
+                                    colorLight: '#ffffff',
+                                    correctLevel: QRCode.CorrectLevel.M,
+                                    useSVG: true
+                                });
+                            }
+                        });
+                    }
+
                     if (image) { setimage(image, 'imagein'); }
 
-                    // Timeout dipasang di luar requestAnimationFrame
                     setDisplayTimeout(function() {
                         clear_out();
-                        $('#promosi_operator').removeClass('hidden');
-                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                    }, {{ (int)config('uno.timeout_out', 30) * 1000 }});
-                } else if (action == 4) {
+                        DOM.promosiOperator.removeClass('hidden');
+                        DOM.info.text('Silahkan scan tiket atau tap kartu anda');
+                    }, TIMEOUT_OUT);
+                }
+                else if (action == 4) {
                     if (imagein) { setimage(imagein, 'image'); }
-                    var qrEl = document.getElementById('qr');
-                    if (qrEl) { qrEl.innerHTML = ''; }
-                    $('#qr-container').addClass('hidden');
-                    $('#page-out').removeClass('hidden');
-                    $('#standby').addClass('hidden');
+                    if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
+                    qrcodeInstance = null;
+
+                    DOM.qrContainer.addClass('hidden');
+                    DOM.pageOut.removeClass('hidden');
+                    DOM.standby.addClass('hidden');
                     showWrapperData();
+
                     var balance = datas.balance;
                     if (image) { setimage(image, 'imagein'); }
-                    $('#image').removeClass('hidden');
-                    $('#informasi-pembayaran-row').removeClass('hidden');
+                    DOM.image.removeClass('hidden');
+                    DOM.infoPembayaranRow.removeClass('hidden');
+
                     if (balance) {
-                        $('#informasi-pembayaran').text('Saldo : ' + formatRupiah(balance));
+                        DOM.infoPembayaran.text('Saldo : ' + formatRupiah(balance)).removeClass('hidden');
                     } else {
-                        $('#informasi-pembayaran-row').addClass('hidden');
-                        $('#informasi-pembayaran').addClass('hidden');
+                        DOM.infoPembayaranRow.addClass('hidden');
+                        DOM.infoPembayaran.addClass('hidden');
                     }
+
                     setDisplayTimeout(function() {
                         lpr = '';
                         model = '';
                         datecapture = '';
                         memberstatus = '';
                         clear_out();
-                    }, {{ (int)config('uno.timeout_out_in', 30) * 1000 }});
+                    }, TIMEOUT_OUT_IN);
                 }
 
-                $('#info').text(pesan);
-                $('#posname').text(posname);
-                $('#posip').text(posip);
-                if(memberperiod == '') {
-                    $('#memberstatus').text('Non Member');
+                DOM.info.text(pesan);
+                DOM.posname.text(posname);
+                DOM.posip.text(posip);
+
+                if (memberperiod == '') {
+                    DOM.memberstatus.text('Non Member');
                 } else {
-                    $('#memberstatus').text('Masa Aktif Member : ' + memberperiod);
+                    DOM.memberstatus.text('Masa Aktif Member : ' + memberperiod);
                 }
-                $('#plate').text(plateno);
-                $('#lpr').text(lpr);
-                $('#datecapture').text(datecapture);
-                if (action != 1) {
-                    $('#nota').text(nota);
-                    $('#total').text(formatRupiah(total));
-                    $('#vehicletype').text(vehicletype);
-                    $('#intime').text(intime);
-                    $('#outtime').text(outtime);
-                    $('#duration').text(duration);
-                }
-                $('#video').addClass('hidden');
-                $('#imagein').removeClass('hidden');
-                $('#labelin').removeClass('hidden');
 
+                DOM.plate.text(plateno);
+                DOM.lpr.text(lpr);
+                DOM.datecapture.text(datecapture);
+
+                if (action != 1) {
+                    DOM.nota.text(nota);
+                    DOM.total.text(formatRupiah(total));
+                    DOM.vehicletype.text(vehicletype);
+                    DOM.intime.text(intime);
+                    DOM.outtime.text(outtime);
+                    DOM.duration.text(duration);
+                }
+
+                DOM.video.addClass('hidden');
+                DOM.imagein.removeClass('hidden');
+                DOM.labelin.removeClass('hidden');
             });
 
         function clear() {
-            $('#memberstatus').text('\t');
-            $('#lpr').text('\t');
-            $('#datecapture').text('\t');
+            DOM.memberstatus.text('\t');
+            DOM.lpr.text('\t');
+            DOM.datecapture.text('\t');
             hideWrapperData();
-            $('#promosi_operator').removeClass('hidden');
-            $('#imagein').addClass('hidden');
-            $('#imagein').removeAttr('src');
-            $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-            $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
+            DOM.promosiOperator.removeClass('hidden');
+            DOM.imagein.addClass('hidden');
+            DOM.imagein.attr('src', LOGO_OPERATOR_URL);
+            DOM.image.attr('src', OUT_IMG_URL);
+            DOM.info.text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
 
             lpr = '';
             model = '';
@@ -279,66 +350,33 @@
         }
 
         function clear_out() {
-            $('#memberstatus').text('\u00A0');
-            $('#lpr').text('\u00A0');
-            $('#plate').text('\u00A0');
-            $('#datecapture').text('\u00A0');
-            $('#nota').text('');
-            $('#total').text('');
+            DOM.memberstatus.text('\u00A0');
+            DOM.lpr.text('\u00A0');
+            DOM.plate.text('\u00A0');
+            DOM.datecapture.text('\u00A0');
+            DOM.nota.text('');
+            DOM.total.text('');
             hideWrapperData();
-            $('#vehicletype').text('');
-            $('#intime').text('');
-            $('#outtime').text('');
-            $('#duration').text('');
-            $('#informasi-pembayaran').text(' ');
+            DOM.vehicletype.text('');
+            DOM.intime.text('');
+            DOM.outtime.text('');
+            DOM.duration.text('');
+            DOM.infoPembayaran.text(' ');
 
-            $('#standby').removeClass('hidden');
-            $('#page-out').addClass('hidden');
-            $('#video').removeClass('hidden');
-            $('#labelin').addClass('hidden');
-            $('#imagein').addClass('hidden');
-            $('#promosi_operator').removeClass('hidden');
-            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
-            $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-            $('#info').text('Silahkan scan tiket atau tap kartu anda');
+            DOM.standby.removeClass('hidden');
+            DOM.pageOut.addClass('hidden');
+            DOM.video.removeClass('hidden');
+            DOM.labelin.addClass('hidden');
+            DOM.imagein.addClass('hidden');
+            DOM.promosiOperator.removeClass('hidden');
+            DOM.image.attr('src', OUT_IMG_URL);
+            DOM.imagein.attr('src', LOGO_OPERATOR_URL);
+            DOM.info.text('Silahkan scan tiket atau tap kartu anda');
+
             lpr = '';
             model = '';
             datecapture = '';
             memberstatus = '';
-            // $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
         }
-
-        function formatRupiah(amount) {
-            const formatter = new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            });
-            return formattedAmount = formatter.format(amount);
-        }
-
-        function blink() {
-            $('#wrapper-info').addClass('animate-blink');
-            setTimeout(function() {
-                $('#wrapper-info').removeClass('animate-blink');
-            }, 2000);
-        }
-        // Set the video source
-                // setVideo('\\\\192.168.9.223\\Share\\promosi.mp4');
-        function syncLprWrapperHeight() {
-            var wrapper = document.getElementById('wrapper');
-            var lpr = document.getElementById('lpr_wrapper');
-            if (wrapper && lpr) {
-                lpr.style.height = wrapper.offsetHeight + 'px';
-            }
-        }
-        $(window).on('resize load', function() {
-            setTimeout(syncLprWrapperHeight, 100);
-        });
-        // Panggil setelah document ready
-        $(document).ready(function() {
-            syncLprWrapperHeight();
-        });
     </script>
 @endpush
