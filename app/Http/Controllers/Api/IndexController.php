@@ -102,22 +102,11 @@ class IndexController extends Controller
                             cache()->forget($key);
                         }
 
-                        if (!empty($datas->qris)) {
-                            cache()->put($cacheKeys['qris'], $datas->qris, now()->addMinutes(2));
-                        }
                         if (!empty($datas->image)) {
                             $datas->image = $this->uncToUrl($datas->image);
-                            cache()->put($cacheKeys['image'], $datas->image, now()->addMinutes(2));
-                        }
-                        if (!empty($datas->total)) {
-                            cache()->put($cacheKeys['total'], $datas->total, now()->addMinutes(2));
-                        }
-                        if (!empty($datas->lpr)) {
-                            cache()->put($cacheKeys['lpr'], $datas->lpr, now()->addMinutes(2));
                         }
                         if (!empty($datas->imagein)) {
                             $datas->imagein = $this->uncToUrl($datas->imagein);
-                            cache()->put($cacheKeys['imagein'], $datas->imagein, now()->addMinutes(2));
                         }
 
                         if (isset($datas->qris)) {
@@ -128,14 +117,20 @@ class IndexController extends Controller
                             $expired = '';
                         }
 
-                        if (!empty($datas->intime)) {
-                            cache()->put($cacheKeys['intime'], $datas->intime, now()->addMinutes(2));
-                        }
-                        if (!empty($datas->outtime)) {
-                            cache()->put($cacheKeys['outtime'], $datas->outtime, now()->addMinutes(2));
-                        }
+                        $cacheData = array_filter([
+                            $cacheKeys['qris']    => $datas->qris ?? null,
+                            $cacheKeys['image']   => $datas->image ?? null,
+                            $cacheKeys['total']   => $datas->total ?? null,
+                            $cacheKeys['lpr']     => $datas->lpr ?? null,
+                            $cacheKeys['imagein'] => $datas->imagein ?? null,
+                            $cacheKeys['intime']  => $datas->intime ?? null,
+                            $cacheKeys['outtime'] => $datas->outtime ?? null,
+                        ], fn($val) => !is_null($val) && $val !== '');
 
-                        cache()->put('vehicle_detected_' . $locId, true, now()->addMinutes(2));
+                        $cacheData['vehicle_detected_' . $locId] = true;
+
+                        cache()->putMany($cacheData, now()->addMinutes(2));
+
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
                     }
@@ -150,9 +145,10 @@ class IndexController extends Controller
                     $cacheImageinKey = 'imagein_' . $request->locationID;
                     $datas->action   = 2;
 
+                    $cachePuts = [];
                     if (!empty($datas->image)) {
                         $datas->image = $this->uncToUrl($datas->image);
-                        cache()->put($cacheImageKey, $datas->image, now()->addMinutes(2));
+                        $cachePuts[$cacheImageKey] = $datas->image;
                     } else {
                         $cachedImg = cache()->get($cacheImageKey);
                         if ($cachedImg !== null) {
@@ -162,12 +158,16 @@ class IndexController extends Controller
 
                     if (!empty($datas->imagein)) {
                         $datas->imagein = $this->uncToUrl($datas->imagein);
-                        cache()->put($cacheImageinKey, $datas->imagein, now()->addMinutes(2));
+                        $cachePuts[$cacheImageinKey] = $datas->imagein;
                     } else {
                         $cachedImgIn = cache()->get($cacheImageinKey);
                         if ($cachedImgIn !== null) {
                             $datas->imagein = $cachedImgIn;
                         }
+                    }
+
+                    if (!empty($cachePuts)) {
+                        cache()->putMany($cachePuts, now()->addMinutes(2));
                     }
 
                     $datas->pesan = 'Terima kasih, silahkan masuk.';
@@ -217,8 +217,10 @@ class IndexController extends Controller
                         cache()->forget($cacheKeys['lpr']);
                     }
 
+                    $cachePuts = [];
+
                     if (!empty($datas->qris)) {
-                        cache()->put($cacheKeys['qris'], $datas->qris, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['qris']] = $datas->qris;
                     } else {
                         $cached = cache()->get($cacheKeys['qris']);
                         if ($cached !== null) {
@@ -228,7 +230,7 @@ class IndexController extends Controller
 
                     if (!empty($datas->image)) {
                         $datas->image = $this->uncToUrl($datas->image);
-                        cache()->put($cacheKeys['image'], $datas->image, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['image']] = $datas->image;
                     } else {
                         $cached = cache()->get($cacheKeys['image']);
                         if ($cached !== null) {
@@ -237,7 +239,7 @@ class IndexController extends Controller
                     }
 
                     if (!empty($datas->total)) {
-                        cache()->put($cacheKeys['total'], $datas->total, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['total']] = $datas->total;
                     } else {
                         $cached = cache()->get($cacheKeys['total']);
                         if ($cached !== null) {
@@ -246,7 +248,7 @@ class IndexController extends Controller
                     }
 
                     if (!empty($datas->lpr)) {
-                        cache()->put($cacheKeys['lpr'], $datas->lpr, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['lpr']] = $datas->lpr;
                     } else {
                         $cached = cache()->get($cacheKeys['lpr']);
                         if ($cached !== null) {
@@ -256,7 +258,7 @@ class IndexController extends Controller
 
                     if (!empty($datas->imagein)) {
                         $datas->imagein = $this->uncToUrl($datas->imagein);
-                        cache()->put($cacheKeys['imagein'], $datas->imagein, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['imagein']] = $datas->imagein;
                     } else {
                         $cached = cache()->get($cacheKeys['imagein']);
                         if ($cached !== null) {
@@ -273,7 +275,7 @@ class IndexController extends Controller
                     }
 
                     if (!empty($datas->intime)) {
-                        cache()->put($cacheKeys['intime'], $datas->intime, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['intime']] = $datas->intime;
                     } else {
                         $cached = cache()->get($cacheKeys['intime']);
                         if ($cached !== null) {
@@ -282,12 +284,16 @@ class IndexController extends Controller
                     }
 
                     if (!empty($datas->outtime)) {
-                        cache()->put($cacheKeys['outtime'], $datas->outtime, now()->addMinutes(2));
+                        $cachePuts[$cacheKeys['outtime']] = $datas->outtime;
                     } else {
                         $cached = cache()->get($cacheKeys['outtime']);
                         if ($cached !== null) {
                             $datas->outtime = $cached;
                         }
+                    }
+
+                    if (!empty($cachePuts)) {
+                        cache()->putMany($cachePuts, now()->addMinutes(2));
                     }
 
                     $datas->pesan = 'Silahkan melakukan pembayaran ';
