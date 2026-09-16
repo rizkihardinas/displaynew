@@ -69,6 +69,13 @@
             <div id="time"></div>
         </div>
     </div>
+    @if($setting->warning_message != null)
+    <div class="shrink-0 p-2 flex justify-between" style="font-size: {{ $setting->warning_font_size }}px;color: {{ $setting->warning_font_color }};background-color: {{ $setting->warning_background }};font-weight:bold">
+        <div class="text-center flex-grow mx-24">
+            <span class="text-4xl">{{ $setting->warning_message }}</span>
+        </div>
+    </div>
+    @endif
 
     <!-- CONTENTS -->
     <div class="flex-1 overflow-auto">
