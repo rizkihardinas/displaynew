@@ -70,7 +70,7 @@
         </div>
     </div>
     @if($setting->warning_message != null)
-    <div class="shrink-0 p-2 flex justify-between" style="font-size: {{ $setting->warning_font_size }}px;color: {{ $setting->warning_font_color }};background-color: {{ $setting->warning_background }};font-weight:bold">
+    <div id="warning-container" class="hidden shrink-0 p-2 flex justify-between" style="font-size: {{ $setting->warning_font_size }}px;color: {{ $setting->warning_font_color }};background-color: {{ $setting->warning_background }};font-weight:bold">
         <div class="text-center flex-grow mx-24">
             <span class="text-4xl">{{ $setting->warning_message }}</span>
         </div>
@@ -150,6 +150,32 @@
         function setimage(img, attr) {
             $('#' + attr).attr('src', img);
         }
+
+        @if($setting->warning_message != null)
+        function checkInternetStatus() {
+            var statusUrl = '{{ !empty($setting->ip_server) ? (preg_match("/^https?:\\/\\//i", $setting->ip_server) ? $setting->ip_server : "http://" . $setting->ip_server) . "/api/status" : "http://forwardapi.test/api/status" }}';
+
+            $.ajax({
+                url: statusUrl,
+                type: 'GET',
+                dataType: 'json',
+                timeout: 3000,
+                success: function(response) {
+                    if (response && response.internet === 'up') {
+                        $('#warning-container').addClass('hidden');
+                    } else {
+                        $('#warning-container').removeClass('hidden');
+                    }
+                },
+                error: function() {
+                    $('#warning-container').removeClass('hidden');
+                }
+            });
+        }
+
+        checkInternetStatus();
+        setInterval(checkInternetStatus, {{ ((int)($setting->time_check_status ?? 5)) * 1000 }});
+        @endif
     </script>
 
     @stack('scripts')
