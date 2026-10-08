@@ -21,7 +21,7 @@ class IndexController extends Controller
     use CryptAES;
     function hit_display(Request $request)
     {
-        Log::info(json_encode($request->all()));
+        //Log::info(json_encode($request->all()));
         $time = Carbon::now();
         $action = $request->action;
         $action = $request->action;
