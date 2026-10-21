@@ -9,11 +9,14 @@
 			"databasePath": "/database/laravel-echo-server.sqlite"
 		}
 	},
-	"devMode": true,
+	"devMode": false,
 	"host": null,
 	"port": "6001",
 	"protocol": "http",
-	"socketio": {},
+	"socketio": {
+		"pingTimeout": 10000,
+		"pingInterval": 5000
+	},
 	"secureOptions": 67108864,
 	"sslCertPath": "",
 	"sslKeyPath": "",

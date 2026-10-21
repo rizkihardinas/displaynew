@@ -117,7 +117,7 @@ class IndexController extends Controller
                             'outtime'  => $datas->outtime ?? null,
                         ];
 
-                        cache()->put($stateKey, $state, now()->addMinutes(2));
+                        cache()->put($stateKey, $state, now()->addMinutes(15));
 
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
@@ -147,7 +147,7 @@ class IndexController extends Controller
                         $datas->imagein = $state['imagein'];
                     }
 
-                    cache()->put($stateKey, $state, now()->addMinutes(2));
+                    cache()->put($stateKey, $state, now()->addMinutes(15));
 
                     $datas->pesan = 'Terima kasih, silahkan masuk.';
                     event(new InEvent(json_encode($datas)));
@@ -159,27 +159,36 @@ class IndexController extends Controller
                     $state = cache()->get($stateKey);
 
                     if (!$state || empty($state['detected'])) {
-                        $response = [
-                            'userID'       => $request->userID,
-                            'locationID'   => $request->locationID,
-                            'daterequest'  => $request->daterequest,
-                            'action'       => $request->action,
-                            'responsetime' => now()->diffInMilliseconds($time),
-                            'data'         => [
-                                'message' => 'Kendaraan belum terdeteksi',
-                                'pesan'   => 'Kendaraan belum terdeteksi'
-                            ]
-                        ];
-                        return response()->json($response);
+                        if (!empty($datas->qris) || !empty($datas->nota)) {
+                            $state = [
+                                'detected' => true,
+                                'ticket'   => $datas->nota ?? null,
+                            ];
+                        } else {
+                            $response = [
+                                'userID'       => $request->userID,
+                                'locationID'   => $request->locationID,
+                                'daterequest'  => $request->daterequest,
+                                'action'       => $request->action,
+                                'responsetime' => now()->diffInMilliseconds($time),
+                                'data'         => [
+                                    'message' => 'Kendaraan belum terdeteksi',
+                                    'pesan'   => 'Kendaraan belum terdeteksi'
+                                ]
+                            ];
+                            return response()->json($response);
+                        }
                     }
                     $datas->action = 3;
 
-                    // Jika tiket berganti, reset field transaksi
-                    if (empty($state['ticket']) || $state['ticket'] != ($datas->nota ?? null)) {
+                    // Jika tiket berganti, reset field transaksi hanya bila tiket lama ada dan berbeda
+                    if (!empty($state['ticket']) && !empty($datas->nota) && $state['ticket'] != $datas->nota) {
                         $state = [
                             'detected' => true,
                             'ticket'   => $datas->nota ?? null,
                         ];
+                    } elseif (empty($state['ticket']) && !empty($datas->nota)) {
+                        $state['ticket'] = $datas->nota;
                     }
 
                     // Sinkronisasi data teks
@@ -209,7 +218,7 @@ class IndexController extends Controller
                         $expired = '';
                     }
 
-                    cache()->put($stateKey, $state, now()->addMinutes(2));
+                    cache()->put($stateKey, $state, now()->addMinutes(15));
 
                     $datas->pesan = 'Silahkan melakukan pembayaran ';
                     $datas->expired = $expired;

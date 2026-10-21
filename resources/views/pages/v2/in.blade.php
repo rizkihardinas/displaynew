@@ -123,6 +123,46 @@
             requestAnimationFrame(syncLprWrapperHeight);
         });
 
+        // Socket.IO Watchdog & Reconnection Handler
+        if (window.Echo && window.Echo.connector && window.Echo.connector.socket) {
+            var socket = window.Echo.connector.socket;
+            var reconnectTimeout = null;
+
+            socket.on('disconnect', function(reason) {
+                console.warn('[Socket] Disconnected:', reason);
+                clearTimeout(reconnectTimeout);
+                reconnectTimeout = setTimeout(function() {
+                    console.warn('[Socket] Disconnected for 15s. Reloading page...');
+                    window.location.reload();
+                }, 15000);
+            });
+
+            socket.on('connect', function() {
+                console.log('[Socket] Connected, ID:', socket.id);
+                clearTimeout(reconnectTimeout);
+            });
+
+            socket.on('reconnect', function(attemptNumber) {
+                console.log('[Socket] Reconnected after attempts:', attemptNumber);
+                clearTimeout(reconnectTimeout);
+            });
+
+            setInterval(function() {
+                if (socket && !socket.connected) {
+                    console.warn('[Socket Watchdog] Socket not connected, attempting connect...');
+                    socket.connect();
+                }
+            }, 10000);
+        }
+
+        // Auto reload harian pada jam 03:00 pagi untuk membersihkan memory leak
+        setInterval(function() {
+            var now = new Date();
+            if (now.getHours() === 3 && now.getMinutes() === 0 && now.getSeconds() < 10) {
+                window.location.reload();
+            }
+        }, 10000);
+
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
                 clearDisplayTimeout();
@@ -248,19 +288,35 @@
 
                     if (DOM.qrEl && qr) {
                         requestAnimationFrame(function() {
-                            if (qrcodeInstance) {
-                                qrcodeInstance.makeCode(qr);
-                            } else {
-                                DOM.qrEl.innerHTML = '';
-                                qrcodeInstance = new QRCode(DOM.qrEl, {
-                                    text: qr,
-                                    width: 200,
-                                    height: 200,
-                                    colorDark: '#000000',
-                                    colorLight: '#ffffff',
-                                    correctLevel: QRCode.CorrectLevel.M,
-                                    useSVG: true
-                                });
+                            try {
+                                if (qrcodeInstance) {
+                                    qrcodeInstance.makeCode(qr);
+                                } else {
+                                    DOM.qrEl.innerHTML = '';
+                                    qrcodeInstance = new QRCode(DOM.qrEl, {
+                                        text: qr,
+                                        width: 200,
+                                        height: 200,
+                                        colorDark: '#000000',
+                                        colorLight: '#ffffff',
+                                        correctLevel: QRCode.CorrectLevel.M
+                                    });
+                                }
+                            } catch (qrErr) {
+                                console.error('Error generating QR:', qrErr);
+                                try {
+                                    DOM.qrEl.innerHTML = '';
+                                    qrcodeInstance = new QRCode(DOM.qrEl, {
+                                        text: qr,
+                                        width: 200,
+                                        height: 200,
+                                        colorDark: '#000000',
+                                        colorLight: '#ffffff',
+                                        correctLevel: QRCode.CorrectLevel.L
+                                    });
+                                } catch (e) {
+                                    console.error('Fallback QR generation failed:', e);
+                                }
                             }
                         });
                     }
@@ -333,6 +389,10 @@
             });
 
         function clear() {
+            if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
+            qrcodeInstance = null;
+            if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }
+
             DOM.memberstatus.text('\t');
             DOM.lpr.text('\t');
             DOM.datecapture.text('\t');
@@ -350,6 +410,10 @@
         }
 
         function clear_out() {
+            if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
+            qrcodeInstance = null;
+            if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }
+
             DOM.memberstatus.text('\u00A0');
             DOM.lpr.text('\u00A0');
             DOM.plate.text('\u00A0');
