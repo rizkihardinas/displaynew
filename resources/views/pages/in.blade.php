@@ -23,76 +23,80 @@
 @endsection
 @push('scripts')
     <script>
-        var sec = {{ config('uno.timeout_in') }} * 1000;
+        var sec = {{ (int)config('uno.timeout_in', 15) * 1000 }};
         var model = '';
         var lpr = '';
         var datecapture = '';
         var memberstatus = '';
         var hasResponse = false;
+        var inTimer = null;
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
-                
-                var jsonString = e.message;
-                var escapedJsonString = jsonString.replace(/\\/g, '\\\\');
-                try {
-                    var jsonObject = JSON.parse(escapedJsonString);
-                    hasResponse = true;
-                    var datas = jsonObject;
-                    var local_ip = datas.local_ip;
-                    var posname = datas.posname;
+                if (inTimer) {
+                    clearTimeout(inTimer);
+                    inTimer = null;
+                }
 
-                    var image = datas.image.replace(/\\\\/g, '\\');
-                    var job = datas.job;
-                    var action = datas.action;
-                    var posip = datas.posip;
+                try {
+                    var datas;
+                    if (typeof e.message === 'string') {
+                        try {
+                            datas = JSON.parse(e.message);
+                        } catch (err) {
+                            var escapedJsonString = e.message.replace(/\\/g, '\\\\');
+                            datas = JSON.parse(escapedJsonString);
+                        }
+                    } else {
+                        datas = e.message;
+                    }
+
+                    if (!datas) {
+                        return;
+                    }
+
+                    hasResponse = true;
+                    var local_ip = datas.local_ip || '';
+                    var posname = datas.posname || '';
+                    var image = datas.image ? datas.image.replace(/\\\\/g, '\\') : '';
+                    var job = datas.job || '';
+                    var action = datas.action || 0;
+                    var posip = datas.posip || '';
+
                     blink(action);
                     $('#promosi_operator').addClass('hidden');
+                    $('#wrapper_data').removeClass('hidden');
                     $('#imagein').removeClass('hidden');
+
                     if (lpr == '') {
-                        lpr = datas.lpr
-                        model = datas.model;
-
-
+                        lpr = datas.lpr || '';
+                        model = datas.model || '';
                     }
 
-                    datecapture = datas.datecapture.replace('\\', '').replace('\\', '');
+                    datecapture = datas.datecapture ? datas.datecapture.replace(/\\/g, '') : '';
                     if (datas.memberstatus) {
-                        memberstatus = datas.memberstatus + ' - ' + datas.memberperiod.replace('\\', '').replace('\\',
-                            '');
-                    }
-                    var time_out = setInterval(function() {
-                        clear();
-                        $('#wrapper_data')
-                        $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                        clearInterval(time_out);
-                    }, {{ config('uno.timeout_in') * 1000 }}); // 1 menit
-                    if (datas.memberperiod) {
-                        var memberperiod = datas.memberperiod.replace('\\', '').replace('\\', '');
-                    }
-
-                    var pesan = datas.pesan;
-                    setimage(image, 'imagein');
-                    $('#posname').text(posname);
-                    $('#posip').text(posip);
-                    if (typeof datas.memberstatus !== "undefined") {
+                        var period = datas.memberperiod ? datas.memberperiod.replace(/\\/g, '') : '';
+                        memberstatus = datas.memberstatus + (period ? ' - ' + period : '');
                         $('#memberstatus').text(memberstatus);
                     } else {
+                        memberstatus = '';
                         $('#memberstatus').text('');
                     }
 
+                    var pesan = datas.pesan || 'Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.';
+                    if (image) {
+                        setimage(image, 'imagein');
+                    }
+                    $('#posname').text(posname);
+                    $('#posip').text(posip);
                     $('#lpr').text(lpr);
-                    // $('#datecapture').text(datecapture);
                     $('#info').text(pesan);
-                    var r = setInterval(function() {
-                        hasResponse = hasResponse ? !hasResponse : hasResponse;
-                        if (action == 2) {
-                            clear();
-                        }
-                        clearInterval(r);
+
+                    inTimer = setTimeout(function() {
+                        clear();
                         console.log('beres in action ' + action + ' sec : ' + sec);
-                    }, {{ config('uno.timeout_in') * 1000 }});
+                    }, sec);
                 } catch (error) {
-                    console.error("Error parsing JSON: ", error);
+                    console.error("Error processing IN event: ", error);
                 }
 
             })
@@ -138,12 +142,10 @@
                 var done = false;
                 if (action == 3) {
                     var i = 0;
-                    var time_out = setInterval(function() {
+                    inTimer = setTimeout(function() {
                         clear_out();
 
-
                         $('#info').text('Silahkan scan tiket atau tap kartu anda');
-                        clearInterval(time_out);
                     }, {{ config('uno.timeout_out') * 1000 }}); // 1 menit
 
                 }
@@ -167,11 +169,11 @@
                 $('#imagein').removeClass('hidden');
                 $('#labelin').removeClass('hidden');
                 if (action == 1) {
-                    var t = setInterval(function() {
+                    inTimer = setTimeout(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
-                        clearInterval(t);
-                    }, {{ config('uno.timeout_out') * 1000 }});
+                        clear_out();
+                    }, {{ (int)config('uno.timeout_out', 15) * 1000 }});
 
                 }
                 if (action == 4) {
@@ -198,15 +200,21 @@
             });
 
         function clear() {
+            if (inTimer) {
+                clearTimeout(inTimer);
+                inTimer = null;
+            }
+
             $('#memberstatus').text('\t');
             $('#lpr').text('\t');
             // $('#datecapture').text('\t');
 
+            $('#wrapper_data').addClass('hidden');
             $('#promosi_operator').removeClass('hidden');
             $('#imagein').addClass('hidden');
             $('#imagein').removeAttr('src');
             $('#imagein').attr('src', `{{ asset('public/Logo_Operator.jpg') }}`);
-            $('#image').attr('src', `{{ asset('public/out.jpg') }}`)
+            $('#image').attr('src', `{{ asset('public/out.jpg') }}`);
             $('#info').text('Selamat datang, silahkan tekan tombol tiket atau tap kartu Anda.');
 
             lpr = '';
@@ -216,6 +224,11 @@
         }
 
         function clear_out() {
+            if (inTimer) {
+                clearTimeout(inTimer);
+                inTimer = null;
+            }
+
             $('#memberstatus').text('\u00A0');
             $('#lpr').text('\u00A0');
             $('#plate').text('\u00A0');
@@ -228,6 +241,7 @@
             $('#duration').text('');
             $('#informasi-pembayaran').text(' ');
 
+            $('#wrapper_data').addClass('hidden');
             $('#standby').removeClass('hidden');
             $('#page-out').addClass('hidden');
             $('#video').removeClass('hidden');

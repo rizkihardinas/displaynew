@@ -211,7 +211,6 @@
                     setDisplayTimeout(function() {
                         clear();
                         hideWrapperData();
-                        DOM.info.text('Silahkan scan tiket atau tap kartu anda');
                     }, TIMEOUT_IN);
                 } catch (error) {
                     console.error("Error parsing JSON: ", error);
@@ -303,6 +302,7 @@
                     setDisplayTimeout(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
+                        clear_out();
                     }, timeoutMs);
                 }
                 else if (action == 3) {
