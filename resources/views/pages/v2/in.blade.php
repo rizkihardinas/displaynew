@@ -30,6 +30,8 @@
         var hasResponse = false;
         var qrcodeInstance = null;
         var globalTimer = null;
+        var isPaymentActive = false;
+        var activeTicket = null;
 
         // Cached DOM Elements
         var DOM = {};
@@ -165,6 +167,12 @@
 
         window.Echo.channel('{{ strtolower(config('app.name')) }}_database_my-channel')
             .listen('.my-event', (e) => {
+                // Jika QRIS/pembayaran di OUT sedang aktif, abaikan event IN agar tidak memotong QRIS
+                if (isPaymentActive) {
+                    console.warn('[Display] InEvent diabaikan karena QRIS sedang aktif di OUT.');
+                    return;
+                }
+
                 clearDisplayTimeout();
                 blink();
                 showWrapperData();
@@ -210,10 +218,6 @@
                 }
             })
             .listen('.my-event-out', (e) => {
-                clearDisplayTimeout();
-                showWrapperData();
-                blink();
-
                 var datas;
                 try {
                     datas = typeof e.message === 'string' ? JSON.parse(e.message) : e.message;
@@ -224,6 +228,26 @@
 
                 hasResponse = true;
                 var action = datas.action;
+                var nota = datas.nota || '';
+                var pesan = datas.pesan || '';
+                var total = isNaN(Number(datas.total)) ? 0 : Number(datas.total);
+
+                // Proteksi: Jika QRIS sedang aktif, jangan biarkan action 1 (trigger loop sensor/idle check) memotong QRIS sebelum timeout
+                if (isPaymentActive && action == 1) {
+                    var isExplicitCancel = (pesan && (pesan.toLowerCase().includes('batal') || pesan.toLowerCase().includes('cancel'))) ||
+                                           (datas.is_cancel === true) ||
+                                           (datas.cancel === true);
+                    if (isExplicitCancel) {
+                        console.log('[Display] Transaksi QRIS dibatalkan secara eksplisit.');
+                        isPaymentActive = false;
+                        activeTicket = null;
+                        clear_out();
+                    } else {
+                        console.warn('[Display] Action 1 diabaikan karena QRIS sedang aktif untuk tiket:', activeTicket);
+                        return;
+                    }
+                }
+
                 DOM.promosiOperator.addClass('hidden');
                 DOM.imagein.removeClass('hidden');
 
@@ -240,16 +264,17 @@
                 }
 
                 var memberperiod = datas.memberperiod || '';
-                var nota = datas.nota || '';
                 var plateno = datas.plateno || '';
-                var total = isNaN(Number(datas.total)) ? 0 : Number(datas.total);
                 var vehicletype = datas.vehicletype || '';
                 var intime = datas.intime || '';
                 var outtime = datas.outtime || '';
                 var duration = datas.duration || '';
-                var pesan = datas.pesan || '';
 
                 if (action == 1) {
+                    clearDisplayTimeout();
+                    showWrapperData();
+                    blink();
+
                     DOM.pageOut.addClass('hidden');
                     DOM.standby.removeClass('hidden');
                     DOM.qrContainer.addClass('hidden');
@@ -271,12 +296,43 @@
                     DOM.outtime.text('');
                     DOM.vehicletype.text('');
 
+                    var timeoutMs = (datas.timeout_out && Number(datas.timeout_out) > 0)
+                        ? Number(datas.timeout_out)
+                        : TIMEOUT_OUT;
+
                     setDisplayTimeout(function() {
                         hasResponse = hasResponse ? !hasResponse : hasResponse;
                         action = 0;
-                    }, TIMEOUT_OUT);
+                    }, timeoutMs);
                 }
                 else if (action == 3) {
+                    var timeoutMs = (datas.timeout_out && Number(datas.timeout_out) > 0)
+                        ? Number(datas.timeout_out)
+                        : TIMEOUT_OUT;
+
+                    // Jika QRIS untuk tiket yang SAMA sedang berjalan, pertahankan timer yang sudah berjalan
+                    if (isPaymentActive && activeTicket && activeTicket === nota) {
+                        console.log('[Display] Action 3 untuk tiket yang sama (' + nota + '), timer tetap berjalan.');
+                    } else {
+                        isPaymentActive = true;
+                        activeTicket = nota;
+
+                        clearDisplayTimeout();
+                        showWrapperData();
+                        blink();
+
+                        console.log('[Display] QRIS aktif untuk tiket: ' + (nota || '-') + ' | Durasi Timeout: ' + (timeoutMs / 1000) + ' detik');
+
+                        setDisplayTimeout(function() {
+                            console.log('[Display] Timeout QRIS tercapai (' + (timeoutMs / 1000) + ' detik). Mengembalikan ke standby...');
+                            isPaymentActive = false;
+                            activeTicket = null;
+                            clear_out();
+                            DOM.promosiOperator.removeClass('hidden');
+                            DOM.info.text('Silahkan scan tiket atau tap kartu anda');
+                        }, timeoutMs);
+                    }
+
                     DOM.standby.addClass('hidden');
                     DOM.pageOut.removeClass('hidden');
                     DOM.image.addClass('hidden');
@@ -322,14 +378,15 @@
                     }
 
                     if (image) { setimage(image, 'imagein'); }
-
-                    setDisplayTimeout(function() {
-                        clear_out();
-                        DOM.promosiOperator.removeClass('hidden');
-                        DOM.info.text('Silahkan scan tiket atau tap kartu anda');
-                    }, TIMEOUT_OUT);
                 }
                 else if (action == 4) {
+                    isPaymentActive = false;
+                    activeTicket = null;
+
+                    clearDisplayTimeout();
+                    showWrapperData();
+                    blink();
+
                     if (imagein) { setimage(imagein, 'image'); }
                     if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
                     qrcodeInstance = null;
@@ -351,13 +408,17 @@
                         DOM.infoPembayaran.addClass('hidden');
                     }
 
+                    var timeoutOutInMs = (datas.timeout_out_in && Number(datas.timeout_out_in) > 0)
+                        ? Number(datas.timeout_out_in)
+                        : TIMEOUT_OUT_IN;
+
                     setDisplayTimeout(function() {
                         lpr = '';
                         model = '';
                         datecapture = '';
                         memberstatus = '';
                         clear_out();
-                    }, TIMEOUT_OUT_IN);
+                    }, timeoutOutInMs);
                 }
 
                 DOM.info.text(pesan);
@@ -389,6 +450,10 @@
             });
 
         function clear() {
+            isPaymentActive = false;
+            activeTicket = null;
+            clearDisplayTimeout();
+
             if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
             qrcodeInstance = null;
             if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }
@@ -410,6 +475,10 @@
         }
 
         function clear_out() {
+            isPaymentActive = false;
+            activeTicket = null;
+            clearDisplayTimeout();
+
             if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
             qrcodeInstance = null;
             if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }

@@ -89,6 +89,7 @@ class IndexController extends Controller
                     } else {
                         $locId = $request->locationID;
                         $stateKey = 'display_' . $locId;
+                        $existingState = cache()->get($stateKey, []);
 
                         if (!empty($datas->image)) {
                             $datas->image = $this->uncToUrl($datas->image);
@@ -105,20 +106,28 @@ class IndexController extends Controller
                             $expired = '';
                         }
 
-                        $state = [
-                            'detected' => true,
-                            'ticket'   => null,
-                            'qris'     => $datas->qris ?? null,
-                            'image'    => $datas->image ?? null,
-                            'total'    => $datas->total ?? null,
-                            'lpr'      => $datas->lpr ?? null,
-                            'imagein'  => $datas->imagein ?? null,
-                            'intime'   => $datas->intime ?? null,
-                            'outtime'  => $datas->outtime ?? null,
-                        ];
+                        // Jika sedang ada transaksi aktif (QRIS/tiket), jangan hapus tiket/qris di state
+                        if (!empty($existingState['qris']) || !empty($existingState['ticket'])) {
+                            $state = $existingState;
+                            $state['detected'] = true;
+                        } else {
+                            $state = [
+                                'detected' => true,
+                                'ticket'   => null,
+                                'qris'     => $datas->qris ?? null,
+                                'image'    => $datas->image ?? null,
+                                'total'    => $datas->total ?? null,
+                                'lpr'      => $datas->lpr ?? null,
+                                'imagein'  => $datas->imagein ?? null,
+                                'intime'   => $datas->intime ?? null,
+                                'outtime'  => $datas->outtime ?? null,
+                            ];
+                        }
 
                         cache()->put($stateKey, $state, now()->addMinutes(15));
 
+                        $freshSetting = Setting::first();
+                        $datas->timeout_out = (int) ($freshSetting->timeout_out ?? $setting->timeout_out ?? 30) * 1000;
                         $datas->pesan = 'Silahkan scan tiket atau tap kartu anda';
                         event(new OutEvent(json_encode($datas)));
                     }
@@ -220,6 +229,8 @@ class IndexController extends Controller
 
                     cache()->put($stateKey, $state, now()->addMinutes(15));
 
+                    $freshSetting = Setting::first();
+                    $datas->timeout_out = (int) ($freshSetting->timeout_out ?? $setting->timeout_out ?? 30) * 1000;
                     $datas->pesan = 'Silahkan melakukan pembayaran ';
                     $datas->expired = $expired;
                     event(new OutEvent(json_encode($datas)));
@@ -246,6 +257,8 @@ class IndexController extends Controller
 
                     cache()->forget($stateKey);
 
+                    $freshSetting = Setting::first();
+                    $datas->timeout_out_in = (int) ($freshSetting->timeout_out_in ?? $setting->timeout_out_in ?? 4) * 1000;
                     $datas->qris = "";
                     $datas->action = 4;
                     $datas->pesan = 'Terima kasih atas kunjungan Anda, selamat jalan.';

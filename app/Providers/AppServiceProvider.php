@@ -20,15 +20,11 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('setting', function () {
-            return Cache::rememberForever('setting_first', function () {
-                return Setting::first();
-            });
+            return Setting::first();
         });
 
         $this->app->singleton('security', function () {
-            return Cache::rememberForever('security_first', function () {
-                return Security::first();
-            });
+            return Security::first();
         });
     }
 
