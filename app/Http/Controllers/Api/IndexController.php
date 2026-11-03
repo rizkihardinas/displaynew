@@ -200,8 +200,26 @@ class IndexController extends Controller
                         $state['ticket'] = $datas->nota;
                     }
 
+                    // Cek parameter connected
+                    $hasConnected = isset($datas->connected) || $request->has('connected');
+                    $connected = $hasConnected ? ($datas->connected ?? $request->connected) : null;
+                    $isQrisKendala = $hasConnected && ((string) $connected === '0' || $connected === 0 || $connected === false);
+
+                    if ($isQrisKendala) {
+                        unset($datas->qris);
+                        unset($state['qris']);
+                        $datas->qris = null;
+                        $state['qris'] = null;
+                    } else {
+                        if (!empty($datas->qris)) {
+                            $state['qris'] = $datas->qris;
+                        } elseif (!empty($state['qris'])) {
+                            $datas->qris = $state['qris'];
+                        }
+                    }
+
                     // Sinkronisasi data teks
-                    foreach (['qris', 'total', 'lpr', 'intime', 'outtime'] as $field) {
+                    foreach (['total', 'lpr', 'intime', 'outtime'] as $field) {
                         if (!empty($datas->$field)) {
                             $state[$field] = $datas->$field;
                         } elseif (!empty($state[$field])) {
@@ -219,19 +237,25 @@ class IndexController extends Controller
                         }
                     }
 
-                    if (isset($datas->qris)) {
+                    if (!$isQrisKendala && !empty($datas->qris)) {
                         $payment = 'QRIS';
                         $expired = now()->addMinutes(10)->format('d/m/Y H:i:s');
                     } else {
                         $payment = 'E-Payment Card';
                         $expired = '';
+                        $datas->qris = null;
                     }
 
                     cache()->put($stateKey, $state, now()->addMinutes(15));
 
                     $freshSetting = Setting::first();
                     $datas->timeout_out = (int) ($freshSetting->timeout_out ?? $setting->timeout_out ?? 30) * 1000;
-                    $datas->pesan = 'Silahkan melakukan pembayaran ';
+
+                    if ($isQrisKendala) {
+                        $datas->pesan = 'Qris sedang dalam kendala';
+                    } else {
+                        $datas->pesan = 'Silahkan melakukan pembayaran ';
+                    }
                     $datas->expired = $expired;
                     event(new OutEvent(json_encode($datas)));
                     break;

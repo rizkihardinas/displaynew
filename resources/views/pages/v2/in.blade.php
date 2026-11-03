@@ -335,14 +335,25 @@
 
                     DOM.standby.addClass('hidden');
                     DOM.pageOut.removeClass('hidden');
-                    DOM.image.addClass('hidden');
-                    DOM.qrContainer.removeClass('hidden');
-                    showWrapperData();
 
                     var qr = datas.qris;
-                    DOM.expired.text('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/'));
+                    var isConnected = (datas.connected !== undefined && datas.connected !== null) ? Number(datas.connected) : null;
+                    var showQris = Boolean(qr && (isConnected === null || isConnected === 1));
 
-                    if (DOM.qrEl && qr) {
+                    if (showQris) {
+                        DOM.image.addClass('hidden');
+                        DOM.qrContainer.removeClass('hidden');
+                    } else {
+                        DOM.qrContainer.addClass('hidden');
+                        DOM.image.removeClass('hidden');
+                        if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
+                        qrcodeInstance = null;
+                    }
+                    showWrapperData();
+
+                    DOM.expired.text(showQris ? ('Masa Berlaku : ' + (datas.expired || '').replace(/\\\//g, '/')) : '');
+
+                    if (DOM.qrEl && showQris) {
                         requestAnimationFrame(function() {
                             try {
                                 if (qrcodeInstance) {
