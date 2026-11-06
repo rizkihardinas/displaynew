@@ -21,7 +21,7 @@ class IndexController extends Controller
     use CryptAES;
     function hit_display(Request $request)
     {
-        //Log::info(json_encode($request->all()));
+        Log::info(json_encode($request->all()));
         $time = Carbon::now();
         $action = $request->action;
         $action = $request->action;
@@ -252,7 +252,8 @@ class IndexController extends Controller
                     $datas->timeout_out = (int) ($freshSetting->timeout_out ?? $setting->timeout_out ?? 30) * 1000;
 
                     if ($isQrisKendala) {
-                        $datas->pesan = 'Qris sedang dalam kendala';
+                        $datas->warning_qris = 'Qris sedang dalam kendala';
+                        $datas->pesan = 'Silahkan melakukan pembayaran ';
                     } else {
                         $datas->pesan = 'Silahkan melakukan pembayaran ';
                     }

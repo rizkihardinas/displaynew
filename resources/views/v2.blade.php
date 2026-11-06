@@ -77,6 +77,12 @@
     </div>
     @endif
 
+    <div id="warning-qris-container" class="hidden shrink-0 p-2 flex justify-between items-center" style="font-size: {{ $setting->warning_font_size ?? 24 }}px;color: {{ !empty($setting->warning_font_color) ? $setting->warning_font_color : 'yellow' }};background-color: {{ !empty($setting->warning_background) ? $setting->warning_background : 'red' }};font-weight:bold">
+        <div class="text-center flex-grow mx-24">
+            <span class="text-4xl font-bold" id="warning-qris-text">Qris sedang dalam kendala</span>
+        </div>
+    </div>
+
     <!-- CONTENTS -->
     <div class="flex-1 overflow-auto">
         <div class="px-4 py-2 h-full">

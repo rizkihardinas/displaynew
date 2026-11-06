@@ -65,7 +65,9 @@
                 labelin: $('#labelin'),
                 wrapperInfo: $('#wrapper-info'),
                 wrapper: document.getElementById('wrapper'),
-                lprWrapper: document.getElementById('lpr_wrapper')
+                lprWrapper: document.getElementById('lpr_wrapper'),
+                warningQrisContainer: $('#warning-qris-container'),
+                warningQrisText: $('#warning-qris-text')
             };
         }
 
@@ -231,6 +233,10 @@
                 var pesan = datas.pesan || '';
                 var total = isNaN(Number(datas.total)) ? 0 : Number(datas.total);
 
+                if (action != 3 && DOM.warningQrisContainer) {
+                    DOM.warningQrisContainer.addClass('hidden');
+                }
+
                 // Proteksi: Jika QRIS sedang aktif, jangan biarkan action 1 (trigger loop sensor/idle check) memotong QRIS sebelum timeout
                 if (isPaymentActive && action == 1) {
                     var isExplicitCancel = (pesan && (pesan.toLowerCase().includes('batal') || pesan.toLowerCase().includes('cancel'))) ||
@@ -338,16 +344,25 @@
 
                     var qr = datas.qris;
                     var isConnected = (datas.connected !== undefined && datas.connected !== null) ? Number(datas.connected) : null;
-                    var showQris = Boolean(qr && (isConnected === null || isConnected === 1));
+                    var isKendala = Boolean(isConnected === 0 || datas.warning_qris || (pesan && pesan.toLowerCase().includes('kendala')));
+                    var showQris = Boolean(qr && !isKendala);
 
                     if (showQris) {
                         DOM.image.addClass('hidden');
                         DOM.qrContainer.removeClass('hidden');
+                        if (DOM.warningQrisContainer) { DOM.warningQrisContainer.addClass('hidden'); }
                     } else {
                         DOM.qrContainer.addClass('hidden');
                         DOM.image.removeClass('hidden');
                         if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
                         qrcodeInstance = null;
+
+                        if (isKendala && DOM.warningQrisContainer) {
+                            DOM.warningQrisContainer.removeClass('hidden');
+                            if (DOM.warningQrisText) {
+                                DOM.warningQrisText.text(datas.warning_qris || 'Qris sedang dalam kendala');
+                            }
+                        }
                     }
                     showWrapperData();
 
@@ -432,7 +447,11 @@
                     }, timeoutOutInMs);
                 }
 
-                DOM.info.text(pesan);
+                if (action == 3 && (typeof isKendala !== 'undefined' && isKendala) && pesan && pesan.toLowerCase().includes('kendala')) {
+                    DOM.info.text('Silahkan melakukan pembayaran');
+                } else {
+                    DOM.info.text(pesan);
+                }
                 DOM.posname.text(posname);
                 DOM.posip.text(posip);
 
@@ -465,6 +484,7 @@
             activeTicket = null;
             clearDisplayTimeout();
 
+            if (DOM.warningQrisContainer) { DOM.warningQrisContainer.addClass('hidden'); }
             if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
             qrcodeInstance = null;
             if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }
@@ -490,6 +510,7 @@
             activeTicket = null;
             clearDisplayTimeout();
 
+            if (DOM.warningQrisContainer) { DOM.warningQrisContainer.addClass('hidden'); }
             if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
             qrcodeInstance = null;
             if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }
