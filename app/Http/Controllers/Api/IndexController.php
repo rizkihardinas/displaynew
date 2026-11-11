@@ -68,6 +68,8 @@ class IndexController extends Controller
             $datas->local_ip = $this->removeIp($request->ip());
             $datas->posip = $this->removeIp($datas->posip);
 
+            Log::info("[hit_display] Action: {$action}, Nota: " . ($datas->nota ?? '-') . ", QRIS: " . ($datas->qris ?? 'NULL') . ", Data: " . json_encode($datas));
+
             $datas->datecapture = Carbon::createFromFormat('Y/m/d H:i:s', $datas->datecapture)->format('d/m/Y H:i:s');
             if (isset($data->memberperiod) && !empty($data->memberperiod)) {
                 $datas->memberperiod = Carbon::createFromFormat('Y/m/d H:i:s', $datas->memberperiod)->format('d/m/Y H:i:s');
@@ -89,7 +91,6 @@ class IndexController extends Controller
                     } else {
                         $locId = $request->locationID;
                         $stateKey = 'display_' . $locId;
-                        $existingState = cache()->get($stateKey, []);
 
                         if (!empty($datas->image)) {
                             $datas->image = $this->uncToUrl($datas->image);
@@ -98,31 +99,22 @@ class IndexController extends Controller
                             $datas->imagein = $this->uncToUrl($datas->imagein);
                         }
 
-                        if (isset($datas->qris)) {
-                            $payment = 'QRIS';
-                            $expired = now()->addMinutes(10)->format('d/m/Y H:i:s');
-                        } else {
-                            $payment = 'E-Payment Card';
-                            $expired = '';
-                        }
+                        // Action 1 adalah deteksi awal kendaraan di gate keluar (standby).
+                        // Jangan pernah membawa QRIS atau tiket dari transaksi sebelumnya.
+                        unset($datas->qris);
+                        $datas->qris = null;
 
-                        // Jika sedang ada transaksi aktif (QRIS/tiket), jangan hapus tiket/qris di state
-                        if (!empty($existingState['qris']) || !empty($existingState['ticket'])) {
-                            $state = $existingState;
-                            $state['detected'] = true;
-                        } else {
-                            $state = [
-                                'detected' => true,
-                                'ticket'   => null,
-                                'qris'     => $datas->qris ?? null,
-                                'image'    => $datas->image ?? null,
-                                'total'    => $datas->total ?? null,
-                                'lpr'      => $datas->lpr ?? null,
-                                'imagein'  => $datas->imagein ?? null,
-                                'intime'   => $datas->intime ?? null,
-                                'outtime'  => $datas->outtime ?? null,
-                            ];
-                        }
+                        $state = [
+                            'detected' => true,
+                            'ticket'   => null,
+                            'qris'     => null,
+                            'image'    => $datas->image ?? null,
+                            'total'    => null,
+                            'lpr'      => $datas->lpr ?? null,
+                            'imagein'  => $datas->imagein ?? null,
+                            'intime'   => null,
+                            'outtime'  => null,
+                        ];
 
                         cache()->put($stateKey, $state, now()->addMinutes(15));
 
@@ -190,14 +182,27 @@ class IndexController extends Controller
                     }
                     $datas->action = 3;
 
-                    // Jika tiket berganti, reset field transaksi hanya bila tiket lama ada dan berbeda
-                    if (!empty($state['ticket']) && !empty($datas->nota) && $state['ticket'] != $datas->nota) {
+                    $currentTicket = !empty($datas->nota) ? trim($datas->nota) : null;
+                    $cachedTicket = !empty($state['ticket']) ? trim($state['ticket']) : null;
+
+                    // Cek apakah transaksi baru atau tiket berganti
+                    $isNewTicket = empty($cachedTicket) || ($currentTicket !== null && $cachedTicket !== $currentTicket);
+
+                    if ($isNewTicket) {
+                        Log::info("[hit_display] Pergantian tiket terdeteksi. Nota lama: " . ($cachedTicket ?? 'NULL') . " -> Nota baru: " . ($currentTicket ?? 'NULL') . ", QRIS: " . ($datas->qris ?? 'NULL'));
+
+                        // Tiket baru atau tiket berganti: reset data transaksi lama agar QRIS tidak bocor
                         $state = [
                             'detected' => true,
-                            'ticket'   => $datas->nota ?? null,
+                            'ticket'   => $currentTicket,
+                            'qris'     => null,
+                            'image'    => $datas->image ?? ($state['image'] ?? null),
+                            'imagein'  => $datas->imagein ?? ($state['imagein'] ?? null),
+                            'lpr'      => $datas->lpr ?? ($state['lpr'] ?? null),
+                            'total'    => $datas->total ?? null,
+                            'intime'   => $datas->intime ?? null,
+                            'outtime'  => $datas->outtime ?? null,
                         ];
-                    } elseif (empty($state['ticket']) && !empty($datas->nota)) {
-                        $state['ticket'] = $datas->nota;
                     }
 
                     // Cek parameter connected
@@ -211,12 +216,20 @@ class IndexController extends Controller
                         $datas->qris = null;
                         $state['qris'] = null;
                     } else {
+                        // Jika ada QRIS baru di payload request
                         if (!empty($datas->qris)) {
                             $state['qris'] = $datas->qris;
-                        } elseif (!empty($state['qris'])) {
+                        } elseif (!$isNewTicket && !empty($state['qris'])) {
+                            // HANYA wariskan QRIS jika tiketnya SAMA PERSIS dan bukan tiket baru
                             $datas->qris = $state['qris'];
+                        } else {
+                            // Jika tiket baru tanpa QRIS atau QRIS belum ada, jangan pakai QRIS lama
+                            $datas->qris = null;
+                            $state['qris'] = null;
                         }
                     }
+
+                    Log::info("[hit_display] Action 3 diproses. Nota: " . ($currentTicket ?? '-') . ", QRIS aktif: " . ($datas->qris ?? 'NULL') . ", isNewTicket: " . ($isNewTicket ? 'true' : 'false'));
 
                     // Sinkronisasi data teks
                     foreach (['total', 'lpr', 'intime', 'outtime'] as $field) {
@@ -280,7 +293,12 @@ class IndexController extends Controller
                         }
                     }
 
+                    $clearedNota = $state['ticket'] ?? ($datas->nota ?? '-');
+                    $clearedQris = $state['qris'] ?? ($datas->qris ?? '-');
+
                     cache()->forget($stateKey);
+
+                    Log::info("[hit_display] Action 4 selesai. Nota: '{$clearedNota}', QRIS: '{$clearedQris}' - Cache '{$stateKey}' berhasil dibersihkan dengan baik.");
 
                     $freshSetting = Setting::first();
                     $datas->timeout_out_in = (int) ($freshSetting->timeout_out_in ?? $setting->timeout_out_in ?? 4) * 1000;

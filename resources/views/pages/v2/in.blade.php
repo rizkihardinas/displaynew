@@ -316,6 +316,14 @@
                         ? Number(datas.timeout_out)
                         : TIMEOUT_OUT;
 
+                    // Jika tiket berganti, reset QR code dan status transaksi tiket sebelumnya
+                    if (activeTicket && nota && activeTicket !== nota) {
+                        console.log('[Display] Tiket berganti dari ' + activeTicket + ' ke ' + nota + '. Bersihkan QR sebelumnya.');
+                        if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
+                        qrcodeInstance = null;
+                        if (DOM.qrContainer) { DOM.qrContainer.addClass('hidden'); }
+                    }
+
                     // Jika QRIS untuk tiket yang SAMA sedang berjalan, pertahankan timer yang sudah berjalan
                     if (isPaymentActive && activeTicket && activeTicket === nota) {
                         console.log('[Display] Action 3 untuk tiket yang sama (' + nota + '), timer tetap berjalan.');
@@ -371,19 +379,15 @@
                     if (DOM.qrEl && showQris) {
                         requestAnimationFrame(function() {
                             try {
-                                if (qrcodeInstance) {
-                                    qrcodeInstance.makeCode(qr);
-                                } else {
-                                    DOM.qrEl.innerHTML = '';
-                                    qrcodeInstance = new QRCode(DOM.qrEl, {
-                                        text: qr,
-                                        width: 200,
-                                        height: 200,
-                                        colorDark: '#000000',
-                                        colorLight: '#ffffff',
-                                        correctLevel: QRCode.CorrectLevel.M
-                                    });
-                                }
+                                DOM.qrEl.innerHTML = '';
+                                qrcodeInstance = new QRCode(DOM.qrEl, {
+                                    text: qr,
+                                    width: 200,
+                                    height: 200,
+                                    colorDark: '#000000',
+                                    colorLight: '#ffffff',
+                                    correctLevel: QRCode.CorrectLevel.M
+                                });
                             } catch (qrErr) {
                                 console.error('Error generating QR:', qrErr);
                                 try {
