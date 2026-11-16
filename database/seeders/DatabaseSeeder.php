@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SamplePusherSeeder::class);
         $this->call(FfmpegSetting::class);
         $this->call(DefaultRate::class);
+        $this->call(DefaultPreferenceSeeder::class);
         // \App\Models\User::factory(10)->create();
     }
 }
