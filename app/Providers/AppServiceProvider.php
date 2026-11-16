@@ -35,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (Schema::hasTable('settings') && DB::table('settings')->count() > 0) {
         $setting = app('setting');
         Config::set('ffmpeg.host', $setting->ffmpeg_host);
         Config::set('ffmpeg.port', $setting->ffmpeg_port);
@@ -46,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
         Config::set('uno.timeout_out', $setting->timeout_out);
         Config::set('uno.timeout_out_in', $setting->timeout_out_in);
         Config::set('uno.delay_in', $setting->delay_in);
-        }
+        
         if (Schema::hasTable('preferences') && DB::table('preferences')->count() > 0) {
             $preferences = \App\Models\Preference::first();
             Config::set('uno.style.background', $preferences->background_color);
