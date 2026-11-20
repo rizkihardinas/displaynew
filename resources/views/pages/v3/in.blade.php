@@ -25,16 +25,16 @@
 
             <!-- Top Row: Logo / Lokasi / Jam + Tanggal -->
             <div class="flex gap-[0.6em] shrink-0">
-                <div class="w-[8em] h-[3.6em] rounded-[0.2em] justify-center overflow-hidden shrink-0 bg-white flex items-center p-1">
-                    <img src="{{ asset('Logo_Operator.jpg') }}" alt="Logo" class="h-full w-full object-contain" onerror="this.src='{{ asset('public/Logo_Operator.jpg') }}'">
+                <div class="w-[8em] h-[3.6em] rounded-[0.2em] justify-center overflow-hidden shrink-0">
+                    <img src="{{ file_exists(public_path('asset/logo.jpg')) ? asset('asset/logo.jpg') : (file_exists(public_path('Logo.png')) ? asset('Logo.png') : asset('Logo_Operator.jpg')) }}" alt="Logo" class="h-full object-fill" onerror="this.src='{{ asset('Logo_Operator.jpg') }}'">
                 </div>
                 <div class="flex-1 rounded-[0.2em] flex flex-col justify-center px-2">
-                    <span class="font-bold text-white text-[1.5em] leading-tight" id="posname">{{ $setting->text_promotion ?? 'UNO PARKING' }}</span>
-                    <span class="text-white text-[0.6em] leading-tight" id="posip">{{ config('app.ip_server') ?? 'SISTEM PARKIR' }}</span>
+                    <span class="font-bold text-white text-[1.5em] leading-tight" id="posname">{{ $setting->name ?? ($setting->text_promotion ?? 'LOKASI 1') }}</span>
+                    <span class="text-white text-[0.6em] leading-tight" id="posip">{{ $setting->address ?? ($ip ?? 'ALAMAT LOKASI') }}</span>
                 </div>
-                <div class="w-[7.5em] text-white rounded-[0.2em] flex flex-col items-end justify-center leading-tight shrink-0 px-2">
-                    <span id="jam" class="font-bold text-[1.5em]">00:00:00</span>
-                    <span id="tanggal" class="text-[0.55em] text-gray-200">1 Januari 2026</span>
+                <div class="w-[6.5em] text-white rounded-[0.2em] flex flex-col items-end justify-center leading-tight shrink-0 px-2">
+                    <span id="jam" class="font-bold text-[1.5em]">10:10</span>
+                    <span id="tanggal" class="text-[0.55em]">26 Desember 2026</span>
                 </div>
             </div>
 
@@ -59,7 +59,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <img src="{{ asset('Logo_Operator.jpg') }}" class="w-full h-full object-fill" onerror="this.src='{{ asset('public/Logo_Operator.jpg') }}'">
+                            <img src="{{ file_exists(public_path('cam/in.jpeg')) ? asset('cam/in.jpeg') : asset('Logo_Operator.jpg') }}" class="w-full h-full object-fill" onerror="this.src='{{ asset('Logo_Operator.jpg') }}'">
                         @endif
                     </div>
 
@@ -67,8 +67,8 @@
                     <img id="imagein" src="{{ asset('Logo_Operator.jpg') }}" alt="Kamera IN" class="w-full h-full object-fill absolute inset-0 z-30 hidden" onerror="this.src='{{ asset('public/Logo_Operator.jpg') }}'">
                 </div>
 
-                <!-- Banner Orange: Pesan + Nopol + Member Status -->
-                <div class="shrink-0 bg-[#F79743] p-3 text-white font-bold text-[1.2em] text-center" id="wrapper_data">
+                <!-- Banner Orange: Pesan + Nopol + Member Status (hanya muncul saat ada trigger/event) -->
+                <div class="shrink-0 bg-[#F79743] p-3 text-white font-bold text-[1.2em] text-center hidden" id="wrapper_data">
                     <span id="info">SELAMAT DATANG, TEKAN TOMBOL TIKET ATAU TAP KARTU</span>
                     <div class="text-[1.8em] font-extrabold tracking-wider leading-tight" id="lpr">&nbsp;</div>
                     <div class="text-[0.7em] font-semibold opacity-95" id="memberstatus">&nbsp;</div>
@@ -76,7 +76,7 @@
 
                 <!-- Metode Bayar -->
                 <div class="shrink-0 bg-white">
-                    <div class="text-center text-gray-600 py-2 font-bold text-[0.8em] tracking-wide">
+                    <div class="text-center text-gray-600 py-3 font-bold text-[0.8em] tracking-wide">
                         METODE BAYAR
                     </div>
                     <div class="grid grid-cols-5 gap-[0.6em] px-[0.5em] pb-[0.5em]">
@@ -100,7 +100,7 @@
             </div>
 
             <!-- Info Bar Footer Grid 4 -->
-            <div class="shrink-0 text-white font-bold rounded-[0.2em] grid grid-cols-4 divide-x divide-gray-400 overflow-hidden bg-[#03234d]">
+            <div class="shrink-0 text-white font-bold rounded-[0.2em] grid grid-cols-4 divide-x divide-gray-300 overflow-hidden">
                 <div class="py-[0.5em] flex items-center justify-center text-[0.65em]">INFO LAYANAN</div>
                 <div class="py-[0.5em] flex items-center justify-center text-[0.65em]">+62 888-1357-770</div>
                 <div class="py-[0.5em] flex items-center justify-center text-[0.65em]">www.unosystem.id</div>
@@ -113,7 +113,7 @@
         <div class="flex-[1] min-w-0 flex flex-col h-full">
 
             <!-- State 1: Standby / IN Gate -> Full-height Iklan Carousel -->
-            <div id="standby" class="w-full h-full rounded-[0.5em] overflow-hidden bg-gray-300 relative z-0 flex flex-col"
+            <div id="standby" class="w-full h-full rounded-[0.2em] overflow-hidden bg-gray-300 relative z-0 flex flex-col"
                  @if(count($datas) > 1) data-carousel="slide" data-carousel-interval="{{ ($setting->duration ?? 15) * 1000 }}" @endif>
                 @if(count($datas) > 0)
                     @foreach ($datas as $key => $item)
@@ -127,7 +127,7 @@
                         </div>
                     @endforeach
                 @else
-                    <img src="{{ asset('Logo_Operator.jpg') }}" class="w-full h-full object-fill" onerror="this.src='{{ asset('public/Logo_Operator.jpg') }}'">
+                    <img src="{{ file_exists(public_path('asset/iklan1.jpeg')) ? asset('asset/iklan1.jpeg') : asset('Logo_Operator.jpg') }}" class="w-full h-full object-fill" onerror="this.src='{{ asset('Logo_Operator.jpg') }}'">
                 @endif
             </div>
 
@@ -178,7 +178,7 @@
 
                 <!-- 1B: Camera OUT Image (Action 4 / Tap Card / Cash) -->
                 <div id="image-out-container" class="shrink-0 hidden flex flex-col gap-[0.5em]">
-                    <div class="w-full h-[13.5em] rounded-[0.4em] overflow-hidden border border-[#021C3F]/20 bg-black shadow-sm">
+                    <div class="w-full h-[24.5em] rounded-[0.4em] overflow-hidden border border-[#021C3F]/20 bg-black shadow-sm">
                         <img id="image" src="{{ asset('public/out.jpg') }}" alt="Camera Out" class="w-full h-full object-fill" onerror="this.src='{{ asset('out.jpg') }}'">
                     </div>
                     <div id="informasi-pembayaran-row" class="hidden text-center py-1.5 bg-green-100 rounded border border-green-300 shadow-sm">
@@ -328,6 +328,14 @@
         }
     }
 
+    function showWrapperData() {
+        DOM.wrapperData.removeClass('hidden');
+    }
+
+    function hideWrapperData() {
+        DOM.wrapperData.addClass('hidden');
+    }
+
     function blink() {
         DOM.wrapperData.addClass('animate-blink');
         setTimeout(function() {
@@ -397,6 +405,7 @@
                 var image = datas.image || '';
                 var posip = datas.posip;
 
+                showWrapperData();
                 DOM.promosiOperator.addClass('hidden');
                 DOM.imagein.removeClass('hidden');
 
@@ -462,6 +471,7 @@
                 }
             }
 
+            showWrapperData();
             DOM.promosiOperator.addClass('hidden');
             DOM.imagein.removeClass('hidden');
 
@@ -674,6 +684,7 @@
         if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
         qrcodeInstance = null;
 
+        hideWrapperData();
         DOM.memberstatus.text('\u00A0');
         DOM.lpr.text('\u00A0');
         DOM.promosiOperator.removeClass('hidden');
@@ -697,6 +708,7 @@
         if (DOM.qrEl) { DOM.qrEl.innerHTML = ''; }
         qrcodeInstance = null;
 
+        hideWrapperData();
         DOM.memberstatus.text('\u00A0');
         DOM.strukMemberstatus.text('NON MEMBER');
         DOM.lpr.text('\u00A0');
