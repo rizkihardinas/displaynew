@@ -20,11 +20,17 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('setting', function () {
-            return Setting::first();
+            if (Schema::hasTable('settings')) {
+                return Setting::first();
+            }
+            return null;
         });
 
         $this->app->singleton('security', function () {
-            return Security::first();
+            if (Schema::hasTable('securities')) {
+                return Security::first();
+            }
+            return null;
         });
     }
 
@@ -35,16 +41,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $setting = app('setting');
-        Config::set('ffmpeg.host', $setting->ffmpeg_host);
-        Config::set('ffmpeg.port', $setting->ffmpeg_port);
-        Config::set('ffmpeg.username', $setting->ffmpeg_username);
-        Config::set('ffmpeg.password', $setting->ffmpeg_password);
-        Config::set('app.ip_server', $setting->ip);
-        Config::set('uno.timeout_in', $setting->timeout_in);
-        Config::set('uno.timeout_out', $setting->timeout_out);
-        Config::set('uno.timeout_out_in', $setting->timeout_out_in);
-        Config::set('uno.delay_in', $setting->delay_in);
+        if (Schema::hasTable('settings') && DB::table('settings')->count() > 0) {
+            $setting = app('setting');
+            if ($setting) {
+                Config::set('ffmpeg.host', $setting->ffmpeg_host);
+                Config::set('ffmpeg.port', $setting->ffmpeg_port);
+                Config::set('ffmpeg.username', $setting->ffmpeg_username);
+                Config::set('ffmpeg.password', $setting->ffmpeg_password);
+                Config::set('app.ip_server', $setting->ip);
+                Config::set('uno.timeout_in', $setting->timeout_in);
+                Config::set('uno.timeout_out', $setting->timeout_out);
+                Config::set('uno.timeout_out_in', $setting->timeout_out_in);
+                Config::set('uno.delay_in', $setting->delay_in);
+            }
+        }
         
         if (Schema::hasTable('preferences') && DB::table('preferences')->count() > 0) {
             $preferences = \App\Models\Preference::first();

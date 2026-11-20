@@ -48,6 +48,14 @@ class IndexController extends Controller
             return Rate::where('vehicle', $vehicle)->first();
         });
         $ip = getHostByName(getHostName());
+
+        $designVersion = strtolower(trim($setting->design_version ?? 'v2'));
+        if ($designVersion === 'v3') {
+            return view('pages.v3.in', compact('datas', 'ip', 'setting', 'rate', 'datas_operator'));
+        } elseif ($designVersion === 'v1') {
+            return view('pages.in', compact('datas', 'ip', 'setting', 'rate', 'datas_operator'));
+        }
+
         return view('pages.v2.in', compact('datas', 'ip', 'setting', 'rate', 'datas_operator'));
     }
 

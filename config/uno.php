@@ -4,6 +4,7 @@
 return [
     'timeout_in' => 30,
     'timeout_out' => 30,
+    'cache_minutes' => (int) env('CACHE_DISPLAY_MINUTES', 2),
     'style' => [
         'background' => '#ffffff',
         'primary' => '#04427b',
